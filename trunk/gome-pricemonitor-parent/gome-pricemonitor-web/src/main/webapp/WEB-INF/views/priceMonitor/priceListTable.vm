@@ -1,0 +1,83 @@
+
+             <input type="hidden" id="pageNo" value="$!page.pageNo"/>
+             <input type="hidden" id="pageSize" value="$!page.pageSize"/>
+            <h3>全部日志相关查询结果如下：共 <strong>$!page.totalResult</strong> 条记录</h3>
+            <table border="0" cellpadding="0" cellspacing="0" class="log_tabel">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>时间</th>
+                        <th>价格编码</th>
+                        <th>价格类型</th>
+                        <th>SKU编号</th>
+                        <th>区域编码</th>
+                        <th>处理状态</th>
+                        <th>当前节点</th>
+                        <th>处理动作</th>
+                        <th>当前处理结果</th>
+                        <th>操 作</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                #if($!page.data.size() > 0)
+                  #set($i=($page.pageNo - 1) * $page.pageSize)
+                  #foreach($priceMonitor in $page.data)
+                  #set($i = $!i+1)
+                   <tr>
+                        <td>$!i</td>
+                        <td>$!priceMonitor.timeStr</td>
+                        <td>$!priceMonitor.type</td>
+                        <td>$!priceMonitor.typeStr</td>
+                        <td>$!priceMonitor.skuNo</td>
+                        <td>$!priceMonitor.areaCode</td>
+                        <td>$!priceMonitor.statusStr</td>
+                        <!--
+                        #if($!priceMonitor.status == "START")
+                         <td>开始</td>
+                        #elseif($!priceMonitor.status == "CONTINUE")
+                         <td>过程中</td>
+                        #elseif($!priceMonitor.status == "END")
+                         <td>结束</td>
+                        #end
+                        -->
+                        
+                        <td>$!priceMonitor.node</td>
+                        <td>$!priceMonitor.actionStr</td>
+                        <!--
+                        #if($!priceMonitor.action == "SEND")
+                         <td>发送</td>
+                        #elseif($!priceMonitor.action == "RECIVE")
+                         <td>接收</td>
+                        #end
+                        -->
+                        
+                        
+                        
+                        #if($!priceMonitor.resultStr == "成功")
+                         <td class="log_success">成功</td>
+                        #elseif($!priceMonitor.resultStr == "失败")
+                        <td class="log_fail">失败</td>
+                        #end
+                        <!--<td><a href="${rc.contextPath}/price/monitor/detail/$!priceMonitor.type/$!priceMonitor.id">详情</a></td>-->
+                        <td><a href="javascript:void(0)" logId="$!priceMonitor.id" typeCode="$!priceMonitor.type" class="toDetail">详情</a></td>
+                    </tr>
+                  #end
+                #else
+                <tr><td colspan="12">当前搜索无结果，请尝试重新输入查询条件</td></tr>
+                #end
+                
+                </tbody>
+            </table>
+            
+           #parse("priceMonitor/callbackParam.vm")
+           #parse("priceMonitor/pageListTable.vm") 
+         
+
+<link href="${rc.contextPath}/price_monitor/plugs/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="${rc.contextPath}/price_monitor/plugs/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="${rc.contextPath}/price_monitor/public/css/base.css"rel="stylesheet" type="text/css"/>
+<link href="${rc.contextPath}/price_monitor/public/css/style.css" rel="stylesheet" type="text/css"/>
+<script src="${rc.contextPath}/price_monitor/plugs/jQuery/jQuery-2.1.3.min.js" type="text/javascript"></script>
+

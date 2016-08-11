@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.ManagerUserMapper">
+	<resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.ManagerUser">
+		<id column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="passwd" property="passwd" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="contact_way" property="contactWay" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="head_path" property="headPath" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="operator_name" property=" " jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id userId, user_name userName, passwd passwd,
+		real_name realName,
+		contact_way contactWay, state, head_path headPath,
+		create_time
+		createTime,
+		update_time updateTime, operator_name
+		operatorName
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_user
+		where user_id = #{userId,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectByUserName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_user
+		where user_name = #{userName}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		gm_manager_user
+		where user_id = #{userId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.gome.pricemonitor.domain.ManagerUser"
+		useGeneratedKeys="true" keyProperty="userId">
+		insert into gm_manager_user
+		(user_id, user_name, passwd,
+		real_name, contact_way, state,
+		head_path,
+		create_time, update_time,
+		operator_name)
+		values
+		(#{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
+		#{passwd,jdbcType=VARCHAR},
+		#{realName,jdbcType=VARCHAR},
+		#{contactWay,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER},
+		#{headPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{operatorName,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gome.pricemonitor.domain.ManagerUser"
+		useGeneratedKeys="true" keyProperty="userId">
+		insert into gm_manager_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="passwd != null">
+				passwd,
+			</if>
+			<if test="realName != null">
+				real_name,
+			</if>
+			<if test="contactWay != null">
+				contact_way,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="headPath != null">
+				head_path,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="operatorName != null">
+				operator_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=BIGINT},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="passwd != null">
+				#{passwd,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="contactWay != null">
+				#{contactWay,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="headPath != null">
+				#{headPath,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorName != null">
+				#{operatorName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gome.pricemonitor.domain.ManagerUser">
+		update gm_manager_user
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="passwd != null">
+				passwd = #{passwd,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				real_name = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="contactWay != null">
+				contact_way = #{contactWay,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="headPath != null">
+				head_path = #{headPath,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorName != null">
+				operator_name = #{operatorName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where user_id = #{userId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gome.pricemonitor.domain.ManagerUser">
+		update
+		gm_manager_user
+		set user_name = #{userName,jdbcType=VARCHAR},
+		passwd =
+		#{passwd,jdbcType=VARCHAR},
+		real_name = #{realName,jdbcType=VARCHAR},
+		contact_way = #{contactWay,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=INTEGER},
+		head_path = #{headPath,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		operator_name =
+		#{operatorName,jdbcType=VARCHAR}
+		where user_id =
+		#{userId,jdbcType=BIGINT}
+	</update>
+
+
+	<select id="query" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+		u.user_id userId,
+		u.user_name userName,
+		u.real_name realName,
+		u.contact_way contactWay,
+		r.role_id roleId,
+		u.state,
+		u.head_path
+		headPath,
+		u.create_time
+		createTime,
+		u.update_time updateTime,
+		u.operator_name operatorName,
+		r.role_name roleName
+		FROM gm_manager_user
+		u,gm_manager_user_role
+		ur,gm_manager_role r
+		WHERE u.user_id=ur.user_id
+		AND ur.`role_id`=
+		r.`role_id` and u.state != -1
+		<if test="roleId != null">
+			AND r.role_id=#{roleId}
+		</if>
+		<if test="condition != null">
+			AND (user_name LIKE CONCAT('%','${condition}','%' ) OR
+			real_name LIKE CONCAT('%','${condition}','%' ) OR
+			contact_way
+			LIKE
+			CONCAT('%','${condition}','%' ))
+		</if>
+		<if test="ordery == null">
+			ORDER BY u.update_time desc
+		</if>
+
+		limit ${offset}, ${count}
+
+	</select>
+
+	<select id="queryCount" resultType="long" parameterType="map">
+		SELECT count(1) FROM gm_manager_user u,gm_manager_user_role
+		ur,gm_manager_role r
+		WHERE u.user_id=ur.user_id AND ur.`role_id`=
+		r.`role_id` and u.state != -1
+		<if test="roleId != null">
+			AND r.role_id=#{roleId}
+		</if>
+		<if test="condition != null">
+			AND (user_name LIKE CONCAT('%','${condition}','%' ) OR
+			real_name LIKE CONCAT('%','${condition}','%' ) OR
+			contact_way
+			LIKE
+			CONCAT('%','${condition}','%' ))
+		</if>
+
+
+	</select>
+</mapper>

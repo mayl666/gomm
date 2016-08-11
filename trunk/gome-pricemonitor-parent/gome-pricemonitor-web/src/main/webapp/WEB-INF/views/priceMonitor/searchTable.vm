@@ -1,0 +1,150 @@
+        <div class="select_row" >
+            <div class="select_fl fl" >
+               <label class="ctroll-label">SKU编号:&nbsp&nbsp</label><input id="skuNo" type="text" class="select_style " placeholder="请输入SKU编号" maxlength="10" value="$!skuNo"/>
+                <label class="ctroll-label">价格类型:&nbsp&nbsp</label>
+                <div class="select_beautify mr30">
+                    <input type="hidden" id="typeCode" value="$!type"/>
+                    <span class="angle_down pointer typeCode" style="width:145px;">
+                    #if("$!type" != "")
+                     $!typeName
+                    #else
+                                                                          价格类型
+                    #end
+                    </span><i class="fa fa-angle-down" ></i>
+                    <div class="cs-options" style="display:none">
+                        <ul ctroll-label class="ctroll-label">
+                            <li titled="" >全部 </li>
+                            <li titled="01" >01联营售价限价保护价 </li>
+                            <li titled="02" >02联营直降价</li>
+                            <li titled="03" >03联营区域售价</li>
+                            <li titled="04" >04自营售价限价保护价</li>
+                            <li titled="05" >05自营直降价</li>
+                            <li titled="06" >06自营区域售价</li>
+                            <li titled="07" >07自营区域直降价</li>
+                            <li titled="08" >08团抢价</li>
+                            <li titled="09" >09联营掌上专享价</li>
+                            <li titled="10" >10自营掌上专享价</li>
+                            <li titled="11" >11会员价</li>
+                            <li titled="12" >12唯品惠价</li>
+                            <li titled="13" >13联营预售价</li>
+                            <li titled="14" >14自营预售价</li>
+                            <li titled="15" >15预约价</li>
+                            <li titled="16" >16残次品</li>
+                            <li titled="17" >17海外购</li>
+                        </ul>
+                    </div>
+                </div><!--select_beautify end-->
+                <label class="ctroll-label">当前处理结果:&nbsp&nbsp</label>
+                <div class="select_beautify mr30">
+                    <input type="hidden" id="dResult" value="$!result"/>
+                    <span class="angle_down pointer dResult" >
+                    #if("$!result" == "")
+                                                                      处理结果
+                    #elseif("$!result" == "1")
+                                                                       成功
+                    #else
+                                                                     失败
+                    #end
+                    </span><i class="fa fa-angle-down" ></i>
+                    <div class="cs-options" style="display: none" >
+                        <ul class="ctroll-label">
+                        <li titled="" >全部</li>
+                        <li titled="1" >成功</li>
+                        <li titled="0" >失败</li>
+                        </ul>
+                    </div>
+                </div><!--select_beautify end-->
+                <label class="ctroll-label">时间:&nbsp&nbsp</label>
+                <input placeholder="请输入日期" id="beginTime" value="$!beginTime" class="laydate-icon select_style pointer" style="margin-right: 0;" onclick="$('body').click();laydate({istime: true,max: '$!endDate', format: 'YYYY-MM-DD hh:mm:ss'})" />
+                <span style="margin: 0 10px; color:#6a707c">至</span>
+                <input placeholder="请输入日期" id="endTime" value="$!endTime" class="laydate-icon select_style pointer" onclick="$('body').click();laydate({istime: true,max: '$!endDate', format: 'YYYY-MM-DD hh:mm:ss'})" />
+                <span class="operate" id="superSearch"><b class="pointer">高级搜索</b><i class="fa fa-angle-double-down"></i></span>
+            </div>
+
+            <div class="recet fr">
+                <div class="btn-baseinfo recet_btn pointer">重置</div>
+               <!-- <div class="recet fr">-->
+                <div class="btn-baseinfo search_btn pointer">搜索</div>
+              <!--  </div>-->
+            </div>
+        </div><!--select_row end-->
+        <div class="select_row" id="hight_select" style="display: none">
+            <div class="select_fl fl">
+                <label class="ctroll-label">区域编码:&nbsp&nbsp</label>
+                <input type="text" id="areaCode" class="select_style" value="$!areaCode" maxlength="8" placeholder="请输入区域编号"/>
+                <label class="ctroll-label">当前处理状态:&nbsp&nbsp</label>
+                <div class="select_beautify mr30">
+                    <input type="hidden" id="dealStatus" value="$!status"/>
+                    <span class="angle_down pointer dealStatus">
+                    #if("$!status" == "")
+                                                                      处理状态
+                    #elseif("$!status" == "1")
+                                                                      开始
+                    #elseif("$!status" == "2")
+                                                                       过程中
+                    #else
+                 	结束
+                    #end
+                    </span><i class="fa fa-angle-down" ></i>
+                    <div class="cs-options" style="display: none">
+                        <ul class="ctroll-label">
+                        <li titled="" >全部</li>
+                        <li titled="1" >开始</li>
+                        <li titled="2" >过程中</li>
+                        <li titled="3" >结束</li>
+                        </ul>
+                    </div>
+                </div><!--select_beautify end-->
+                <label class="ctroll-label">当前节点:&nbsp&nbsp</label>
+                <div class="select_beautify mr30">
+                    <input type="hidden" id="currentNode" value="$!node"/>
+                    <span class="angle_down pointer currentNode" style="width:80px;">
+                    #if("$!node" == "")
+                                                                      当前节点
+                    #else
+                    $!node
+                    #end
+                    </span><i class="fa fa-angle-down" ></i>
+                    <div class="cs-options" style="display: none">
+                        <ul class="ctroll-label">
+                            <li titled="" >全部</li>
+                            <li titled="INF" >INF</li>
+                            <li titled="BCC" >BCC</li>
+                            <li titled="INDEX" >INDEX</li>
+                            <li titled="CART" >CART</li>
+                            <!--<li titled="Srchdispatch" >Srchdispatch</li>-->
+                            <li titled="Stedeliver" >Stedeliver</li>
+                            <!--<li titled="Rhino" >Rhino</li>-->
+                            <li titled="NPOP" >NPOP</li>
+                            <li titled="OA" >OA</li>
+                            <li titled="SEARCH" >SEARCH</li>
+                            <li titled="SAP" >SAP</li>
+                            <li titled="GCC" >GCC</li>
+                            <li titled="AUX" >AUX</li>
+                        </ul>
+                    </div>
+                </div><!--select_beautify end-->
+                <label class="ctroll-label">处理动作:&nbsp&nbsp</label>
+                <div class="select_beautify mr30">
+                    <input type="hidden" id="currentAction" value="$!action"/>
+                    <span class="angle_down pointer currentAction ">
+                    #if("$!action" == "")
+                                                                      处理动作
+                    #elseif("$!action" == "0")
+                                                                      发送
+                    #else
+                   	接收
+                    #end
+                    </span><i class="fa fa-angle-down" ></i>
+                    <div class="cs-options" style="display: none">
+                        <ul class="ctroll-label">
+                            <li titled="" >全部</li>
+                            <li titled="0" >发送</li>
+                            <li titled="1" >接收</li>
+                        </ul>
+                    </div>
+                </div><!--select_beautify end-->
+            </div>
+        </div><!--select_row end-->
+        
+<script src="${rc.contextPath}/price_monitor/js/date.js" type="text/javascript"></script>

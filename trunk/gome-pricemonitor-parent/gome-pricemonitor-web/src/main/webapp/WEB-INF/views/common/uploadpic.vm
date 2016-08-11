@@ -1,0 +1,14 @@
+<form id="imgform" action="../imageUpload/uploadimg" method="post" enctype="multipart/form-data">
+	<div style="display: none">
+		<input id="file" name="file" type="file" onchange="parent.upload()"/>
+	</div>
+	<input id="imgurl" type="hidden" value="$!{msg}"/>
+</form>
+<script type="text/javascript">
+	if(document.getElementById("imgurl").value!=''){
+		parent.document.getElementById('oneImage').src=document.getElementById("imgurl").value;
+		parent.document.getElementById('picPath').value=document.getElementById("imgurl").value;  
+	}
+</script>
+
+

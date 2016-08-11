@@ -1,0 +1,58 @@
+    <div class="row_tow">
+        <div class="log_data_warp">
+            <h3>处理日志</h3>
+            <table border="0" cellpadding="0" cellspacing="0" class="log_tabel">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>SKU编号</th>
+                        <th>区域编码</th>
+                        <th>处理状态</th>
+                        <th>当前节点</th>
+                        <th>处理动作</th>
+                        <th>当前处理结果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                #if($!page.data.size() > 0)
+                #foreach($priceMonitor in $!page.data)
+                    <tr>
+                        <td>$!priceMonitor.timeStr</td>
+                        <td>$!priceMonitor.skuNo</td>
+                        <td>$!priceMonitor.areaCode</td>
+                        <td>$!priceMonitor.statusStr</td>
+                        
+                        <!--
+                        #if($!priceMonitor.status == "START")
+                         <td>开始</td>
+                        #elseif($!priceMonitor.status == "CONTINUE")
+                         <td>过程中</td>
+                        #elseif($!priceMonitor.status == "END")
+                         <td>结束</td>
+                        #end
+                        -->
+                        
+                        <td>$!priceMonitor.node</td>
+                        <td>$!priceMonitor.actionStr</td>
+                        
+                        <!--
+                        #if($!priceMonitor.action == "SEND")
+                         <td>发送</td>
+                        #elseif($!priceMonitor.action == "RECIVE")
+                         <td>接收</td>
+                        #end
+                        -->
+                        
+                        
+                        #if($!priceMonitor.resultStr == "成功")
+                         <td class="log_success">成功</td>
+                        #elseif($!priceMonitor.resultStr == "失败")
+                        <td class="log_fail">失败</td>
+                        #end
+                    </tr>
+                #end
+                #end
+                </tbody>
+            </table>
+        </div>
+    </div>

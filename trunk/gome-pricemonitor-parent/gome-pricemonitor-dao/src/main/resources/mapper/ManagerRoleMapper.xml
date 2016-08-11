@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.ManagerRoleMapper">
+	<resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.ManagerRole">
+		<id column="role_id" property="roleId" jdbcType="BIGINT" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="operator_name" property="operatorName"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		role_id roleId, role_name roleName, create_time createTime,
+		update_time
+		updateTime, state, description, operator_name operatorName
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_role
+		where role_id = #{roleId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		gm_manager_role
+		where role_id = #{roleId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.gome.pricemonitor.domain.ManagerRole"
+		useGeneratedKeys="true" keyProperty="roleId">
+		insert into gm_manager_role
+		(role_id, role_name, create_time,
+		update_time, state, description,
+		operator_name)
+		values (#{roleId,jdbcType=BIGINT},
+		#{roleName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}),
+		#{description,jdbcType=VARCHAR},
+		#{operatorName,jdbcType=VARCHAR}
+	</insert>
+	<insert id="insertSelective" parameterType="com.gome.pricemonitor.domain.ManagerRole"
+		useGeneratedKeys="true" keyProperty="roleId">
+		insert into gm_manager_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="roleName != null">
+				role_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="operatorName != null">
+				operator_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				#{roleId,jdbcType=BIGINT},
+			</if>
+			<if test="roleName != null">
+				#{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorName != null">
+				#{operatorName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gome.pricemonitor.domain.ManagerRole">
+		update gm_manager_role
+		<set>
+			<if test="roleName != null">
+				role_name = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorName != null">
+				operator_name = #{operatorName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where role_id = #{roleId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gome.pricemonitor.domain.ManagerRole">
+		update
+		gm_manager_role
+		set role_name = #{roleName,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		state = #{state,jdbcType=INTEGER},
+		description = #{description,jdbcType=VARCHAR},
+		operator_name =
+		#{operatorName,jdbcType=VARCHAR}
+		where role_id =
+		#{roleId,jdbcType=BIGINT}
+	</update>
+	
+	<select id="getList" resultMap="BaseResultMap" parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_role
+		where 1=1 
+		<if test="state != null">
+		and state=#{state}
+		</if>
+		
+	</select>
+
+
+	<select id="query" resultMap="BaseResultMap" parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_role
+		where 1=1 and state != -1
+		<if test="roleName != null">
+			and role_name LIKE CONCAT('%','${roleName}','%')
+		</if>
+
+		<if test="ordery == null">
+			ORDER BY update_time desc
+		</if>
+
+		limit ${offset}, ${count}
+	</select>
+
+
+	<select id="queryCount" resultType="long" parameterType="java.lang.String">
+		select count(1) from gm_manager_role where 1=1 and state != -1
+		<if test="_parameter != null">
+			and role_name LIKE CONCAT('%','${_parameter}','%')
+		</if>
+	</select>
+	
+	
+	<select id="selectByRoleName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_role
+		where role_name = #{_parameter}
+	</select>
+	
+	
+	<select id="selectByUserId" resultMap="BaseResultMap"
+		parameterType="long">
+		select
+		mr.role_id roleId, 
+		mr.role_name roleName, 
+		mr.create_time createTime,
+		mr.update_time updateTime, 
+		mr.state, 
+		mr.description, 
+		mr.operator_name operatorName
+		from gm_manager_role mr,gm_manager_user_role mur where mr.role_id = mur.role_id
+		<if test="userId != null">
+		and mur.user_id = #{userId}
+		</if>
+	</select>
+	
+	
+	
+</mapper>

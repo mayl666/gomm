@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>商品管理</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<!-- Bootstrap 3.3.2 -->
+<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- FontAwesome 4.3.0 -->
+<link href="../libs/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<!-- Theme style -->
+<link href="../libs/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+<link href="../libs/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<!--表单验证样式-->
+<link rel="stylesheet" href="../plugins/jqueryformValidatorRegex/themes/baidu/style/style.css" type="text/css"/>
+<!--[if lt IE 9]>
+  <script src="../libs/js/html5shiv.js" type="text/javascript"></script>
+  <script src="../libs/js/respond.js" type="text/javascript"></script>
+  <![endif]-->
+  <style type="text/css">
+.form-group input.inputborder{width:238px;height:40px; line-height: 40px;border: 1px solid #ccc; border-radius: 3px; padding-left: 10px;}
+.form-group  input.errorInput{ border: 1px solid #ff0000;width:238px;height:40px; line-height: 40px; border-radius: 3px; padding-left: 10px;}
+.error_span{display:inline-block;height:28px;width:250px; line-height: 28px; color:#ff0000;}
+</style>
+</head>
+<body class="skin-blue">
+	<div class="wrapper">
+        #parse("common/header.vm") 
+		<!-- Left side column. contains the logo and sidebar -->
+		#parse("common/leftMenu.vm")
+		<!-- Content Wrapper. Contains page content  *********************************************************************************************-->
+		<label id="moduleName" style="display:none">修改个人信息</label>
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h2>我的帐号</h2>
+				<div class="BreadcrumbTrail">
+					<a class="cc link" href="#">我的帐号</a> <i>&gt;</i>
+					<a class="cc link" href="myAccunt-edit.html">修改个人信息</a>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<form action="" class="form form-horizontal addProduct_form" id="editMyAccount">
+						<div class="form-group">
+							<label for="accuntName" class="control-label">帐号</label> <strong>&nbsp;</strong>
+							<span class="from-span" id="accuntName">$!userName</span>
+						</div>
+						<div class="form-group">
+							<label for="roleName" class="control-label">角色</label> <strong>*</strong>
+							<span class="from-span">$!mrole.roleName</span>
+						</div>
+						<div class="form-group">
+							<label for="realName" class="control-label">真实姓名</label> <strong>&nbsp;</strong>
+							<input id="realName" class="form-control" type="text" placeholder="请输入姓名" value="$!muser.realName"/>
+							<span class="error_span" style="display: none"></span>
+						</div>
+						<div class="form-group">
+							<label for="address" class="control-label">联系方式</label> <strong>&nbsp;</strong>
+							<input id="contactWay" class="form-control" type="text" placeholder="手机或者邮箱" value="$!muser.contactWay" />
+							<span class="error_span" style="display: none"></span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">头像</label><strong></strong>
+							
+						  <div class="up_image">
+                            <img style="width:200px;height:200px;" #if(!$!muser.headPath || $!muser.headPath=="") src='../image/upfire.png' #else src='$!{muser.headPath}' #end alt="点击上传图片"  id="oneImage" onclick="iframeClick();hideHeadPathCheckError()"/>
+                            <input type="hidden" id="imgurl" value="$!{muser.headPath}" onpropertychange="hideHeadPathCheckError()"/>
+						    <iframe name="img" id="img" src="../upload/touploadimg" frameborder="0" height="0px"></iframe>
+						    <span class="error_span" style="display: none"></span>
+						  </div>
+                        </div>
+                        
+						<div class="button_area">
+							<input class="user_submit" id="savebtn" type="button" value="保存">
+							<a class="return-btn" href="javascript:history.go(-1);">返回</a>
+						</div>
+					</form>
+				</div>
+			</section>
+			<!-- Main content end -->
+		</div>
+		<!-- /.content-wrapper *************************************************************************************************************-->
+    #parse("common/footer.vm")
+	</div>
+	#parse("common/messageBox.vm")
+	<!-- ./wrapper -->
+
+	<!-- jQuery 2.1.3 -->
+	<script src="../plugins/jQuery/jquery-1.11.0.min.js" type="text/javascript"></script>
+	<!-- jQuery UI 1.11.2 -->
+	<script src="../plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	<!-- AdminLTE App -->
+	<script src="../libs/js/app.js" type="text/javascript"></script>
+	<script src="../js/left_menu.js" type="text/javascript"></script>
+	<script src="../js/commodityCategory.js" type="text/javascript"></script>
+	<script type="text/javascript">
+ 	 function getFullPath(obj) {
+	  $('#iconTip').hide();
+      $('#img').show();
+      if(obj) { 
+          //ie 
+          if (window.navigator.userAgent.indexOf("MSIE")>=1) { 
+              obj.select(); 
+              return document.selection.createRange().text; 
+          } else {
+				if(obj.files) { 
+                  return window.URL.createObjectURL(obj.files[0]); 
+              } 
+              return obj.value; 
+          }
+         
+          return obj.value; 
+          /* //firefox 
+          else if(window.navigator.userAgent.indexOf("Firefox")>=1) { 
+              if(obj.files) { 
+            	  
+                  return window.URL.createObjectURL(obj.files[0]); 
+              } 
+              return obj.value; 
+          }
+          //chrome
+          else if(window.navigator.userAgent.indexOf("Chrome")>=1) { 
+              if(obj.files) { 
+            	  
+                  return window.URL.createObjectURL(obj.files[0]); 
+              } 
+              return obj.value; 
+          } */
+          
+      } 
+  }
+</script>
+<script src="../manager/user/ajaxfileupload.js" type="text/javascript"></script>
+<script src="../manager/user/jquery.form.js" type="text/javascript"></script>
+<script src="../manager/user/jquery.form.js" type="text/javascript"></script>
+<script src="../manager/user/myAccunt-edit.js" type="text/javascript"></script>
+<script src="../js/messageBox.js" type="text/javascript"></script>
+<script src="../js/upload.js" type="text/javascript"></script>
+<!--表单验证-->
+<script src="../plugins/jqueryformValidatorRegex/formValidator-4.1.1.js" type="text/javascript"></script>
+<script src="../plugins/jqueryformValidatorRegex/formValidatorRegex.js" type="text/javascript"></script>
+</body>
+</html>

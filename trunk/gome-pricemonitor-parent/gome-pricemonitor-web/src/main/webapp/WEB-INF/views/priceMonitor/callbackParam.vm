@@ -1,0 +1,9 @@
+            <input type="hidden" id="skuParam" value="$!page.conditions.skuNo">
+            <input type="hidden" id="typeParam" value="$!page.conditions.type">
+            <input type="hidden" id="resultParam" value="$!page.conditions.result">
+            <input type="hidden" id="beginTimeParam" value="$!page.conditions.startTime">
+            <input type="hidden" id="endTimeParam" value="$!page.conditions.endTime">
+            <input type="hidden" id="areaCodeParam" value="$!page.conditions.areaCode">
+            <input type="hidden" id="statusParam" value="$!page.conditions.status">
+            <input type="hidden" id="nodeParam" value="$!page.conditions.node">
+            <input type="hidden" id="actionParam" value="$!page.conditions.action">

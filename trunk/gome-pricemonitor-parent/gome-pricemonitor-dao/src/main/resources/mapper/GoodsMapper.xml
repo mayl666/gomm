@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.Goods" >
+    <id column="ib_id" property="id" jdbcType="BIGINT" />
+    <result column="goods_no" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="link_path" property="links" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ib_id, goods_no, goods_name, price, pic_path,
+    link_path, status, category_id, description, create_time, create_user, update_time, 
+    update_user 
+  </sql>
+  
+  <insert id="insertGoods" parameterType="com.gome.pricemonitor.domain.Goods" useGeneratedKeys="true" keyProperty="id">
+    insert into gm_itembase (ib_id, goods_no, goods_name, price, pic_path,
+    link_path, status, category_id, description, create_time, create_user, update_time, 
+    update_user)
+    values (#{id,jdbcType=BIGINT}, #{goodsCode,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DOUBLE}, #{picPath,jdbcType=VARCHAR}, #{links,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{categoryId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectGoodsListByPage" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.common.Page">
+  	select
+  	ib.ib_id, ib.goods_no, ib.goods_name, ib.price, ib.pic_path,
+    ib.link_path, ib.status, ib.category_id, ib.description, ib.create_time, ib.create_user, ib.update_time, 
+    ib.update_user, c.category_name 
+  	from gm_itembase as ib  
+  	left join gm_itembase_category as c 
+  	on ib.category_id = c.id 
+ 	where 1=1
+ 	<if test="conditions.id != null" >
+      and ib.ib_id = #{conditions.id,jdbcType=BIGINT} 
+    </if>
+    <if test="conditions.goodsCode != null" >
+      and ib.goods_no = #{conditions.goodsCode,jdbcType=VARCHAR} 
+    </if>
+    <if test="conditions.goodsName != null" >
+      and (ib.goods_name like CONCAT('%',#{conditions.goodsName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.goodsName != null" >
+      or c.category_name like CONCAT('%',#{conditions.goodsName,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="conditions.price != null" >
+      and ib.price = #{conditions.price,jdbcType=DOUBLE} 
+    </if>
+	<if test="conditions.picPath != null" >
+      and ib.pic_path = #{conditions.picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="conditions.links != null" >
+      and ib.link_path = #{conditions.links,jdbcType=VARCHAR} 
+    </if>
+    <if test="conditions.status != null" >
+      and ib.status = #{conditions.status,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.categoryId != null" >
+      and ib.category_id = #{conditions.categoryId,jdbcType=BIGINT}
+    </if>
+    <if test="conditions.description != null" >
+      and ib.description = #{conditions.description,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.createUser != null" >
+      and ib.create_user = #{conditions.createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.updateUser != null" >
+      and ib.update_user = #{conditions.updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.createTime != null" >
+      and ib.create_time = #{conditions.createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="conditions.updateTime != null" >
+      and ib.update_time = #{conditions.updateTime,jdbcType=TIMESTAMP}
+    </if>
+    order by ib.create_time desc
+    <if test="start != null and pageSize != null">
+    	LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.pricemonitor.domain.Goods">
+  	select count(*) from gm_itembase as ib  
+  	left join gm_itembase_category as c 
+  	on ib.category_id = c.id 
+ 	where 1=1 
+ 	<if test="id != null" >
+      and ib.ib_id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="goodsCode != null" >
+      and ib.goods_no = #{goodsCode,jdbcType=VARCHAR} 
+    </if>
+    <if test="goodsName != null" >
+      and (ib.goods_name like CONCAT('%',#{goodsName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="goodsName != null" >
+      or c.category_name like CONCAT('%',#{goodsName,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="price != null" >
+      and ib.price = #{price,jdbcType=DOUBLE} 
+    </if>
+	<if test="picPath != null" >
+      and ib.pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="links != null" >
+      and ib.link_path = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      and ib.status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="categoryId != null" >
+      and ib.category_id = #{categoryId,jdbcType=BIGINT}
+    </if>
+    <if test="description != null" >
+      and ib.description = #{description,jdbcType=VARCHAR}
+    </if>
+    <if test="createUser != null" >
+      and ib.create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and ib.update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and ib.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and ib.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectGoodsById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from gm_itembase 
+ 	where ib_id = #{id}
+  </select>
+  <select id="selectGoodsListByGoods" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.domain.Goods">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from gm_itembase
+  	where 1=1 
+ 	<if test="id != null" >
+      and ib_id != #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="goodsCode != null" >
+      and goods_no = #{goodsCode,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsName != null" >
+      and goods_name = #{goodsName,jdbcType=VARCHAR}
+    </if>
+    <if test="price != null" >
+      and price = #{price,jdbcType=DOUBLE} 
+    </if>
+	<if test="picPath != null" >
+      and pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="description != null" >
+      and description = #{description,jdbcType=VARCHAR}
+    </if>
+    <if test="links != null" >
+      and link_path = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="categoryId != null" >
+      and category_id = #{categoryId,jdbcType=BIGINT}
+    </if>
+    <if test="createUser != null" >
+      and create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <update id="updateGoods" parameterType="com.gome.pricemonitor.domain.Goods" >
+    update gm_itembase set
+    <if test="id != null" >
+      ib_id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="goodsCode != null" >
+      , goods_no = #{goodsCode,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsName != null" >
+      , goods_name = #{goodsName,jdbcType=VARCHAR}
+    </if>
+    <if test="price != null" >
+      , price = #{price,jdbcType=DOUBLE}
+    </if>
+	<if test="picPath != null" >
+      , pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="links != null" >
+      , link_path = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      , status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="categoryId != null" >
+      , category_id = #{categoryId,jdbcType=BIGINT}
+    </if>
+    <if test="description != null" >
+      , description = #{description,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      , update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateTime != null" >
+      , update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    where ib_id = #{id,jdbcType=BIGINT}
+  </update>
+  <delete id="deleteGoodsById" parameterType="java.lang.Long" >
+    delete from gm_itembase
+    where ib_id = #{id,jdbcType=BIGINT}
+  </delete>
+</mapper> 

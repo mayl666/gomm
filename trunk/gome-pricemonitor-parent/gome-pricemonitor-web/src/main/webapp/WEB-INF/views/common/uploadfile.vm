@@ -1,0 +1,13 @@
+<form id="fileform" action="../imageUpload/uploadfile" method="post" enctype="multipart/form-data">
+	<div style="display: none">
+		<input id="file" name="file" type="file" onchange="parent.upload()"/>
+	</div>
+	<input id="fileurl" type="hidden" value="$!{msg}"/>
+</form>
+<script type="text/javascript">
+	if(document.getElementById("fileurl").value!=''){
+		parent.document.getElementById('filePath').value=document.getElementById("fileurl").value;  
+	}
+</script>
+
+

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.GoodsCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.GoodsCategory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, category_name, status,
+    create_time, create_user, update_time, 
+    update_user, remark 
+  </sql>
+  
+  <insert id="insertGoodsCategory" parameterType="com.gome.pricemonitor.domain.GoodsCategory" useGeneratedKeys="true" keyProperty="id">
+    insert into gm_itembase_category (id, category_name,  
+      status, create_time, create_user, update_time, update_user, 
+      remark)
+    values (#{id,jdbcType=BIGINT}, #{categoryName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectGoodsCategoryListByPage" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.common.Page">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from gm_itembase_category 
+ 	where 1=1 
+ 	<if test="conditions.id != null" >
+      and id = #{conditions.id,jdbcType=BIGINT} 
+    </if>
+	<if test="conditions.categoryName != null" >
+      and category_name like CONCAT('%',#{conditions.categoryName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.status != null" >
+      and status = #{conditions.status,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.createUser != null" >
+      and create_user = #{conditions.createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.updateUser != null" >
+      and update_user = #{conditions.updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.createTime != null" >
+      and create_time = #{conditions.createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="conditions.updateTime != null" >
+      and update_time = #{conditions.updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="conditions.remark != null" >
+      and remark = #{conditions.remark,jdbcType=VARCHAR})
+    </if>
+    order by create_time desc
+    <if test="start != null and pageSize != null">
+    	LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.pricemonitor.domain.GoodsCategory">
+  	select count(*) from gm_itembase_category
+  	where 1=1 
+ 	<if test="id != null" >
+      and id = #{id,jdbcType=BIGINT} 
+    </if>
+	<if test="categoryName != null" >
+      and category_name like CONCAT('%',#{categoryName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status != null" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="createUser != null" >
+      and create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null" >
+      and remark = #{remark,jdbcType=VARCHAR})
+    </if>
+  </select>
+  <select id="selectGoodsCategoryById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from gm_itembase_category 
+ 	where id = #{id} 
+  </select>
+  <select id="selectGoodsCategoryListByGoodsCategory" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.domain.GoodsCategory">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from gm_itembase_category
+  	where 1=1 
+ 	<if test="id != null" >
+      and id != #{id,jdbcType=BIGINT} 
+    </if>
+	<if test="categoryName != null" >
+      and category_name = #{categoryName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="createUser != null" >
+      and create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null" >
+      and remark = #{remark,jdbcType=VARCHAR})
+    </if>
+  </select>
+  <update id="updateGoodsCategory" parameterType="com.gome.pricemonitor.domain.GoodsCategory" >
+    update gm_itembase_category set
+	  <if test="id != null" >
+	    id = #{id,jdbcType=BIGINT} 
+	  </if>
+      <if test="categoryName != null" >
+        ,category_name = #{categoryName,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null" >
+        ,status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        ,update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateUser != null" >
+        ,update_user = #{updateUser,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null" >
+        ,remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <delete id="deleteGoodsCategoryById" parameterType="java.lang.Long" >
+    delete from gm_itembase_category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+</mapper> 

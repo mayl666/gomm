@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.ManagerFuncMapper">
+	<resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.ManagerFunc">
+		<id column="func_id" property="funcId" jdbcType="BIGINT" />
+		<result column="func_name" property="funcName" jdbcType="VARCHAR" />
+		<result column="func_url" property="funcUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		func_id funcId, func_name funcName, func_url funcUrl,
+		create_time createTime,
+		update_time updateTime, state, parent_id
+		parentId
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_func
+		where func_id = #{funcId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		gm_manager_func
+		where func_id = #{funcId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.gome.pricemonitor.domain.ManagerFunc">
+		insert into gm_manager_func
+		(func_id, func_name, func_url,
+		create_time, update_time, state,
+		parent_id)
+		values (#{funcId,jdbcType=BIGINT},
+		#{funcName,jdbcType=VARCHAR},
+		#{funcUrl,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{state,jdbcType=INTEGER},
+		#{parentId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.gome.pricemonitor.domain.ManagerFunc">
+		insert into gm_manager_func
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="funcId != null">
+				func_id,
+			</if>
+			<if test="funcName != null">
+				func_name,
+			</if>
+			<if test="funcUrl != null">
+				func_url,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="funcId != null">
+				#{funcId,jdbcType=BIGINT},
+			</if>
+			<if test="funcName != null">
+				#{funcName,jdbcType=VARCHAR},
+			</if>
+			<if test="funcUrl != null">
+				#{funcUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.gome.pricemonitor.domain.ManagerFunc">
+		update gm_manager_func
+		<set>
+			<if test="funcName != null">
+				func_name = #{funcName,jdbcType=VARCHAR},
+			</if>
+			<if test="funcUrl != null">
+				func_url = #{funcUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where func_id = #{funcId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.gome.pricemonitor.domain.ManagerFunc">
+		update
+		gm_manager_func
+		set func_name = #{funcName,jdbcType=VARCHAR},
+		func_url =
+		#{funcUrl,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		state = #{state,jdbcType=INTEGER},
+		parent_id = #{parentId,jdbcType=BIGINT}
+		where func_id =
+		#{funcId,jdbcType=BIGINT}
+	</update>
+
+
+	<select id="query" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gm_manager_func f where state=0
+
+		order by f.update_time desc
+	</select>
+
+
+
+
+
+
+
+	<select id="queryForRole" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		f.func_id funcId,
+		f.func_name funcName,
+		f.func_url funcUrl,
+		f.create_time createTime,
+		f.update_time updateTime,
+		f.state,
+		f.parent_id
+		parentId
+		from gm_manager_func f ,gm_manager_role_func rf
+		where
+		f.func_id=rf.func_id and f.state=0
+		<if test="roleId != null">
+			and rf.role_id=#{roleId}
+		</if>
+		<if test="parentId != null">
+			and f.parent_id = #{parentId,jdbcType=BIGINT}
+		</if>
+		order by f.update_time desc
+
+	</select>
+
+	<select id="queryForRoleId" resultType="long" parameterType="map">
+		select f.func_id
+		from gm_manager_func f ,gm_manager_role_func rf
+		where
+		f.func_id=rf.func_id and f.state=0
+		<if test="roleId != null">
+			and rf.role_id=#{roleId}
+		</if>
+		<if test="parentId != null">
+			and f.parent_id = #{parentId,jdbcType=BIGINT}
+		</if>
+		order by f.update_time desc
+
+	</select>
+
+	<select id="queryByRoleIdAndParentId" resultType="long" parameterType="map">
+		select
+		f.func_id funcId
+		from gm_manager_func f , gm_manager_role_func rf
+		where
+		f.func_id=rf.func_id and f.state=0 and f.parent_id !=-1
+		<if test="roleId != null">
+			and rf.role_id=#{roleId}
+		</if>
+
+		order by f.update_time desc
+
+	</select>
+
+	<select id="queryNormal" resultType="long" parameterType="map">
+		select
+		func_id funcId
+		from gm_manager_func where state=0 and parent_id !=-1
+		order by update_time desc
+
+	</select>
+
+
+
+</mapper>

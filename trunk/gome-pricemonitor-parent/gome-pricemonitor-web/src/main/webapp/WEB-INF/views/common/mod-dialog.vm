@@ -1,0 +1,12 @@
+<!--模态窗口-->
+<!--
+<div id="mod-dialog-bg" style="background: #333;filter: alpha(opacity=60);height: 100%;opacity:0.5; -moz-opacity:0.5;left: 0;position: fixed;top: 0;width: 100%;z-index: 1000;display:none;"></div>
+-->
+<div id="mod-dialog" style="background-color: #fff;border-top: none;width: 280px;position: absolute;z-index: 1001;height: 160px;margin-top: -20px;left:39%;top:34%;border:1px solid #c8c8c8;display:none">
+    <p style="text-align: center; margin: 30px 0;font-size: 16px;" id="tishi">提示信息</p>
+    <!--
+    <div class="prc_btn parmeter_btn" style="overflow: hidden;text-align: center;">
+		<a href="javascript:void(0);" style="background: #37618F; color: #fff; margin-right: 24px;margin: 0px 0 0 95px;display: block;width:90px;height:40px;line-height: 40px; text-align: center; font-size:16px; border-radius: 3px;text-decoration:none;" id="altbtn">确定</a>
+	</div>
+	-->
+</div>模态窗口 <!--end-->

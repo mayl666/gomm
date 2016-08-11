@@ -1,0 +1,13 @@
+    <nav class="navbar  navbar-default log_header">
+        <b class="log_top fl"><a href="${rc.contextPath}/price/monitor/index"><img src="${rc.contextPath}/price_monitor/public/img/log_top.gif"></a></b>
+        
+        <div class="login_info fr">
+            <span style="color: #6a707c;">$!userName</span>
+            <!-- <span>$!userName<i class="fa fa-angle-down"></i></span>-->
+            #if($!userName != "")
+          <!--   <span>退出</span>-->
+            <a href="${rc.contextPath}/user/loginOut" style="color: #6a707c;" onclick="return confirm('确定要退出吗')"><span>退出</span></a>
+            #end
+        </div>
+    </nav>
+#parse("priceMonitor/common.vm")

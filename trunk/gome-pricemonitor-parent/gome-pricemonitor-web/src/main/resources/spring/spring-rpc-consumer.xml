@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">  
+  
+    <dubbo:application name="gome-sec-consumer" />
+    
+    <!-- 线上 
+    <dubbo:registry  protocol="zookeeper"  address="10.58.22.191:2181,10.58.22.192:2181,10.58.22.193:2181,10.58.50.149:2181,10.58.50.150:2181" />
+    
+    uat 
+    <dubbo:registry  protocol="zookeeper"  address="10.58.50.203:2181,10.58.50.204:2181,10.58.50.205:2181" />
+    
+    slt
+    <dubbo:registry  protocol="zookeeper"  address="10.126.53.168:2181,10.126.53.169:2181,10.126.53.170:2181" /> 
+    
+     pre
+    <dubbo:registry  protocol="zookeeper"  address="10.58.50.206:2181,10.58.50.207:2181,10.58.50.208:2181" /> 
+    
+    <dubbo:registry  protocol="zookeeper"  address="${user.dubbo.address}" />
+    
+    <dubbo:consumer loadbalance="leastactive" timeout="5000" check="false"/>
+         用户登录 
+  	<dubbo:reference id="userLoginFacade" interface="com.gome.userCenter.facade.login.IUserLoginFacade" check="false"/>
+  	
+  	 注册验证 
+  	<dubbo:reference id = "registerForntFacade" interface="com.gome.userCenter.facade.register.IRegisterForntFacade" check="false"/>
+  	
+  	 注册 
+  	<dubbo:reference id = "userRegisterFacade" interface="com.gome.userCenter.facade.register.IUserRegisterFacade" check="false"/>
+  
+  	 修改密码 
+  	<dubbo:reference id = "iCloudUserFacade" interface="com.gome.userCenter.facade.userservice.profile.ICloudUserFacade" check="false"/>-->
+</beans>    

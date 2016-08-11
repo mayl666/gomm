@@ -1,0 +1,33 @@
+body{
+    padding:0;
+    margin:0;
+    background: #edf1f2;
+    overflow: hidden;
+    font-family: 'Microsoft YaHei', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+   /* position:relative;*/
+}
+div,h2{padding:0;margin:0;}
+.opearte a{text-decoration: none;color:#cd4d4e}
+
+
+.monkey-lost-con{
+    width: 345px;
+    overflow: hidden;
+    position: relative;
+    top: 200px;
+    display: block;
+    margin: auto;
+    z-index: 1000;}
+.monkey{
+    width: 345px;
+    height: 278px;
+    background:url("monkey-lost.png") no-repeat;
+}
+.monkey-lost-con h2{font-size: 22px;color:#808182;   margin-left: 36px;line-height: 50px;}
+.opearte{margin-left:36px;}
+.opearte a i{display:inline-block;margin-right: 6px;}
+.opearte a i.refresh{ background:url("refresh.png") no-repeat; width: 13px;height: 13px}
+.opearte a i.goback{ background:url("goback.png") no-repeat; width: 15px;height: 11px;
+ margin-left:20px;
+
+}

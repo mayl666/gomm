@@ -1,0 +1,33 @@
+
+			
+   <header class="main-header">
+        <!-- Logo -->
+        <a href="../" class="logo"><img src="../image/logo.png" alt="国美价格监控系统"/></a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav user_loginInfo">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <span  class="dropdown-toggle" data-toggle="dropdown">
+                          <img #if(!$!muser.headPath || $!muser.headPath=="") src="../image/user-photo2.png" #else src='$!{muser.headPath}' #end class="user-image" alt="User Image"/>
+                          <span class="hidden-xs">$!muser.userName</span>
+                        </span>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <p>
+                                    <a href="#">$!muser.realName</a>
+                                    <a href="../user/upMyAccount"><i class="fa fa-user"></i>个人信息</a>
+                                   <!-- <a href="../user/upPasswd"><i class="fa fa-pencil-square-o"></i>修改密码</a>-->
+                                </p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+               <a href="../user/loginOut" onclick="return confirm('确定要退出吗')"> <p class="exit-icon"></p></a>
+            </div>
+        </nav>
+    </header>		
+

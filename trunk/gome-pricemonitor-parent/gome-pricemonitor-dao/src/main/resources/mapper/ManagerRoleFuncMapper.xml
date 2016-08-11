@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.ManagerRoleFuncMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.ManagerRoleFunc" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="func_id" property="funcId" jdbcType="BIGINT" />
+    <result column="func_parent_id" property="funcParentId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id roleId, func_id funcId, func_parent_id funcParentId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from gm_manager_role_func
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from gm_manager_role_func
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="deleteByRoleId" parameterType="java.lang.Long" >
+    delete from gm_manager_role_func
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.gome.pricemonitor.domain.ManagerRoleFunc" >
+    insert into gm_manager_role_func (id, role_id, func_id, 
+      func_parent_id)
+    values (#{id,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{funcId,jdbcType=BIGINT}, 
+      #{funcParentId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gome.pricemonitor.domain.ManagerRoleFunc" >
+    insert into gm_manager_role_func
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="funcId != null" >
+        func_id,
+      </if>
+      <if test="funcParentId != null" >
+        func_parent_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="funcId != null" >
+        #{funcId,jdbcType=BIGINT},
+      </if>
+      <if test="funcParentId != null" >
+        #{funcParentId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gome.pricemonitor.domain.ManagerRoleFunc" >
+    update gm_manager_role_func
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="funcId != null" >
+        func_id = #{funcId,jdbcType=BIGINT},
+      </if>
+      <if test="funcParentId != null" >
+        func_parent_id = #{funcParentId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gome.pricemonitor.domain.ManagerRoleFunc" >
+    update gm_manager_role_func
+    set role_id = #{roleId,jdbcType=BIGINT},
+      func_id = #{funcId,jdbcType=BIGINT},
+      func_parent_id = #{funcParentId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

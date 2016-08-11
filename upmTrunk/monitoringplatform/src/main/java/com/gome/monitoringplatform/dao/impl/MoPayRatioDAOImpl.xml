@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.monitoringplatform.dao.MoPayRatioDAO">
+	<insert id="saveMoPayRatio" parameterType="MoPayRatioBO">
+		INSERT INTO mo_payratio(id,start_time,end_time,mo_count,type)
+		VALUES(#{id},#{startTime},#{endTime},#{count},#{type})
+	</insert>
+	<!-- 在线支付成功率 -->
+		<!-- 查询所有订单数量 -->
+		<select id="searchAllOrderCountHistory" resultType="MoBusiness" parameterType="MoBusiness">
+			SELECT mp.start_time startTime,mp.end_time endTime,mp.mo_count amount
+			from mo_payratio mp
+			where 1=1 and mp.type='all'
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+			<![CDATA[ and #{startTime} <= mp.end_time  &&  #{endTime} > mp.end_time ]]>
+			</if>
+			order by mp.start_time
+		</select>
+		<!-- 查询成功在线支付的订单数量 -->
+		<select id="searchOneLineOrderCountHistory" resultType="MoBusiness" parameterType="MoBusiness">
+			SELECT mp.start_time startTime,mp.end_time endTime,mp.mo_count amount
+			from mo_payratio mp
+			where 1=1 and mp.type='onLine'
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+			<![CDATA[ and #{startTime} <= mp.end_time  &&  #{endTime} > mp.end_time ]]>
+			</if>
+			order by mp.start_time
+		</select>
+</mapper>

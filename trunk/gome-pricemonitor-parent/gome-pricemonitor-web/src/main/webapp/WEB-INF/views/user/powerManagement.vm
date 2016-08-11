@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GomeCloudMageagement</title>
+    <meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Bootstrap 3.3.2 -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- FontAwesome 4.3.0 -->
+    <link href="../libs/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link href="../libs/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="../libs/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <!--[if lt IE 9]>
+    <script src="../libs/js/html5shiv.js" type="text/javascript"></script>
+    <script src="../libs/js/respond.js" type="text/javascript"></script>
+    <![endif]-->
+</head>
+<body class="skin-blue">
+<div class="wrapper">
+    #parse("common/header.vm")
+    <!-- Left side column. contains the logo and sidebar -->
+    #parse("common/leftMenu.vm")
+    <!-- Content Wrapper. Contains page content  *********************************************************************************************-->
+	<!-- 用于控制左侧菜单默认选中 -->
+    <label id="moduleName" style="display:none">帐号列表</label>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+                <h2>权限管理</h2>
+            <div class="BreadcrumbTrail">
+                <a class="cc link" href="../user/list">帐号列表</a>
+            </div>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="search_area">
+                    <div class="search_L">
+                        <input type="text" value="$!condition" class="form-control" placeholder="帐号/真实姓名/联系方式" id="searchCon"/>
+                        <div class="search_btn"><span id="searchBtn">搜索</span><i class="search_icon"></i></div>
+                    </div>
+                    <div class="search_R">
+							<div class="search_R_l">
+								<span id="hight_click"><i class="fa fa-hand-o-right"></i><em>高级搜索</em></span>
+								<div class="btn-area">
+								    #if($!mrole.roleName == "超级管理员")
+									<a class="add_span" href="../user/add"><i class="fa fa-user-plus"></i>添加</a>
+									#end
+									<a class="export-btn"><i class=" fa fa-arrow-circle-down"></i>导出</a>
+								</div>
+							</div>
+						</div>
+                    
+                    
+                    <div class="search_L search_hight" style="display: none">
+                        <div class="form-group">
+                            <label  class="control-label">角色</label>
+                            <select class="dropdown-select">
+                           <!-- <option>超级管理员</option>
+                            <option>管理员</option>-->
+                            <option value="0">请选择</option>
+                            #foreach($!role in $!list)
+                            #if($!roleId == $!role.roleId)
+                            <option value="$!role.roleId" selected="selected">$!role.roleName</option>
+                            #else
+                            <option value="$!role.roleId">$!role.roleName</option>
+                            #end
+                            #end
+                            </select>
+                        </div>
+                    </div>
+                </div><!-- search_area end -->
+                <div>
+                    <div class="table-area">
+                        <table class="table_data" cellpadding="0" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>帐号</th>
+                                <th>角色</th>
+                                <th>状态</th>
+                                <th></th>
+                                <th>真实姓名</th>
+                                <th>联系方式</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                             #if($!page.list.size() > 0)
+                             #set($i=($page.currentPage - 1) * $page.pageSize)
+                             #if($!page.list.size()>0)
+                              #foreach($user in $page.list)
+                                  
+                                    #set($i=$!i + 1)                          
+                                    <tr>
+                                    <td>$!i</td>
+                                    <td>$!user.userName</td>
+                                    <td>$!user.roleName</td>
+                                    #if($!user.state==0)
+                                    <td>正常</td>
+                                    #elseif($!user.state==1)
+                                    <td>锁定</td>
+                                    #end
+                                    <!--<td><img class="true_photo" src='../image/truePhoto.jpg'/>$!user.realName</td>-->
+                                    <td><img class="true_photo" #if(!$!user.headPath || $!user.headPath=="") src='../image/truePhoto.jpg' #else src='$!{user.headPath}' #end/></td>
+                                    <td>$!user.realName</td>
+                                    <td>$!user.contactWay</td>
+                                    <td>$!user.createTimeView</td>
+                                    #if($!mrole.roleId == $!superRoleId && $!user.userId != $!superUserId)
+                                    <td><a href="../user/edit?userId=$!user.userId"><i class="fa fa-edit"></i></a>
+                                    
+                                    <i class="fa fa-times" userId="$!user.userId"></i></a>
+                                    </i></td>
+                                    #end
+                                </tr>
+                                #end
+                             #end
+                             #end
+                               
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+                        <div class="page">
+                            <div class="page_info">
+                                <div>
+                                    <span>当前为：</span>
+                                    <span class="currentPage">第$!page.currentPage页</span>
+                                    <span class="totalPage">共$!page.totalPage页（$!page.rowTotal条）</span>
+                                    <span>显示为：</span>
+                                   #set($j=($page.currentPage - 1) * $page.pageSize + 1)
+                                    #if($!i == 0)
+                                    <span class="regionPage"> 0 ~ 0 条</span>
+                                    #else
+                                    <span class="regionPage"> $!j ~ $!i 条</span>
+                                    #end
+                                    
+                                </div>
+                            </div>
+                            <div class="page-number">
+                               <ul id="pagination-digg">
+                                  
+                                      #if($!page.currentPage>1)
+                                      #set($beforeStart=($page.currentPage - 1))
+                                      <li>
+                                      <a href="../user/query?pageNo=$!beforeStart&pageSize=$!page.pageSize&condition=$!condition&roleId=$!roleId">&lt;&lt;上一页</a>
+                                      </li>
+                                      #else
+                                       <li class="previous-off">
+                                       &lt;&lt;上一页
+                                       </li>
+                                      #end
+                               
+                                    #if($!page.totalPage<=1)
+                                    <li class="active">1</li>
+                                    #else
+                                    #foreach($!foo in [1..$!page.totalPage])
+                                    #if($!page.currentPage == $!foo)
+                                    <li class="active">$!foo</li>
+                                    #else
+                                    <li><a href="../user/query?pageNo=$!foo&pageSize=$!page.pageSize&condition=$!condition&roleId=$!roleId">$!foo</a></li>
+                                    #end
+                                    #end
+                                    #end
+                                    
+                                    #if($!page.currentPage < $!page.totalPage)
+                                    #set($afterNext=($page.currentPage + 1))
+                                    <li>
+                                    <a href="../user/query?pageNo=$!afterNext&pageSize=$!page.pageSize&condition=$!condition&roleId=$!roleId">&gt;&gt;下一页</a>
+                                    </li>
+                                    #else
+                                    <li class="next-off">
+                                    &gt;&gt;下一页
+                                    #end
+                                    </li>
+									</ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- Main content end -->
+    </div><!-- /.content-wrapper *************************************************************************************************************-->
+ #parse("common/footer.vm")
+</div><!-- ./wrapper -->
+
+<!-- jQuery 2.1.3 -->
+<script src="../plugins/jQuery/jquery-1.11.0.min.js" type="text/javascript"></script>
+<!-- jQuery UI 1.11.2 -->
+<script src="../plugins/jQueryUI/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../js/highSearch.js" type="text/javascript"></script>
+
+<!-- AdminLTE App -->
+<script src="../libs/js/app.js" type="text/javascript"></script>
+<script src="../js/left_menu.js" type="text/javascript"></script>
+<script src="../js/user_list.js" type="text/javascript"></script>
+<script src="../manager/user/powerManagement.js" type="text/javascript"></script>
+</body>
+</html>

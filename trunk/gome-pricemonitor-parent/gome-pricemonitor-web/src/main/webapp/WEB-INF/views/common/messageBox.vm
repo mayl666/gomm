@@ -1,0 +1,7 @@
+<div class='loading-mask'></div>
+<div id="loading">
+    <div class="loading-indicator">
+         <!--<p class="loading-error-p"><i class="fa fa-warning"></i>你在执行删除操作</p>-->
+        <p class="">成功执行哦！</p>
+    </div>
+</div>

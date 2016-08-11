@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.gome.pricealarm</groupId>
+    <artifactId>gome-pricealarm-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>gome-pricealarm-common</artifactId>
+  <description>com.gome.pricealarm</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>gome-pricealarm-lib</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+  </dependencies>
+  <build>
+      <finalName>gome-pricealarm-common</finalName>
+  </build>
+</project>

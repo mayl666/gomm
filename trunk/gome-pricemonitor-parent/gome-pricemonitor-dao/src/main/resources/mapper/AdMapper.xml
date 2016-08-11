@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.pricemonitor.dao.AdMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.pricemonitor.domain.Ad" >
+    <id column="ads_id" property="id" jdbcType="BIGINT" />
+    <result column="pic_name" property="picName" jdbcType="VARCHAR" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="links" property="links" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="ads_channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ads_id, pic_name, pic_path, links, sort,
+    status, ads_channel_id, create_time, create_user, update_time, 
+    update_user, remark 
+  </sql>
+  
+  <insert id="insertAd" parameterType="com.gome.pricemonitor.domain.Ad" useGeneratedKeys="true" keyProperty="id">
+    insert into gm_ads (ads_id, pic_name, pic_path, links, sort,
+    status, ads_channel_id, create_time, create_user, update_time, 
+    update_user, remark)
+    values (#{id,jdbcType=BIGINT}, #{picName,jdbcType=VARCHAR}, 
+      #{picPath,jdbcType=VARCHAR}, #{links,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+      #{status,jdbcType=INTEGER}, #{channelId,jdbcType=BIGINT},
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectAdListByPage" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.common.Page">
+  	select
+  	ads.ads_id, ads.pic_name, ads.pic_path, ads.links, ads.sort,
+    ads.status, ads.ads_channel_id, ads.create_time, ads.create_user, ads.update_time, 
+    ads.update_user, ads.remark, channel.channel_name 
+  	from gm_ads as ads  
+  	left join gm_ads_channel as channel 
+  	on ads.ads_channel_id = channel.id 
+ 	where 1=1 
+ 	<if test="conditions.id != null" >
+      and ads.ads_id = #{conditions.id,jdbcType=BIGINT} 
+    </if>
+    <if test="conditions.picName != null" >
+      and (ads.pic_name like CONCAT('%',#{conditions.picName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.picName != null" >
+      or channel.channel_name like CONCAT('%',#{conditions.picName,jdbcType=VARCHAR},'%'))
+    </if>
+	<if test="conditions.picPath != null" >
+      and ads.pic_path = #{conditions.picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="conditions.links != null" >
+      and ads.links = #{conditions.links,jdbcType=VARCHAR} 
+    </if>
+    <if test="conditions.status != null" >
+      and ads.status = #{conditions.status,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.channelId != null" >
+      and ads.ads_channel_id = #{conditions.channelId,jdbcType=BIGINT}
+    </if>
+    <if test="conditions.sort != null" >
+      and ads.sort = #{conditions.sort,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.createUser != null" >
+      and ads.create_user = #{conditions.createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.updateUser != null" >
+      and ads.update_user = #{conditions.updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.createTime != null" >
+      and ads.create_time = #{conditions.createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="conditions.updateTime != null" >
+      and ads.update_time = #{conditions.updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="conditions.remark != null" >
+      and ads.remark = #{conditions.remark,jdbcType=VARCHAR})
+    </if>
+    order by ads.status desc,channel.channel_name asc,ads.sort asc
+    <if test="start != null and pageSize != null">
+    	LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.pricemonitor.domain.Ad">
+  	select count(*) from gm_ads as ads  
+  	left join gm_ads_channel as channel 
+  	on ads.ads_channel_id = channel.id 
+ 	where 1=1 
+ 	<if test="id != null" >
+      and ads.ads_id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="picName != null" >
+      and (ads.pic_name like CONCAT('%',#{picName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="picName != null" >
+      or channel.channel_name like CONCAT('%',#{picName,jdbcType=VARCHAR},'%'))
+    </if>
+	<if test="picPath != null" >
+      and ads.pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="links != null" >
+      and ads.links = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      and ads.status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="channelId != null" >
+      and ads.ads_channel_id = #{channelId,jdbcType=BIGINT}
+    </if>
+    <if test="sort != null" >
+      and ads.sort = #{sort,jdbcType=INTEGER}
+    </if>
+    <if test="createUser != null" >
+      and ads.create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and ads.update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and ads.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and ads.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null" >
+      and ads.remark = #{remark,jdbcType=VARCHAR})
+    </if>
+  </select>
+  <select id="selectAdById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from gm_ads 
+ 	where ads_id = #{id} 
+  </select>
+  <select id="selectAdListByAd" resultMap="BaseResultMap" parameterType="com.gome.pricemonitor.domain.Ad">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from gm_ads
+  	where 1=1 
+ 	<if test="id != null" >
+      and ads_id != #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="picName != null" >
+      and pic_name = #{picName,jdbcType=VARCHAR}
+    </if>
+	<if test="picPath != null" >
+      and pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="links != null" >
+      and links = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="channelId != null" >
+      and ads_channel_id = #{channelId,jdbcType=BIGINT}
+    </if>
+    <if test="sort != null" >
+      and sort = #{sort,jdbcType=INTEGER}
+    </if>
+    <if test="createUser != null" >
+      and create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null" >
+      and update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null" >
+      and create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      and update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null" >
+      and remark = #{remark,jdbcType=VARCHAR})
+    </if>
+  </select>
+  <update id="updateAd" parameterType="com.gome.pricemonitor.domain.Ad" >
+    update gm_ads set
+    <if test="id != null" >
+      ads_id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="picName != null" >
+      , pic_name = #{picName,jdbcType=VARCHAR}
+    </if>
+	<if test="picPath != null" >
+      , pic_path = #{picPath,jdbcType=VARCHAR} 
+    </if>
+    <if test="links != null" >
+      , links = #{links,jdbcType=VARCHAR} 
+    </if>
+    <if test="status != null" >
+      , status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="channelId != null" >
+      , ads_channel_id = #{channelId,jdbcType=BIGINT}
+    </if>
+    <if test="sort != null" >
+      , sort = #{sort,jdbcType=INTEGER}
+    </if>
+    <if test="updateUser != null" >
+      , update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateTime != null" >
+      , update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null" >
+      , remark = #{remark,jdbcType=VARCHAR})
+    </if>
+    where ads_id = #{id,jdbcType=BIGINT}
+  </update>
+  <delete id="deleteAdById" parameterType="java.lang.Long" >
+    delete from gm_ads
+    where ads_id = #{id,jdbcType=BIGINT}
+  </delete>
+</mapper> 
