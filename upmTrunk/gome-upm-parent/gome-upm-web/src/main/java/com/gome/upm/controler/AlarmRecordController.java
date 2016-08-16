@@ -1,5 +1,6 @@
 package com.gome.upm.controler;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -8,18 +9,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.gome.upm.common.Constant;
 import com.gome.upm.common.Page;
+import com.gome.upm.common.util.ResponsesDTO;
+import com.gome.upm.constants.ReturnCode;
 import com.gome.upm.controler.base.BaseController;
 import com.gome.upm.domain.AlarmRecord;
 import com.gome.upm.domain.DBConnection;
+import com.gome.upm.domain.UrlMonitor;
 import com.gome.upm.service.AlarmRecordService;
+import com.gome.upm.service.quartz.DBConnectionAndASMAlarmBean;
 
 /**
  * 报警记录控制器.
@@ -31,6 +41,8 @@ import com.gome.upm.service.AlarmRecordService;
 @Controller
 @RequestMapping(value = "/alarm")
 public class AlarmRecordController extends BaseController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AlarmRecordController.class);
 
 	@Resource
 	private AlarmRecordService alarmRecordService;
@@ -125,6 +137,32 @@ public class AlarmRecordController extends BaseController {
 		AlarmRecord alarm = alarmRecordService.findAlarmRecordById(id2);
 		model.addObject("alarm", alarm);
 		return model;
+	}
+	
+	/**
+	 * 更新状态
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param content
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/update", method={RequestMethod.POST}, produces = "application/json;charset=utf-8")
+	public ResponsesDTO update(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value = "content", required = true) String content){
+		logger.info("content:"+content);
+		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
+		try{
+			AlarmRecord alarmRecord = null;
+			alarmRecord = JSON.parseObject(content, AlarmRecord.class);
+			alarmRecordService.editAlarmRecord(alarmRecord);
+		}catch(Exception e){
+			logger.error("系统出现异常", e);
+			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
+		}
+
+		return res;
+
 	}
 	
 }

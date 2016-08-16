@@ -86,7 +86,7 @@ public class UpmSynMQ implements MessageConsumer {
 		}
 	}
 	void sendMessage(String subject, String type, Long count) {
-		String url = "http://10.58.56.72:8081/alarmplatform/alarm";
+		String url = "http://10.58.62.204/alarmplatform/alarm";
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put("type", type);
 		paramMap.put("mail", "fangjinwei@yolo24.com");

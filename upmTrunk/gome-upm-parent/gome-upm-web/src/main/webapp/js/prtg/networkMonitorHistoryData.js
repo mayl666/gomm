@@ -353,7 +353,7 @@ var chart2 = {
         },
         yAxis: [{           
         	labels: {
-        		format: '{value} kb/秒',
+        		format: '{value} ',
 	            style: {
 	                color: '#9c8ade'
 	            }
@@ -366,7 +366,7 @@ var chart2 = {
             }
         },{           
         	labels: {
-        		format: '{value} %',
+        		format: '{value} ',
 	            style: {
 	                color: '#FF0000'
 	            }

@@ -28,19 +28,9 @@ $(function(){
 			success:function(data){
 				$(".list_table").empty();
 				$(".list_table").append(data);
-				//查看详情
-				$(".detail").unbind("click");
-				$(".detail").bind("click",function(){
-					var url = $(this).attr("url");
-					layer.open({
-						  type: 2,
-						  title: '详情',
-						  shadeClose: true,
-						  shade: 0.8,
-						  area: ['60%', '70%'],
-						  content: url //iframe的url
-						}); 
-				});	
+				//重新绑定事件
+				detail();	
+				changeStatus();
 			},
 			error:function(){
 //				alert("服务器异常");

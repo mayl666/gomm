@@ -37,7 +37,7 @@ public class SystemProcessAlarm {
 			if(serverInfoList.size() > 0){
 				
 				//报警
-				String url="http://10.58.56.72:8081/alarmplatform/alarm";
+				String url="http://10.58.62.204/alarmplatform/alarm";
 				Map<String, String> paramMap=new HashMap<>();
 				paramMap.put("type", "process");
 				paramMap.put("mail", "qiaowentao@yolo24.com");

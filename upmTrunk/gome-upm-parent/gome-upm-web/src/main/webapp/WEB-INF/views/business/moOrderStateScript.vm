@@ -1,5 +1,53 @@
 <script>
 $(function(){
+   indentGraph();
+});
+
+function indentGraph(){
+	$('#container_orderState').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: ''
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: [
+                
+            ]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '订单',
+            data: []
+
+        }]
+    });
+}
+
+$(function(){
    	indentOrderState();
    	
    	laydate({
@@ -12,7 +60,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("startTime:" + date);
+	    	//layer.msg("startTime:" + date);
 	    }
 	});
 	
@@ -26,7 +74,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("endTime:" + date);
+	    	//layer.msg("endTime:" + date);
 	    }
 	});
 });
@@ -110,12 +158,12 @@ function indentOrderState(){
 function searchOrderStateData(){
 	var order=$("#orderSId").val();
 	if(order==''){
-		alert('请选择类型');
+		layer.msg('请选择类型');
 		return ;
 	}
 	var state=jQuery("#orderStateId :selected").text();
 	if(state==''){
-		alert('请选择状态');
+		layer.msg('请选择状态');
 		return ;
 	}
 	var startTimeStr=$('#startTimeOrderState').val();
@@ -165,15 +213,16 @@ function reloadOrderStateData(startTimeStr,endTimeStr,state){
 	});
 }
 
-
+var first;
 function orderChange(){
 	var selectv=$("#orderSId").val();
 	getState(selectv);
 }
 function getState(type){
+	jQuery("#orderStateId").text(' ');
 	jQuery("#orderStateId").empty();
 	if(type==''){
-		alert('请选择类型！');
+		//jQuery("#orderStateId").empty();
 		return;
 	}
 	var url="${rc.contextPath}/monitoBusiness/searchOrderStateListByType.do";
@@ -187,6 +236,9 @@ function getState(type){
 			var list=eval(data);
 			var  options="";
 			jQuery("#orderStateId").append(options);
+			if(list.length>0){
+			$('#stateName').text(list[0].name);
+			}
 			for(var i=0;i<list.length;i++){
 				var  option="<option value='"+list[i].name+"'>"+list[i].type+"</option>";
 				jQuery("#orderStateId").append(option);
@@ -201,7 +253,7 @@ function orderStateChange(){
 	var selectv=jQuery("#orderStateId :selected").text();
 	var text=jQuery("#orderStateId").val();
 	if(selectv==''){
-		alert('请选择状态!');
+		layer.msg('请选择状态!');
 		return;
 	}
 	//重新加载数据

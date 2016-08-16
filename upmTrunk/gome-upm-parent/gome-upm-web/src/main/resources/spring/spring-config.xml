@@ -78,11 +78,12 @@
 	 -->
 	<import resource="classpath:spring/servlet-context-interceptor.xml" />
     <import resource="classpath:spring/spring-rpc-consumer.xml" />
- 	<!-- 定时任务配置 -->	
+ 	<!-- 定时任务配置 -->
  
  	<import resource="classpath:spring/spring-quartz.xml" /> 
 	<import resource="classpath:spring/spring-quartzServer.xml" /> 
 	<import resource="classpath:spring/spring-network-quartz.xml" />
+	
 	<!-- MQ发送消息 -->
 	<import resource="classpath:spring/spring-rocketmq.xml" />
 

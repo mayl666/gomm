@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -72,7 +72,7 @@
 					</div>
 					<div class="form-group">
 						<label>应用名：</label> 
-						<select id="select" class="form-control" style="width: 180px;" name="sel">
+						<select id="select" class="form-control  system-appNameRecite" style="width: 180px;" name="sel">
 							<option value="0" selected="selected">请选择</option>
 							<!--
 								#foreach($xmm in $!xmmList)
@@ -91,7 +91,7 @@
 					    </select>
 				  	</div>
 					-->
-					<a href="javascript:void(0);" id="search_id" class="newbtn ReactiveSystembtn">
+					<a href="javascript:void(0);" id="search_id" class="newbtn search_btn ReactiveSystembtn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
 				</form>

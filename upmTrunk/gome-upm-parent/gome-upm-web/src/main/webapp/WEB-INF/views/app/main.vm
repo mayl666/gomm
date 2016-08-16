@@ -193,6 +193,8 @@
 		
 	 $("#dlg").dialog({
 	      autoOpen: false,
+	      left:600,
+	      top:400,
 	      width:650,
 	      height:450,
 	      //resizable:true,
@@ -210,7 +212,7 @@
  	   			   +"<table style='TABLE-LAYOUT: fixed;height:100%;' width='500'>"
  	   			   +"<tr><td class='dialog-span-title'>服务/方法：</td><td style='WORD-WRAP: break-word;' width='400'>"+viewPointId+"</td></tr>"
  	   			   +"<tr><td class='dialog-span-title'>调用类型：</td><td style='WORD-WRAP: break-word;' width='400'>"+spanTypeName+"</td></tr>"
- 	   			   +"<tr><td class='dialog-span-title'>花费时间：</td><td style='WORD-WRAP: break-word;' width='400'>"+cost+"<strong> 毫秒</strong></td></tr>"
+ 	   			   +"<tr><td class='dialog-span-title'>花费时间：</td><td style='WORD-WRAP: break-word;' width='400'>"+cost+" 毫秒</td></tr>"
  	   			   +"<tr><td class='dialog-span-title'>业务字段：</td><td style='WORD-WRAP: break-word;' width='400'>"+businessKey+"</td></tr>"
  	   			   +"<tr><td class='dialog-span-title'>应用Code：</td><td style='WORD-WRAP: break-word;' width='400'>"+applicationId+"</td></tr>"
  	   			   +"<tr><td class='dialog-span-title'>主机信息：</td><td style='WORD-WRAP: break-word;' width='400'>"+address+"</td></tr>"

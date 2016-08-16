@@ -32,7 +32,7 @@ $(function(){
 			},
 			error:function(){
 //				pop_up("系统异常",false);
-				alert("服务器异常");
+				layer.msg("服务器异常");
 			}
 			
 		});

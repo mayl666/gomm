@@ -15,7 +15,7 @@ $(function(){
 	});
 	
 	networkMonitorPortDetail.service.init();
-	//self.setInterval("networkMonitorPortDetail.service.timedRefreshChart()", 5000);
+	self.setInterval("networkMonitorPortDetail.service.timedRefreshChart()", 1000*60);
 });
 
 var networkMonitorPortDetail = {
@@ -23,7 +23,7 @@ var networkMonitorPortDetail = {
 			init : function(){
 				networkMonitorPortDetail.service.tabHistoryClick();
 				networkMonitorPortDetail.service.page();
-				networkMonitorPortDetail.service.timedRefreshChart();
+				//networkMonitorPortDetail.service.timedRefreshChart();
 				networkMonitorPortDetail.service.tabHistoryDataDateSet();
 				networkMonitorPortDetail.service.startHistoryClick();
 			},
@@ -146,8 +146,9 @@ var networkMonitorPortDetail = {
 			},
 			timedRefreshChart : function(){
 				var tabDate = $("#tabDate").val();
-				if(tabDate == "sceneData"){
-					console.info("5s刷新");
+				//console.info("60s刷新");
+				if(!$("#sceneData").is(":hidden") && tabDate == "sceneData"){
+					//console.info("5s刷新");
 					networkMonitorPortDetail.service.createChart();
 				}
 				
@@ -158,7 +159,7 @@ var networkMonitorPortDetail = {
 					var sensorType=$("#sensorType").val();
 					var ariaController = $(this).attr("aria-controls");
 					$("#tabDate").val(ariaController);
-			    	console.info("sensorType:"+sensorType+"|tabDate:"+ariaController);
+			    //	console.info("sensorType:"+sensorType+"|tabDate:"+ariaController);
 			    	networkMonitorPortDetail.service.createChart();
 			    	networkMonitorPortDetail.controller.page(sensorId,sensorType,ariaController,1,10,"tab");
 					});
@@ -238,6 +239,7 @@ var networkMonitorPortDetail = {
 						halt_time = "0";
 					}
 				//	console.info("halt_time2:"+halt_time);
+					var historyTime = hisData.datetime;
 					categories.push(hisData.datetime);
 					tongxinlianghejiData.push(parseFloat(communication_roll));
 					ruzhantongxinliangData.push(parseFloat(in_communication_roll));
@@ -269,8 +271,7 @@ var networkMonitorPortDetail = {
 				$('#sceneDataContainer').highcharts(chart);
 				
 			},
-			createChartsDetail2 : function(data){
-			//	console.info(data);
+			createChartsDetail2 : function(data,tab){
 				var tooltippercent = {valueSuffix: ' %'};
 				var tooltipkb = {valueSuffix: ' kb/秒'};
 				var sensorType = $("#sensorType").val();
@@ -334,7 +335,12 @@ var networkMonitorPortDetail = {
 						halt_time = "0";
 					}
 				//	console.info("halt_time2:"+halt_time);
-					categories.push(hisData.datetime);
+					var historyTime = hisData.datetime;
+				//	console.info(tab+"|"+historyTime);
+					if(tab == "sceneData" && historyTime != ""){
+						historyTime = historyTime.substring(historyTime.indexOf(" "));
+					}
+					categories.push(historyTime);
 					tongxinlianghejiData.push(parseFloat(communication_roll));
 					ruzhantongxinliangData.push(parseFloat(in_communication_roll));
 					chuzhantongxinliangData.push(parseFloat(out_communication_roll));
@@ -392,16 +398,15 @@ var networkMonitorPortDetail = {
 					dataType : 'json',	
 					data:{"sensorId":sensorId,"type":sensorType,"tabDate":tabDate},
 					success:function(data){
-						//console.info(data);
 						if(data.code == 1){
 							if(data.attach == '429'){
 								var attach = [];
-								networkMonitorPortDetail.service.createChartsDetail2(attach);
+								networkMonitorPortDetail.service.createChartsDetail2(attach,tabDate);
 								//alert("服务器繁忙，请稍后重试");
 								layer.msg('服务器繁忙，请稍后重试');
 								return false;
 							}
-							networkMonitorPortDetail.service.createChartsDetail2(data.attach);
+							networkMonitorPortDetail.service.createChartsDetail2(data.attach,tabDate);
 						}
 					},
 					error:function(){
@@ -504,7 +509,7 @@ var chart2 = {
         },
         yAxis: [{           
         	labels: {
-        		format: '{value} kb/秒',
+        		format: '{value} ',
 	            style: {
 	                color: '#9c8ade'
 	            }
@@ -517,7 +522,7 @@ var chart2 = {
             }
         },{           
         	labels: {
-        		format: '{value} %',
+        		format: '{value} ',
 	            style: {
 	                color: '#FF0000'
 	            }

@@ -48,7 +48,7 @@
 	        			<h2 style="font-size: 15px;">品牌排行榜</h2>
 	        			<div class="rankingList" style="text-align: center;padding: 33px 0px;" id="GoodBrand">
 							<img src="../image/top1.png" />
-							<img style="padding: 0px 13px;" src="../image/top2.png" />
+							<img class="top2_img" src="../image/top2.png" />
 							<img src="../image/top3.png" />
 						</div>
 	        		</div>
@@ -57,21 +57,21 @@
 	        		<div class="centertoplayout">
 	        			<h2 style="font-size: 15px;">订单解析</h2>
 	        			<span style="color:#999999;display: block;text-align: center;margin-top: 10px;font-size:18px;">订单量：<span style="color:#9c8ade;" id="order_tal"></span></span>
-	        			<div style="width: 300px;height: 200px;margin: auto;" id="order_analysis"></div>
+	        			<div style="width: 290px;height: 200px;margin: auto;" id="order_analysis"></div>
 						<p style="color:#999999">
 							充值订单：<span style="color:#9c8ade;font-weight: 600;" id="order_pay"></span>
-							<span style="padding: 23px;">
+							<span>
 								非充值订单：<span style="color:#9c8ade;font-weight: 600;" id="order_notpay"></span>
 							</span><br>
 							支付成功订单：<span style="color:#9c8ade;font-weight: 600;" id="order_relpay"></span>
-							<span style="padding: 20px;">
+							<span>
 								妥投成功订单：<span style="color:#9c8ade;font-weight: 600;" id="order_delivery"></span>
 							</span>
 						</p>
 	        		</div>
 	        		<div class="centertoplayout" style="margin-left: 66%;margin-top: -358px;">
 	        			<h2 style="font-size: 15px;">商品属性分类</h2>
-	        			<div style="width: 300px;height: 300px;margin: auto;" id="commodity_property"></div>
+	        			<div style="width: 290px;height: 300px;margin: auto;" id="commodity_property"></div>
 	        		</div>
 	        		<div class="centerbottomLayout">
 	        			<div class="city_title">

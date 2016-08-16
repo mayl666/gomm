@@ -123,7 +123,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 
@@ -144,7 +144,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 
@@ -165,7 +165,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 
@@ -186,7 +186,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 
@@ -207,7 +207,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 
@@ -228,7 +228,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						layer.msg("操作失败");
 					}
 
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gome.upm.common.Page;
 import com.gome.upm.domain.AlarmRecord;
+import com.gome.upm.domain.UrlMonitor;
 
 /**
  * 
@@ -61,5 +62,15 @@ public interface AlarmRecordMapper {
 	 * 2016年7月26日 下午12:36:05   caowei-ds1
 	 */
 	List<AlarmRecord> selectAllTypes();
+	
+	/**
+	 * 更新报警记录.
+	 * @param alarmRecord
+	 * 				报警记录
+	 * @return
+	 * 				更新记录数
+	 * 2016年8月12日   caowei-ds1
+	 */
+	int updateAlarmRecord(AlarmRecord alarmRecord);
 }
 

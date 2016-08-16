@@ -3,15 +3,15 @@
  */
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$("#searchbtn").unbind("click");
+	$("#searchbtn").bind("click", function(){
 		var startTime = $("#startTime").val();
 		var endTime = $("#endTime").val();
 		if(startTime.length != 0 && endTime == 0){
-			alert("请输入结束时间！");
+			layer.msg("请输入结束时间！");
 			return;
 		} else if(startTime.length == 0 && endTime != 0){
-			alert("请输入开始时间！");
+			layer.msg("请输入开始时间！");
 			return;
 		}
 		var content = {};
@@ -51,7 +51,7 @@ $(function(){
 			},
 			error:function(){
 				//pop_up("系统异常",false);
-				alert("服务器异常");
+				layer.msg("服务器异常");
 			}
 		});
 	});
@@ -65,7 +65,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("startTime:" + date);
+	    	//layer.msg("startTime:" + date);
 	    }
 	});
 	
@@ -79,7 +79,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("endTime:" + date);
+	    	//layer.msg("endTime:" + date);
 	    }
 	});
 });
@@ -102,7 +102,7 @@ $("#groupName").change(function(obj){
 			}
 		},
 		error:function(){
-			alert("操作失败");
+			layer.msg("操作失败");
 		}
 	});
 });

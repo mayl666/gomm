@@ -26,6 +26,28 @@
     <script src="${rc.contextPath}/libs/js/html5shiv.js" type="text/javascript"></script>
     <script src="${rc.contextPath}/libs/js/respond.js" type="text/javascript"></script>
     <![endif]-->
+     <style type="text/css">
+    .backbtn{
+	display: inline-block;
+	padding: 5px 16px;
+	width:90px;
+	height:35px;
+	margin-right:30px;
+	font-size: 12px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	border:1px solid #9c8ade;
+	color:#9c8ade;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 2px 10px rgba(145,164,181,.4);
+	-moz-box-shadow: 0 2px 10px rgba(145,164,181,.4);
+	box-shadow: 0 2px 10px rgba(145,164,181,.4);
+
+}
+    </style>
 </head>
 <body class="sidebar-mini skin-black-light">
 <div class="wrapper">
@@ -43,7 +65,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
         	<a href="${rc.contextPath}/index">统一监控平台 </a><a href="../server/goToHostAll">/ 服务器监控</a><a href="javascript:" style="text-decoration: none;cursor: hand;" onclick="javascript:location.reload();"> / 全部设备</a>
-        	<a href="../server/goToHostAll" class="newbtn pull-right btnBack">返回</a>
+        	<a href="../server/goToHostAll" class="backbtn pull-right btnBack">返回</a>
         </section>
 
         <!-- Main content -->
@@ -76,7 +98,7 @@
 							 #end
 						</select>
 					</div>
-					<a href="#" style="margin-left: 50px; width: 80px; margin-top: 4px;"class="newbtn">
+					<a href="#" style="margin-left: 50px; width: 80px; margin-top: 4px;"class="newbtn" id="searchbtn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
 					<input type="hidden" id="searchConditions" value="" />

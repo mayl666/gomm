@@ -3,7 +3,7 @@ $(function(){
 	//商品属性分类
 	drowPie_commodity_property();
     //城市销售TOP5
-    drowMap_city_sales();
+    //drowMap_city_sales(0);
     //在线支付成功率
     drowLine_pay_success_rate();
     //加载数据
@@ -20,7 +20,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("startTime:" + date);
+	    	//layer.msg("startTime:" + date);
 	    }
 	});
 	
@@ -34,7 +34,7 @@ $(function(){
 	    choose: function(date){
 	         //end.min = datas; //开始日选好后，重置结束日的最小日期
 	         //end.start = datas //将结束日的初始值设定为开始日
-	    	//alert("endTime:" + date);
+	    	//layer.msg("endTime:" + date);
 	    }
 	});
 });
@@ -227,7 +227,7 @@ function searchHotCity(){
 	var ddddd=endLogTimeDate.getTime()-startLogTimeDate.getTime();
 	var time = parseInt(ddddd / (1000 * 60 * 60 * 24));
 	if(time>30){
-		alert('查询时间不能大于1个月');
+		layer.msg('查询时间不能大于1个月');
 		return ;
 	}
 	var url="${rc.contextPath}/monitoBusiness/getCityBySales.do";
@@ -287,6 +287,12 @@ function getCityBySales(){
 function showMap(list){
 	var value1=list[0];
 	var value2=list[1];
+	var maxValue = list[0][0].value;
+	 //城市销售TOP5
+	maxValue =  (Math.round(maxValue/100)+1)*100;
+	maxValue = parseInt(maxValue);
+    drowMap_city_sales(maxValue);
+    
 	copy(optionMap,optionMapTem);                                                                                                                                                                                    
 	optionMap.series[1].markPoint.data=value1;
 	optionMap.series[0].markPoint.data=value1;
@@ -298,7 +304,7 @@ function showMap(list){
 var optionMap
 var optionMapTem={};
 var myMapChart=null;
-function drowMap_city_sales(){
+function drowMap_city_sales(maxValue){
 		optionMap = {
 			backgroundColor: '#FFF',
 		    title : {
@@ -309,7 +315,7 @@ function drowMap_city_sales(){
 		    },
 		    dataRange: {
 		        min : 0,
-		        max : 500,
+		        max : maxValue,
 		        calculable : true,
 		        color: ['maroon','purple','red','orange','yellow','lightgreen']
 		    },
@@ -344,7 +350,6 @@ function drowMap_city_sales(){
 		            geoCoord: {}
 		        },
 		        {
-		            name: 'Top5',
 		            type: 'map',
 		            mapType: 'china',
 		            data:[],
@@ -483,7 +488,7 @@ function waitTimeHeadLoginInfo(){
 	var wwww=new Date(endTimeStr);
 	//下个触发查询时间--5分钟后
 	wwww=wwww.DateAdd('n',5);
-	//alert(wwww.Format('yyyy-MM-dd HH:mm:ss'));
+	//layer.msg(wwww.Format('yyyy-MM-dd HH:mm:ss'));
 	//计算当前时间和下个查询时间的时间差
 	var waitTime=wwww-new Date();
 	//等待时间差

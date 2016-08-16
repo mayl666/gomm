@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gome.upm.common.Page;
 import com.gome.upm.domain.AlarmRecord;
+import com.gome.upm.domain.UrlMonitor;
 
 /**
  * 报警记录service接口
@@ -74,4 +75,20 @@ public interface AlarmRecordService {
 	 * 2016年7月26日 下午4:49:43   caowei-ds1
 	 */
 	AlarmRecord findAlarmRecordById(long id);
+	
+	/**
+	 *
+	 * 编辑报警记录.
+	 *
+	 * @param alarmRecord
+	 * 			报警记录
+	 * @return
+	 * 			修改记录数
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年08月12日    caowei-ds1    新建
+	 * </pre>
+	 */
+	int editAlarmRecord(AlarmRecord alarmRecord);
 }

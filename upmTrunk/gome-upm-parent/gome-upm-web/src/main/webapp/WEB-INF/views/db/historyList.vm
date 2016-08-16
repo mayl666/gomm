@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -48,9 +48,9 @@
         </section>
 
         <!-- Main content -->
-        <section class="content contentSty" style="min-height:600px">
+        <section class="content contentSty">
         	<div class="toolbar">
-				<form class="form-inline" style="padding: 20px;">
+				<form class="form-inline tool_select">
 					<div class="form-group">
 						<label for="startTime">报警时间：</label> <input type="text"
 							class="form-control laydate-icon" id="startTime">
@@ -74,7 +74,7 @@
 					-->
 					<input type="hidden" id="dataType" value="$!dataType" />
 					<input type="hidden" id="pid" value="$!pid" />
-					<a href="#" style="margin-left: 50px; width: 80px; margin-top: 4px;"class="newbtn">
+					<a href="javascript:void(0);" class="newbtn search_btn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
 					<input type="hidden" id="searchConditions" value="" />

@@ -3,7 +3,7 @@
                            <input type="hidden" value="$!page.conditions.survival" id="hiddenUrlSurvival" />
                            <i class="icon fa fa-bullhorn"></i>
                            <!-- <span style="color:orange">Key：</span>ump.web&nbsp;&nbsp;-->
-                           <span style="color:orange">URL：</span>$!port.port&nbsp;&nbsp;
+                           <span style="color:orange">URL：</span><span title="$!port.port">$!port.port&nbsp;&nbsp;</span>
                             <span style="color:orange">配置状态：</span>#if($!port.status == 1)有效#else无效#end&nbsp;&nbsp;<span style="color:orange">监控频率(分钟)：</span>$!port.frequency&nbsp;&nbsp;
                             <table id="example1" class="table table_data  table-striped">
                                 <thead>

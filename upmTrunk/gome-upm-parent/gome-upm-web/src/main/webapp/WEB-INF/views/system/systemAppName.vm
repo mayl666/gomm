@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -82,7 +82,7 @@
 						</select>
                         </div>
                     </div><!--pagination end--->
-                    <a class="newbtn" id="info_search_span" style="padding: 0px;"><i class="fa fa-search"></i> 搜索</a>
+                    <a class="newbtn" id="info_search_span"><i class="fa fa-search"></i>搜索</a>
                 </div><!--pie_item_title end-->
 
             </div><!--pie_item-->

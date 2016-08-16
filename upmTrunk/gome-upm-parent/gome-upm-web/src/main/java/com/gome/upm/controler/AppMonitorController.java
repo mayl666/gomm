@@ -50,9 +50,19 @@ public class AppMonitorController {
 									  @RequestParam(value = "traceId", required = false) String traceId) {
 		model.addObject("leftMenu", "appMonitorMenu");
 		model.addObject("key", traceId);
-
-		if(StringUtil.notEmpty(traceId)){
-			 model.setViewName("/app/main");
+		try{
+			if(StringUtil.notEmpty(traceId)){
+				TraceTreeInfo traceTree = iTraceTreeService.queryTraceTreeByTraceId(traceId);
+				if(traceTree.getNodeSize() > 0){
+					model.setViewName("/app/main");
+				}else{
+					model.setViewName("/app/zwnr");
+				}
+				
+			}
+		}catch(Exception e){
+			logger.info("execute search fail...");
+			model.setViewName("error");
 		}
 
 		return model;
@@ -63,12 +73,17 @@ public class AppMonitorController {
 	public ModelAndView loadTraceTree(HttpServletRequest request, HttpServletResponse response, ModelAndView model,
 			  @RequestParam(value = "traceId", required = false) String traceId){
 		
-		model.addObject("leftMenu", "appMonitorMenu");
-		model.addObject("key", traceId);
 		try{
 			if(StringUtil.notEmpty(traceId)){
 				TraceTreeInfo traceTree = iTraceTreeService.queryTraceTreeByTraceId(traceId);
-				model.addObject("result", JSON.toJSONString(traceTree));
+				model.addObject("leftMenu", "appMonitorMenu");
+				if(traceTree.getNodeSize() > 0){
+					model.addObject("key", traceId);
+					model.addObject("result", JSON.toJSONString(traceTree));
+				}else{
+					logger.info("execute search fail...");
+					model.setViewName("error");
+				}
 			}
 		}catch(Exception e){
 			logger.info("execute search fail...");
@@ -87,25 +102,30 @@ public class AppMonitorController {
 		if(content == null || "".equals(content)){
 			return model;
 		}
+		model.addObject("leftMenu", "appMonitorMenu");
 		Page<TraceInfo> page = new Page<TraceInfo>(1, 10);
 		TraceSearchInfo traceSearchInfo = iTraceTreeService.getTracesByBussinessKey(content,0,10);
-		int pageNo = 1;
-		int pageSize = 10;
-		int totalResult = (int) traceSearchInfo.getTotalHits();
-		int totalPage = totalResult % 10 > 0 ? (totalResult/10 + 1) : totalResult / 10;
-		
-		page.setData(traceSearchInfo.getTraceInfoList());
-		page.setStartIndex(pageNo*pageSize);// 开始条数
-		page.setEndIndex((pageNo+1)*pageSize);
-		page.setPageSize(pageSize); // 每页条数
-		page.setPageNo(pageNo); // 当前页
-		page.setTotalResult(totalResult); // 总记录数
-		page.setTotalPage(totalPage); // 总页数
-		model.addObject("businessKey", content);
-		model.addObject("total", traceSearchInfo.getTotalHits());
-		model.addObject("page", page);
-		model.addObject("leftMenu", "appMonitorMenu");
-	    model.setViewName("/app/all");
+		if(traceSearchInfo.getTotalHits() > 0){
+			int pageNo = 1;
+			int pageSize = 10;
+			int totalResult = (int) traceSearchInfo.getTotalHits();
+			int totalPage = totalResult % 10 > 0 ? (totalResult/10 + 1) : totalResult / 10;
+			
+			page.setData(traceSearchInfo.getTraceInfoList());
+			page.setStartIndex(pageNo*pageSize);// 开始条数
+			page.setEndIndex((pageNo+1)*pageSize);
+			page.setPageSize(pageSize); // 每页条数
+			page.setPageNo(pageNo); // 当前页
+			page.setTotalResult(totalResult); // 总记录数
+			page.setTotalPage(totalPage); // 总页数
+			model.addObject("businessKey", content);
+			model.addObject("total", traceSearchInfo.getTotalHits());
+			model.addObject("page", page);
+			model.addObject("leftMenu", "appMonitorMenu");
+			model.setViewName("/app/all");
+		}else{
+			model.setViewName("/app/zwnr");
+		}
 
 		return model;
 	}
@@ -139,25 +159,28 @@ public class AppMonitorController {
 		int from = (pageNo-1)*pageSize;
 		
 		TraceSearchInfo traceSearchInfo = iTraceTreeService.getTracesByBussinessKey(businessKey,from,pageSize);
-		int totalResult = (int) traceSearchInfo.getTotalHits();
-		int totalPage = totalResult % 10 > 0 ? (totalResult/10 + 1) : totalResult / 10;
-		
-		page.setData(traceSearchInfo.getTraceInfoList());
-		page.setStartIndex((pageNo-1)*pageSize+1);// 开始条数
-		if((pageNo+1)*pageSize >= totalResult){
-			page.setEndIndex(totalResult);
-		}else{
-			page.setEndIndex((pageNo+1)*pageSize);
+		if(traceSearchInfo.getTotalHits() > 0){
+			int totalResult = (int) traceSearchInfo.getTotalHits();
+			int totalPage = totalResult % 10 > 0 ? (totalResult/10 + 1) : totalResult / 10;
+			
+			page.setData(traceSearchInfo.getTraceInfoList());
+			page.setStartIndex((pageNo-1)*pageSize+1);// 开始条数
+			if((pageNo+1)*pageSize >= totalResult){
+				page.setEndIndex(totalResult);
+			}else{
+				page.setEndIndex((pageNo+1)*pageSize);
+			}
+			
+			page.setPageSize(pageSize); // 每页条数
+			page.setPageNo(pageNo); // 当前页
+			page.setTotalResult(totalResult); // 总记录数
+			page.setTotalPage(totalPage); // 总页数
+			model.addObject("businessKey", businessKey);
+			model.addObject("total", traceSearchInfo.getTotalHits());
+			model.addObject("page", page);
+			model.setViewName("/app/allTable");
 		}
 		
-		page.setPageSize(pageSize); // 每页条数
-		page.setPageNo(pageNo); // 当前页
-		page.setTotalResult(totalResult); // 总记录数
-		page.setTotalPage(totalPage); // 总页数
-		model.addObject("businessKey", businessKey);
-		model.addObject("total", traceSearchInfo.getTotalHits());
-		model.addObject("page", page);
-		model.setViewName("/app/allTable");
 		model.addObject("leftMenu", "appMonitorMenu");
 		
 		return model;

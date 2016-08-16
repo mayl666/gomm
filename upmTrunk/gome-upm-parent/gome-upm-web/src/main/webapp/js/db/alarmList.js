@@ -42,6 +42,13 @@ $(function(){
 //			content.serverAddr=serverAddr;
 //		}
 		if(startTime.length > 0 && endTime.length > 0){
+			var startDate = new Date(startTime.replace(/-/g,"/"));
+			var endDate = new Date(endTime.replace(/-/g,"/"));
+			if(startDate >= endDate){
+//				alert("截止时间必须大于开始时间");
+				layer.msg('开始时间不能晚于结束时间！');
+				return;
+			}
 			content.startTime = startTime;
 			content.endTime = endTime;
 		}

@@ -20,7 +20,7 @@
 	                               <!--<td>$!i</td>
 	                               <td><input type="checkbox" name="checkbox" value="$!url.id" /></td>-->
 	                               <td class="null_red">$!url.alarmTimeStr</td>
-	                               <td><a href="${rc.contextPath}/url/report?id=$!url.id" class="link_a">$!url.url</a></td>
+	                               <td title="$!url.url"><a href="${rc.contextPath}/url/report?id=$!url.id&type=1&pageNum=$!{page.pageNo}" class="link_a">$!url.shortUrl</a></td>
 
 	                               <td class="null_red">$!url.survivalStr</td>
 	                               <td>$!url.createTimeStr</td>

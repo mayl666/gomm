@@ -55,8 +55,11 @@ public class PortalController {
 	private PortMonitorService  portMonitorService;
 
 	@RequestMapping(value = "/get", method={RequestMethod.GET})
-	public ModelAndView get(HttpServletRequest request, HttpServletResponse response, ModelAndView model) {
-		Page<PortMonitor> page = new Page<PortMonitor>(1,10);
+	public ModelAndView get(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum) {
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
+		Page<PortMonitor> page = new Page<PortMonitor>(pageNum,10);
 		PortMonitor query = new PortMonitor();
 		page.setConditions(query);
 		page = portMonitorService.findPortMonitorListByPage(page);
@@ -84,8 +87,11 @@ public class PortalController {
 	 * @return
 	 */
 	@RequestMapping(value = "/warning", method={RequestMethod.GET})
-	public ModelAndView warning(HttpServletRequest request, HttpServletResponse response, ModelAndView model) {
-		Page<PortMonitor> page = new Page<PortMonitor>(1,10);
+	public ModelAndView warning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum) {
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
+		Page<PortMonitor> page = new Page<PortMonitor>(pageNum,10);
 		PortMonitor query = new PortMonitor();
 		query.setSurvival(0);
 		page.setConditions(query);
@@ -128,10 +134,14 @@ public class PortalController {
 	 * @return
 	 */
 	@RequestMapping(value="/report")
-	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id){
+	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id,@RequestParam(value="type", required = false) Integer type
+			,@RequestParam(value="pageNum", required = false) Integer pageNum){
 		logger.info("id",id);
 		model.setViewName("/url/urlReport");
 		model.addObject("leftMenu", "urlMenu");
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
 		try{
 			PortMonitor port = portMonitorService.findPortMonitorById(id);
 			Page<PortRecord> page1 = new Page<PortRecord>(1,10);
@@ -148,6 +158,8 @@ public class PortalController {
 			}
 			model.setViewName("/portal/portReport");
 			model.addObject("leftMenu", "portMenu");
+			model.addObject("type", type);
+			model.addObject("pageNum",pageNum);
 			model.addObject("page", page1);
 			model.addObject("port", port);
 		}catch(Exception e){
@@ -199,10 +211,10 @@ public class PortalController {
         				if(StringUtils.isBlank(portMonitor.getMonitorType())){
         					portMonitor.setMonitorType("应用服务器");
         				}
-        				if(portMonitor.getFrequency()==null){
+        				if(portMonitor.getFrequency()==null||portMonitor.getFrequency()==0){
         					portMonitor.setFrequency(5);
         				}
-        				if(portMonitor.getOvertimes()==null){
+        				if(portMonitor.getOvertimes()==null||portMonitor.getOvertimes()==0){
         					portMonitor.setOvertimes(5);
         				}
         				if(StringUtils.isBlank(portMonitor.getAlarmMethod())){

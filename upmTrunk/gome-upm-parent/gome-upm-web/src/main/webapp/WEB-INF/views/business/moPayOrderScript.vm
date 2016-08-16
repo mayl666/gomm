@@ -15,7 +15,7 @@ function waitTimePay(){
 	var wwww=new Date(endTimeStr);
 	//下个触发查询时间--5分钟后
 	wwww=wwww.DateAdd('n',5);
-	//alert(wwww.Format('yyyy-MM-dd HH:mm:ss'));
+	//layer.msg(wwww.Format('yyyy-MM-dd HH:mm:ss'));
 	//计算当前时间和下个查询时间的时间差
 	var waitTime=wwww-new Date();
 	//等待时间差
@@ -27,7 +27,7 @@ var payDate;
 var payHighChart;
 var timePayCon=false;
 function initPayData(){
-	var obj=getSearchHour(1);
+	var obj=getSearchHour(3);
     var startTimeStr=obj.startTime;
     var endTimeStr=obj.endTime;
     reloadPayData(startTimeStr,endTimeStr,false);
@@ -73,7 +73,7 @@ function initPay(){
             renderTo: 'container_pay',  //图表放置的容器，一般在html中放置一个DIV，获取DIV的id属性值
             animation: Highcharts.svg, // don't animate in old IE
             marginRight: 10, //对容器的右内边距
-            shadow:true, //外框阴影
+            shadow:false, //外框阴影
             animation:true,
             events: {
                 load: function () {
@@ -170,7 +170,10 @@ function searchPayData(){
 	
 	var startTimeStr=$('#startTimePay').val();
 	var endTimeStr=$('#endTimePay').val();
-	
+	if(startTimeStr=='' || startTimeStr==null || endTimeStr=='' || endTimeStr==null){
+		layer.msg("请输入查询时间段");
+		return;
+	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);
  	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
@@ -190,6 +193,7 @@ function reloadPayData(stPay,etPay,waitTimeReload){
 		dataType:"text",
 		cache:false,
 		success: function(data){
+			debugger;
 			var dataList=eval(data);
 			payDate=dataList[0][dataList[0].length-1][0];
 			copy(options_pay,config_pay);
@@ -242,8 +246,14 @@ function countDiffer(today,yesterday,weekDay,type){
 	$('#ydc_'+type).removeClass();
 	$("#ydc_"+type).addClass(ycss);
 	//比昨天增加或减少的百分比
-	var yb=Percentage(yDiffern,yesterday);
-	$('#yb_'+type).text(yb);
+	if(yesterday==0){
+		var yb=Percentage(yDiffern,1);
+		$('#yb_'+type).text(yb);
+	}else{
+		var yb=Percentage(yDiffern,yesterday);
+		$('#yb_'+type).text(yb);
+	}
+	
 	
 	//今天和昨天的差值
 	var wDiffer=today-weekDay;
@@ -254,7 +264,12 @@ function countDiffer(today,yesterday,weekDay,type){
 	$('#wdc_'+type).removeClass();
 	$("#wdc_"+type).addClass(wcss);
 	//比昨天增加或减少的百分比
-	var wb=Percentage(wDiffern,weekDay);
-	$('#wb_'+type).text(wb);
+	if(weekDay==0){
+		var wb=Percentage(wDiffern,1);
+		$('#wb_'+type).text(wb);
+	}else{
+		var wb=Percentage(wDiffern,weekDay);
+		$('#wb_'+type).text(wb);
+	}
 }
 </script>

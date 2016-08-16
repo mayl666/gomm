@@ -208,8 +208,8 @@ function loadTree(traceId){
                 });
                 
                 // 记载tracelog
-        		var html = template('tracelog', changedData.traceTree);
-        		document.getElementById('tab_tracelog').innerHTML = html;
+        		//var html = template('tracelog', changedData.traceTree);
+        		//document.getElementById('tab_tracelog').innerHTML = html;
         },
         error: function () {
         	
@@ -254,7 +254,10 @@ $(function(){
 			dataType : 'html',	
 			data:{"pageNo":pageNo, "pageSize":pageSize, "businessKey":businessKey},
 			success:function(data){
-				console.info(data);
+				if(data.indexOf('total') < 0){
+					return;
+				}
+				console.info(data.page);
 				var bool = data.indexOf("sessionTimeOut");
 				if(bool < 0){
 					$(".list_table").empty();

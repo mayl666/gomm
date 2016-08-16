@@ -7,7 +7,8 @@
             <th>报警时间</th>
             <th>类型</th>
             <th>报警内容</th>
-            <th>处理状态</th>
+            <th>当前状态</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -19,15 +20,37 @@
         <td>$!i</td>
         <td>$!alarm.sendTimeStr</td>
         <td>$!alarm.typeStr</td>
-        <!-- 
-        <td><a href="${rc.contextPath}/alarm/detail?id=$!alarm.id" target="_blank" style="font-size:14px;color:#000;text-decoration:underline">查看详情</a></td>
-        -->
-        <td><a href="javascript:void(0);" class="detail" url="${rc.contextPath}/alarm/detail?id=$!alarm.id" style="font-size:14px;color:#000;text-decoration:underline">查看详情</a></td>
-        <td>待处理</td>
+        <td><a href="javascript:void(0);" class="detail" url="${rc.contextPath}/alarm/detail?id=$!alarm.id" style="font-size:12px;color:#9c8ade;text-decoration:underline">查看详情</a></td>
+        <td class="status">$!alarm.statusStr</td>
+        #if($!alarm.status == 0)
+        <td class="operate">
+        	<a href="javascript:void(0);" class="changeStatus" id="$!alarm.id" status="1" style="font-size:12px;color:#9c8ade;text-decoration:underline">处理</a>
+        	<a href="javascript:void(0);" class="changeStatus" id="$!alarm.id" status="3" style="font-size:12px;color:#9c8ade;text-decoration:underline">忽略</a>
+        </td>
+        #elseif($!alarm.status == 1)
+        <td class="operate">
+        	<a href="javascript:void(0);" class="changeStatus" id="$!alarm.id" status="2" style="font-size:12px;color:#9c8ade;text-decoration:underline">已处理</a>
+        	<a href="javascript:void(0);" class="changeStatus" id="$!alarm.id" status="3" style="font-size:12px;color:#9c8ade;text-decoration:underline">忽略</a>
+        </td>
+        #elseif($!alarm.status == 2)
+        <td class="operate">
+        	<a href="javascript:void(0);" disabled="disabled" style="cursor:default;font-size:12px;color:gray;text-decoration:underline">处理</a>
+        	<a href="javascript:void(0);" disabled="disabled" style="cursor:default;font-size:12px;color:gray;text-decoration:underline">忽略</a>
+        </td>
+        #elseif($!alarm.status == 3)
+        <td class="operate">
+        	<a href="javascript:void(0);" class="changeStatus" id="$!alarm.id" status="1" style="font-size:12px;color:#9c8ade;text-decoration:underline">处理</a>
+        	<a href="javascript:void(0);" disabled="disabled" style="cursor:default;font-size:12px;color:gray;text-decoration:underline">忽略</a>
+        </td>
+        #else
+        <td>
+        	状态异常	
+        </td>
+        #end
     </tr>
     #end
 	#else
-	<tr><td colspan='5' align='center'>没有查到任何记录</td></tr>
+	<tr><td colspan='6' align='center'>没有查到任何记录</td></tr>
 	#end
     </tbody>
 </table>

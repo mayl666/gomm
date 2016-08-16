@@ -260,18 +260,33 @@ public class ExcelUtils {
                 field.set(o, String.valueOf(cellValue));
             } else if ((Integer.TYPE == fieldType)
                     || (Integer.class == fieldType)) {
+            	if(cellValue.length()==0){
+            		cellValue="0";
+            	}
                 field.set(o, Integer.parseInt(cellValue.toString()));
             } else if ((Long.TYPE == fieldType)
                     || (Long.class == fieldType)) {
+            	if(cellValue.length()==0){
+            		cellValue="0l";
+            	}
                 field.set(o, Long.valueOf(cellValue.toString()));
             } else if ((Float.TYPE == fieldType)
                     || (Float.class == fieldType)) {
+            	if(cellValue.length()==0){
+            		cellValue="0f";
+            	}
                 field.set(o, Float.valueOf(cellValue.toString()));
             } else if ((Short.TYPE == fieldType)
                     || (Short.class == fieldType)) {
+            	if(cellValue.length()==0){
+            		cellValue="0";
+            	}
                 field.set(o, Short.valueOf(cellValue.toString()));
             } else if ((Double.TYPE == fieldType)
                     || (Double.class == fieldType)) {
+            	if(cellValue.length()==0){
+            		cellValue="0d";
+            	}
                 field.set(o, Double.valueOf(cellValue.toString()));
             } else if (Character.TYPE == fieldType) {
                 if ((cellValue!= null) && (cellValue.toString().length() > 0)) {

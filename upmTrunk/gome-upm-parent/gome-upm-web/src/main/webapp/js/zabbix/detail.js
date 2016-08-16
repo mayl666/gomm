@@ -46,7 +46,7 @@ function queryTrigger(hostid){
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 				$(k).parent().next().children('.itemsDetails').show();
@@ -308,7 +308,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -328,7 +328,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -348,7 +348,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -368,7 +368,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -388,7 +388,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -408,7 +408,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			},
@@ -428,7 +428,7 @@ var networkMonitor = {
 						}
 					},
 					error:function(){
-						alert("操作失败");
+						//layer.msg("操作失败");
 					}
 				});
 			}

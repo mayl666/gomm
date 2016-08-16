@@ -530,7 +530,7 @@ public class MonitoBusinessController extends AbsBaseController{
 		List<MoBusiness> list= moBusinessDAO.searchGoodProperty(moBusiness);
 		for(MoBusiness moBusiness2:list){
 			Pie pieNow=new Pie();
-			pieNow.setName(moBusiness2.getName()+" "+moBusiness2.getAmount());
+			pieNow.setName(moBusiness2.getName()+" : "+moBusiness2.getAmount());
 			pieNow.setY(moBusiness2.getAmount()*xishu);
 			if("G3PP".equals(moBusiness2.getName())||"3PP".equals(moBusiness2.getName())){
 				pieNow.setSliced(true);
@@ -545,7 +545,7 @@ public class MonitoBusinessController extends AbsBaseController{
 				relist.add(map.get(sN));
 			}else{
 				Pie pieNow=new Pie();
-				pieNow.setName(sN+" 0");
+				pieNow.setName(sN+" : 0");
 				pieNow.setY(0);
 				relist.add(pieNow);
 			}
@@ -805,6 +805,7 @@ public class MonitoBusinessController extends AbsBaseController{
 	@RequestMapping(value="/goAlarmlist", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView goAlarmlist(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, @Param(value="type")String type, @Param(value="startTime")String startTime, @Param(value="endTime")String endTime, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
 		model.setViewName("/business/moAlarm");
+		model.addObject("leftMenu", "businessMenu");
 		return model;
 	}
 	/**
@@ -827,12 +828,13 @@ public class MonitoBusinessController extends AbsBaseController{
 		if(type!=null&&!"".equals(type)){
 			alarmRecord.setType(type);
 		}
-		if(startTime!=null&&!"".equals(startTime)&&endTime!=null&&!"".equals(endTime)){
-			try {
-				alarmRecord.setStartTime(startTime);
-				alarmRecord.setEndTime(endTime);
-			} catch (Exception e) {
-			}
+		if(startTime!=null&&!"".equals(startTime)){
+			alarmRecord.setStartTime(startTime);
+			alarmRecord.setEndTime(endTime);
+		}
+		if(endTime!=null&&!"".equals(endTime)){
+			alarmRecord.setStartTime(startTime);
+			alarmRecord.setEndTime(endTime);
 		}
 		Page<AlarmRecord> p = new Page<AlarmRecord>(pageNo, pageSize);
 		p.setConditions(alarmRecord);
@@ -842,9 +844,9 @@ public class MonitoBusinessController extends AbsBaseController{
 	@RequestMapping(value="/getAlarmDate", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView getAlarmDate(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, @Param(value="type")String type, @Param(value="startTime")String startTime, @Param(value="endTime")String endTime,HttpServletRequest request, HttpServletResponse response, ModelAndView model){
 		model.setViewName("/business/moAlarmTable");
-//		model.addObject("leftMenu", "alarmMenu");
 		Page<AlarmRecord> pageAlarm =getAlarmlistData(page, size, type,startTime,endTime);
 		model.addObject("page", pageAlarm);
+		model.addObject("leftMenu", "businessMenu");
 		return model;
 	}
 }

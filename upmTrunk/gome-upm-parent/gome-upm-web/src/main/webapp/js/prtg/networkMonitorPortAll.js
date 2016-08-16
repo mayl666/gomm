@@ -105,6 +105,9 @@ var networkMonitorPortAll = {
 				});
 			},
 			search : function(groupId,deviceId,deviceStatus,pageNo){
+				if($("#portFormGroupStatus").is(":hidden")){
+					deviceStatus = 12;
+				}
 				var pageSize = 10;
 				$.ajax({
 					url:contextPath+'/prtg/port/allTable',

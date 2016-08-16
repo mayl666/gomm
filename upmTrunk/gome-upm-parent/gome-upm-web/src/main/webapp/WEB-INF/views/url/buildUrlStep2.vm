@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -209,18 +209,18 @@
                             <td class="title_td"><strong class="null_red">*</strong>URL请求返回码</td>
                             <td >
                                 <div style="padding-top: 7px;">
-                                <input type="text" class="form-control" maxlength="100" id="returnCode" value="$!returnCode" placeholder="200,301,302" value="200"  style="width: 21.3%;float: left;" />
+                                  <input type="text" class="form-control" maxlength="100" id="returnCode" value="$!returnCode" placeholder="200,301,302" value="200"  style="width: 21.3%;float: left;" />
                                 </div>
-                                   <span class="info_span" style="padding-left: 10px;">
-                                   	提示：
-                                    1.返回码用于在访问URL后判断是否存活的标准，需要用户按照自己项目实际判断URL存活的返回码进行填写<br>
-                                    <span class="info_span" style="text-indent: 56px;display: inline-block;">
-                                    2.填写了自定义返回码的，会按照填写的返回码进行存活判断
-                                    </span>
-                                    <span class="info_span" >
-                                    3.多个返回码可以用分号隔开,例如:302,301
-                                    </span>
-                                   </span><br>
+                                   <div class="info_txt_warp">
+                                  		<span class="info_span">提示：</span>
+                                  		<div class="info_txt">
+	                                  		<p>1. 返回码用于在访问URL后判断是否存活的标准，需要用户按照自己项目实际判断URL存活的返回码进行填写</p>
+	                                  		<p>2. 填写了自定义返回码的，会按照填写的返回码进行存活判断</p>
+	                                  		<p>3. 多个返回码可以用分号隔开,例如:302,301</p>
+                                  		</div>
+                                   </div>
+                                   
+                                   
 								<span class="error_span" id="returnCode_error" style="text-decoration:none;display: none;width:250px;">URL请求返回码不能为空</span>
                             </td>
                         </tr>

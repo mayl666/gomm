@@ -160,7 +160,9 @@ function reloadCpsData(stCps,etCps,waitTimeReload){
 		cache:false,
 		success: function(data){
 			var dataList=eval(data);
-			cpsDate=dataList[dataList.length-1][0];
+			if(dataList[dataList.length-1]!=null){
+				cpsDate=dataList[dataList.length-1][0];
+			}
 			copy(options_cps,config_cps);
 			options_cps.series[0].data=dataList;
 			if(waitTimeReload){

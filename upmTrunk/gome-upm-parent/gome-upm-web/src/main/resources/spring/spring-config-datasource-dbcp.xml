@@ -6,10 +6,10 @@
 	>
 
 	<bean id="dataSourceOne" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${community.shop.jdbc.driver}" />
-		<property name="url" value="${community.shop.jdbc.url}" />
-		<property name="username" value="${community.shop.jdbc.username}" />
-		<property name="password" value="${community.shop.jdbc.password}" />
+		<property name="driverClassName" value="${driver1}" />
+		<property name="url" value="${url1}" />
+		<property name="username" value="${username1}" />
+		<property name="password" value="${password1}" />
 		<property name="defaultAutoCommit" value="false" />
 		<property name="initialSize" value="4" />
 		<property name="maxActive" value="80" />

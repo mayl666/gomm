@@ -49,7 +49,7 @@ public class DBConnectionAndASMAlarmBean {
 	@Resource
 	private ThresholdHistoryService thresholdHistoryService;
 	
-	private String url = "http://10.58.56.72:8081/alarmplatform/alarm";
+	private String url = "http://10.58.62.204/alarmplatform/alarm";
 	
 	private Map<String,String> paramMap = new HashMap<String,String>();
 	

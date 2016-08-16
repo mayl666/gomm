@@ -54,10 +54,13 @@ public class UrlController {
 	private UrlMonitorService urlMonitorService;
 	
 	@RequestMapping(value="/get")
-	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum){
 		logger.info("get url list");
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
 		try{
-			Page<UrlMonitor> page = new Page<UrlMonitor>(1,10);
+			Page<UrlMonitor> page = new Page<UrlMonitor>(pageNum,10);
 			UrlMonitor query = new UrlMonitor();
 			page.setConditions(query);
 			page = urlMonitorService.findUrlMonitorListByPage(page);
@@ -91,10 +94,13 @@ public class UrlController {
 	 * @return 模型
 	 */
 	@RequestMapping(value="/warning")
-	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum){
 		logger.info("get warning url list ");
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
 		try{
-			Page<UrlMonitor> page = new Page<UrlMonitor>(1,10);
+			Page<UrlMonitor> page = new Page<UrlMonitor>(pageNum,10);
 			UrlMonitor query = new UrlMonitor();
 			query.setSurvival(0);
 			page.setConditions(query);
@@ -329,14 +335,17 @@ public class UrlController {
 	 * @return
 	 */
 	@RequestMapping(value="/report")
-	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id){
+	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id
+			,@RequestParam(value="type", required = false) Integer type,@RequestParam(value="pageNum", required = false) Integer pageNum){
 		logger.info("id",id);
 		model.setViewName("/url/urlReport");
 		model.addObject("leftMenu", "urlMenu");
+		if(pageNum==null||pageNum<=0){
+			pageNum=1;
+		}
 		try{
 			UrlMonitor url = urlMonitorService.findUrlMonitorById(id);
 			Page<UrlRecord> page1 = new Page<UrlRecord>(1,10);
-			Page<AlarmRecord> page2 = new Page<AlarmRecord>(1,10);
 			if(url != null){
 				
 				UrlRecord record = new UrlRecord();
@@ -357,6 +366,8 @@ public class UrlController {
 			}
 			
 			model.addObject("page", page1);
+			model.addObject("type", type);
+			model.addObject("pageNum",pageNum);
 			//model.addObject("page", page2);
 			model.addObject("url", url);
 		}catch(Exception e){
@@ -444,10 +455,10 @@ public class UrlController {
         					}
         					
         				}
-        				if(urlMonitor.getFrequency()==null){
+        				if(urlMonitor.getFrequency()==null||urlMonitor.getFrequency()==0){
         					urlMonitor.setFrequency(5);
         				}
-        				if(urlMonitor.getOvertimes()==null){
+        				if(urlMonitor.getOvertimes()==null||urlMonitor.getOvertimes()==0){
         					urlMonitor.setOvertimes(5);
         				}
         				if(StringUtils.isBlank(urlMonitor.getAlarmMethod())){

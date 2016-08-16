@@ -1,4 +1,4 @@
-/***公共菜单选中状态 #3c8dbc**/
+/***閸忣剙鍙￠懣婊冨礋闁鑵戦悩鑸碉拷锟� #3c8dbc**/
 
 .sidebar-menu .treeview-menu>li.currentli{
 	background:#9c8ade;
@@ -6,7 +6,7 @@
 }
 .sidebar-menu .treeview-menu>li.currentli a{color:#fff;}
 .box{ overflow: hidden}
-/*home 时间轴样式 */
+/*home 閺冨爼妫挎潪瀛樼壉瀵拷 */
 .course_nr{margin-top: 30px;border-bottom: 1px solid #e5e5e5;}
 .course_nr .course_nr2 li{ float:left;
 	background:url(../image/ico10.gif) no-repeat center top;
@@ -29,7 +29,7 @@
 .box-body .box_ul .box_item p{line-height: 24px;}
 .box-body .box_ul .box_item p a{color:#00517e;text-decoration: underline;}
 .goBack_btn{width:120px;height:30px; cursor:pointer;line-height: 30px; background: #00a65a;text-align: center;color: #fff; border-radius: 4px;}
-/****url 存活监控***/
+/****url 鐎涙ɑ妞块惄鎴炲付***/
 .toolbar{
     position: relative;
     z-index: 4;
@@ -76,7 +76,7 @@
     letter-spacing: 4px;
 }
 
-/***数据列表****/
+/***閺佺増宓侀崚妤勩��****/
 .list_table,.pie_item{ margin-top: 20px;
 	overflow: hidden;}
 .list_table .table-background{background: #fff;}
@@ -127,7 +127,7 @@
 .list_table .table-bordered td.operate-td a i{margin-right: 6px;}
 
 .list_table .table-bordered th i.arrow_down{font-size: 18px; margin-left: 6px; cursor: pointer}
-/*****创建URL存活监控配置点Key******/
+/*****閸掓稑缂揢RL鐎涙ɑ妞块惄鎴炲付闁板秶鐤嗛悙绛�ey******/
 .build_title{width:160px;background: #ebebeb;}
 .list_table .table-bordered td.build_forminput{text-align: left;}
 .list_table .table-bordered td.build_forminput input.form-control{
@@ -155,7 +155,7 @@
 	line-height: 20px;
 	margin: 0;}
 .info_span{color:#EF9966}
-    /*创建端口存活监控配置点Key*/
+    /*閸掓稑缂撶粩顖氬經鐎涙ɑ妞块惄鎴炲付闁板秶鐤嗛悙绛�ey*/
 .apply td {
 	border: 1px solid #ddd !important;
 }
@@ -386,11 +386,11 @@ td strong {
 
 }
 
-/**重置fieldset使其支持原始的样式**/
+/**闁插秶鐤唂ieldset娴ｅ灝鍙鹃弨顖涘瘮閸樼喎顫愰惃鍕壉瀵拷**/
 fieldset{padding:.35em .625em .75em;margin:0 2px;border:1px solid silver}
 legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 
-/*自定义联系人信息按钮组*/
+/*閼奉亜鐣炬稊澶庝粓缁姹夋穱鈩冧紖閹稿鎸崇紒锟�*/
 .btngroup {
 	background: #F1FAFF;
 	border: 1px solid #E5F1F3;
@@ -408,7 +408,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 }
 
 
-/*********系统存活*********/
+/*********缁崵绮虹�涙ɑ妞�*********/
 .pie_item p{ float: left;width:30%;}
 .pie_item_service {
 	width:100%;
@@ -436,8 +436,8 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	margin: 0;
 	color: #666;
 }
-
-.pie_item_title{ overflow: hidden;height:40px;line-height: 40px;  margin-bottom: 30px;}
+.pdl10{padding-left:10px;}
+.pie_item_title{ overflow: hidden;height:40px;/* line-height: 40px; */  margin-bottom: 30px;}
 .pie_item_title h3{line-height: 40px;}
 .select-con {
 	vertical-align: middle;
@@ -503,7 +503,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 }
 @media screen and (min-width: 1400px) and (max-width: 1600px){ .info_search .pagination .select-con .dropdown-select{width: 100%;min-width: 290px;}}
 
-/********系统存活对应  应用名页面********/
+/********缁崵绮虹�涙ɑ妞跨�电懓绨�  鎼存梻鏁ら崥宥夈�夐棃锟�********/
 
 
 .item_info{height:40px;line-height: 40px; overflow: hidden}
@@ -537,7 +537,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 .info-box-system div{ margin-left: 10px; line-height: 48px;}
 
 
-/*********方法监控*********/
+/*********閺傝纭堕惄鎴炲付*********/
 .approach_txt{ margin: 20px 0;}
 .approach_txt p{line-height: 24px;}
 
@@ -546,7 +546,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 .modal_table tbody td{padding:0 4px;height:30px;line-height:30px;word-break: break-all; word-wrap:break-word;}
 .list_table  .tab-pane_td td{text-align: left;}
 
-/**网络监控拓扑图*/
+/**缂冩垹绮堕惄鎴炲付閹锋挻澧ら崶锟�*/
 .gplot {
 	height: 860px;
 	margin-left: 300px;
@@ -666,7 +666,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	font-weight: 600;
 }
 
-/****基础网络*******/
+/****閸╄櫣顢呯純鎴犵捕*******/
 .newWork_contxt h2{font-size: 18px;color: #333;height: 50px; margin-left: 320px;}
 .newWork_contxt ul li{float: left;width: 100%;}
 .newWork_contxt p{  width: 200px;
@@ -681,7 +681,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 }
 
 
-/*******数据库与表连接监控******/
+/*******閺佺増宓佹惔鎾茬瑢鐞涖劏绻涢幒銉ф磧閹猴拷******/
 .list_table table td span{cursor: pointer}
 .color_FF9900{
 	color:#FF9900;
@@ -773,7 +773,8 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	-moz-box-shadow: 0 2px 10px rgba(145,164,181,.4) !important;
 	box-shadow: 0 2px 10px rgba(145,164,181,.4) !important;
 }
-/**新版网络监控**/
+.search_btn{margin-left:20px;}
+/**閺傛壆澧楃純鎴犵捕閻╂垶甯�**/
 .health_index {
 	margin-left: 30%;
 	margin-top: 60px;
@@ -816,11 +817,11 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	font-size: 20px;
 	font-weight: 600;
 }
-/**历史数据**/
+/**閸樺棗褰堕弫鐗堝祦**/
 .hostoryTableTd {
 	text-align: center;
 }
-/**订单一览**/
+/**鐠併垹宕熸稉锟界憴锟�**/
 .orderSummarySty{
 	width:100%;
 }
@@ -1000,7 +1001,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	background: #FFF;
 	border-radius: 3px;
 }
-/**search框**/
+/**search濡楋拷**/
 .allSearchInput {
 	margin-left: -282px;
 	margin-bottom: -33px;
@@ -1222,7 +1223,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	margin: 25px 33px;
 	display: block;
 }
-/**品牌排行**/
+/**閸濅胶澧濋幒鎺曨攽**/
 .NO1 {
 	width: 108px;
 	height: 190px;
@@ -1292,7 +1293,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	margin-left: -5.3%;
 	border-radius: 25px;
 }
-/**总览**/
+/**閹槒顫�**/
 .panel_con{margin: 0 50px; width: 100%;/*overflow: hidden*/}
 .orderSty, .appSty, .flowSty {
   float: left;
@@ -1440,7 +1441,9 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	cursor: pointer;
 }
 .top2_img{padding: 0 12px;}
-/*************屏幕分辨率适应*************/
+.order_btn{ margin-left:8px;}
+.ReactiveSMbtn{ margin-right:0}
+/*************鐏炲繐绠烽崚鍡氶哺閻滃洭锟藉倸绨�*************/
 
 @media screen and (min-width: 780px) and (max-width : 1798px){
 	.toolbar .tool_select .form-group {
@@ -1449,14 +1452,16 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 		vertical-align: middle;
 		margin-top: 20px;
 	}
-	.Reactivebtn,.ReactiveSystembtn,.ReactiveNetWbtn,.ReactiveNetHbtn{
+	.Reactivebtn,.ReactiveSystembtn,.ReactiveNetWbtn,.ReactiveNetHbtn,.ReactiveSMbtn,.ReactiveURLbtn,.ReactiveAlmSystembtn{
 		float:right;
 		margin-top:20px;
 	}
 }
-
-@media screen and (min-width: 1281px)and (max-width: 1366px){
-
+@media screen and (min-width: 1441px)and (max-width: 1600px){
+     .ReactiveAlmSystembtn{
+      margin-right:36px;
+     }
+	.ReactiveSMbtn{margin-right:248px;}
 	.Reactivebtn{
 		margin-right:36px;
 	}
@@ -1482,27 +1487,84 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 		padding: 0;
 		margin-top: 0;
 	}
+	.search_btn{
+	margin-top:20px;
+	}
+}
+
+
+
+@media screen and (min-width: 1281px)and (max-width: 1366px){
+	
+	
+	 .ReactiveAlmSystembtn{
+      margin-right:36px;
+     }
+.ReactiveSMbtn{margin-right:36px;}
+	.Reactivebtn{
+		margin-right:36px;
+	}
+	.ReactiveSystembtn{
+		margin-right: 50px;
+	}
+	.ReactiveNetWbtn{
+		margin-right: 56px;
+	}
+	.ReactiveNetHbtn{
+		margin-right: 22px;
+	}
+	.ReactiveServer{
+		margin-left: -12px;
+	}
+	.ReactiveStatic{
+		margin-left: 10px;
+	}
+	.ReactiveNetHstatic{
+		margin-left: 10px;
+	}
+	.centertoplayout p {
+		padding: 0;
+		margin-top: 0;
+	}
+	.search_btn{
+	margin-top:20px;
+	}
+	
+	.business_btn{
+	 margin: 14px 0 0 6px !important;
+	}
+	.order_btn{
+	 width:78px !important;
+	 margin:0 !important;
+	}
 }
 @media screen and (min-width: 1026px)and (max-width: 1280px){
-
+ .ReactiveAlmSystembtn{
+      margin-right:36px;
+     }
+	
 	.Reactivebtn{
 		margin-right: 132px;
 	}
 
 	.ReactiveSystembtn{
-		margin-right: 208px;
+		margin-right: 226px;
 	}
+	
 	.ReactiveNetWbtn{
 		margin-right: 242px;
 	}
 	.ReactiveNetHbtn{
-		margin-right: 242px;
+		margin-right: 212px;
 	}
 	.ReactiveServer{
 		margin-left: -12px;
 	}
 	.system-appRecite{
-		margin-left: 12px;
+		margin-left: 13px;
+	}
+	.system-appNameRecite{
+	margin-left: 14px;
 	}
 	.ReactiveStatic{
 		margin-left: 14px;
@@ -1513,32 +1575,47 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	.panel_con {
 		margin: 0 4px;
 	}
+	.search_btn{
+	margin-top:20px;
+	}
 
 	.centertoplayout p {
 		padding: 0;
 		margin-top: 0;
 	}
 	.top2_img{
-		padding: 0 8px;
+		padding: 0 6px;
+	}
+	
+	.business_btn{
+	 margin: 0 !important;
+	}
+	.order_btn{
+	    width: 80px !important;
+    margin: 10px 0 0 48px !important;
 	}
 }
 
 
 @media screen and (min-width: 768px)and (max-width: 1024px){
-
+ .ReactiveAlmSystembtn{
+      margin-right:36px;
+     }
 	.Reactivebtn{
 		margin-right:162px;
 	}
-
-	.ReactiveSystembtn{
-		margin-right:182px;
+	.ReactiveURLbtn{
+	  margin-right:14px;
 	}
+	/* .ReactiveSystembtn{
+		margin-right:182px;
+	} */
 	.ReactiveNetWbtn{
 		margin-right:4px;
 	}
-	.ReactiveNetHbtn{
+	/* .ReactiveNetHbtn{
 		margin-right: 176px;
-	}
+	} */
 	.ReactiveStatic{
 		margin-left: 10px;
 	}
@@ -1546,7 +1623,10 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 		margin-left: 27px;
 	}
 	.system-appRecite{
-		margin-left: 12px;
+		margin-left: 28px;
+	}
+	.system-appNameRecite{
+	     margin-left: -10px;
 	}
 	.ReactiveNetHstatic{
 		margin-left: 10px;
@@ -1557,18 +1637,51 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	.ReactiveDC{
 		margin-left: -3px;
 	}
+	.search_btn{
+	   margin-top:20px;
+	}
 }
 
 .box-header{
 	padding: 10px 0;
+	border-bottom:  1px solid #fff;
 }
 .box-title.lineh30{
-	line-height: 30px;
+	line-height: 60px;
 }
-/****更改业务查询页面样式****/
+/****閺囧瓨鏁兼稉姘閺屻儴顕楁い鐢告桨閺嶅嘲绱�****/
 .info-span{
-	line-height: 30px;margin: 0 6px;
+	line-height: 60px;margin: 0 6px;
 }
 .search-a{
-	margin-left: 20px; width: 80px;
+	margin:14px 10px 0  20px; /*width: 80px;*/
 }
+.operation_infop{margin:20px; }
+.fr .form-group{
+	margin-top:15px;
+}
+
+/* .
+.info_txt_warp{
+	   
+	   
+	    
+} */
+.info_txt_warp .info_span{
+	float:left;    
+
+    margin-left: 10px;
+    }
+.info_txt{ 
+	width: 440px;
+	float: left;
+}
+
+.info_txt p{
+	
+	line-height:24px;
+	float:left;
+	color: #EF9966;
+	 /* margin-left: 10px; */
+}
+

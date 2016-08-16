@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.gome.upm.common.Page;
 import com.gome.upm.dao.AlarmRecordMapper;
 import com.gome.upm.domain.AlarmRecord;
+import com.gome.upm.domain.UrlMonitor;
 import com.gome.upm.service.AlarmRecordService;
 import com.gome.upm.service.util.DBContextHolder;
 
@@ -48,6 +49,11 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
 	public AlarmRecord findAlarmRecordById(long id) {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return alarmRecordMapper.selectAlarmRecordById(id);
+	}
+	
+	public int editAlarmRecord(AlarmRecord alarmRecord) {
+		DBContextHolder.setDataSource("dataSourceOne");
+		return alarmRecordMapper.updateAlarmRecord(alarmRecord);
 	}
 
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * 报警日志实体类
+ * 报警记录实体类
  * @author caowei-ds1
  * @date 2016年6月22日
  */
@@ -41,6 +41,12 @@ public class AlarmRecord {
 	
 	/** 关联ID(url、port表主键id) */
 	private Long pid;
+	
+	/** 状态    0：待处理；1：处理中；2：已处理；3：忽略*/
+	private Integer status;
+	
+	/** 状态描述 */
+	private String statusStr;
 	
 	/** 报警时间 */
 	private Date sendTime;
@@ -128,6 +134,33 @@ public class AlarmRecord {
 
 	public void setTypeStr(String typeStr) {
 		this.typeStr = typeStr;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+		if(status == 0){
+			this.statusStr = "待处理";
+		}else if(status == 1){
+			this.statusStr = "处理中";
+		}else if(status == 2){
+			this.statusStr = "已处理";
+		}else if(status == 3){
+			this.statusStr = "忽略";
+		}else {
+			this.statusStr = "未知";
+		}
+	}
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
 	}
 
 }

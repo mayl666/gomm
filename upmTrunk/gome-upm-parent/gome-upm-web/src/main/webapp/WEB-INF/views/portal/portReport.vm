@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -42,8 +42,12 @@
     <div class="content-wrapper" style="min-height:1000px !important;margin-bottom: -30px;">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-			<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/portal/get"> / 端口存活监控</a><a href="${rc.contextPath}/portal/report?id=$!port.id"> / $!port.port</a>
-        	<a href="${rc.contextPath}/portal/get" class="newbtn pull-right btnBack">返回</a>
+			<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/portal/get"> / 端口存活监控</a ><a title="$!port.port" href="${rc.contextPath}/portal/report?id=$!port.id"> / $!port.port</a>
+        	#if($!type==1)
+        	<a href="${rc.contextPath}/portal/warning?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	#else
+        	<a href="${rc.contextPath}/portal/get?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	#end
         </section>
 
         <!-- Main content -->
@@ -56,26 +60,29 @@
 				<h2 style="font-size: 16px;margin: 10px 10px 0px;">端口实时报表</h2>          
                 </div>
                 <!-- Tab panes -->
-                        <form class="form-inline" style="padding: 20px;">
-                            <div class="form-group" style="margin-right: 20px;">
+                <div class="toolbar">
+                        <form class="form-inline tool_select">
+                            <div class="form-group" >
                                 <label for="startTime">开始时间:</label>
                                 <input type="text" class="form-control laydate-icon" id="portStartTime" onclick="laydate({istime:true,format: 'YYYY-MM-DD hh:mm:ss'})">
                             </div>
-                            <div class="form-group" style="margin-right: 20px;">
+                            <div class="form-group" >
                                 <label for="endTime">结束时间:</label>
                                 <input type="text" class="form-control laydate-icon" id="portEndTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
                             </div>
-                            <div class="form-group" style="margin-right: 20px;">
+                            <div class="form-group" >
                                 <label>存活状态:</label>
                                 <select class="form-control" id="urlSelectSurvival">
                                     <option value="2" selected="selected">全部</option>
                                     <option value="1">存活</option>
                                     <option value="0">不存活</option>
                                 </select>
-                                 <a  id="port_history_btn" onClick="return false;" class="newbtn ReactiveSystembtn"><i class="fa fa-search"></i>搜索</a>
                                <!-- <span style="margin-left: 50px;" class="btn btn-primary" id="port_history_btn">查询</span>-->
                             </div>
+                            <a  id="port_history_btn" onClick="return false;" class="newbtn  search_btn ReactiveURLbtn"><i class="fa fa-search"></i>搜索</a>
+                            
                         </form>
+                        </div>
                         <div class="list_table" id="url_list_table" style="margin-top:0px;">
                             #parse("portal/portHistoryTable.vm")
                         </div>

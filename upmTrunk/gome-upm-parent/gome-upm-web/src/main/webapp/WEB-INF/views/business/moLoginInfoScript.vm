@@ -15,7 +15,7 @@ function waitTimeLoginInfo(){
 	var wwww=new Date(endTimeStr);
 	//下个触发查询时间--5分钟后
 	wwww=wwww.DateAdd('n',5);
-	//alert(wwww.Format('yyyy-MM-dd HH:mm:ss'));
+	//layer.msg(wwww.Format('yyyy-MM-dd HH:mm:ss'));
 	//计算当前时间和下个查询时间的时间差
 	var waitTime=wwww-new Date();
 	//等待时间差
@@ -29,7 +29,7 @@ var loginInfoDate;
 var loginInfoHighChart;
 var timeLoginInfoCon=false;
 function initLoginInfoData(){
-	var obj=getSearchHour(3);
+	var obj=getSearchHour(1);
     var startTimeStr=obj.startTime;
     var endTimeStr=obj.endTime;
     reloadLoginInfoData(startTimeStr,endTimeStr,false);

@@ -15,7 +15,7 @@ function waitTimeNotPay(){
 	var wwww=new Date(endTimeStr);
 	//下个触发查询时间--5分钟后
 	wwww=wwww.DateAdd('n',5);
-	//alert(wwww.Format('yyyy-MM-dd HH:mm:ss'));
+	//layer.msg(wwww.Format('yyyy-MM-dd HH:mm:ss'));
 	//计算当前时间和下个查询时间的时间差
 	var waitTime=wwww-new Date();
 	//等待时间差
@@ -30,7 +30,7 @@ var notPayHighChart;
 //默认每5分钟查询查询一次
 var timeNotPayCon=false;
 function initNotPayData(){
-	var obj=getSearchHour(1);
+	var obj=getSearchHour(3);
     var startTimeStr=obj.startTime;
     var endTimeStr=obj.endTime;
     reloadNotPayData(startTimeStr,endTimeStr,false);
@@ -76,7 +76,7 @@ function initNotPay(){
             renderTo: 'container_notPay',  //图表放置的容器，一般在html中放置一个DIV，获取DIV的id属性值
             animation: Highcharts.svg, // don't animate in old IE
             marginRight: 10, //对容器的右内边距
-            shadow:true, //外框阴影
+            shadow:false, //外框阴影
             animation:true,
             events: {
                 load: function () {
@@ -172,7 +172,10 @@ function searchNotPayData(){
 	clearTimeout(waitNotPayRun);
 	var startTimeStr=$('#startTimeNotPay').val();
 	var endTimeStr=$('#endTimeNotPay').val();
-	
+	if(startTimeStr=='' || startTimeStr==null || endTimeStr=='' || endTimeStr==null){
+		layer.msg("请输入查询时间段");
+		return;
+	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);
  	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
@@ -180,7 +183,6 @@ function searchNotPayData(){
  	endTimeStr=endTimeStr.replace(/-/g,"/");
  	var oDate2 = new Date(endTimeStr);
  	endTimeStr=oDate2.Format('yyyy-MM-dd HH:m5:s0');
- 	
  	reloadNotPayData(startTimeStr,endTimeStr,true);
 }
 function reloadNotPayData(st,et,waitTimeReload){

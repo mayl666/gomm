@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UMP</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link href="${rc.contextPath}/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="${rc.contextPath}/libs/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="${rc.contextPath}/css/base.css" type="text/css" />
+	<link rel="stylesheet" href="${rc.contextPath}/css/style.css" type="text/css" />
+    <link href="${rc.contextPath}/libs/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="${rc.contextPath}/libs/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${rc.contextPath}/css/common-top.css" type="text/css" />
+    <style>
+    
+    </style>
+</head>
+<body class="sidebar-mini skin-black-light">
+<div class="wrapper">
+    <!-- header start-->
+    #parse("common/header.vm")
+    <!-- header end-->
+    
+    <!-- Left side column. contains the logo and sidebar -->
+    #parse("common/leftMenu.vm")
+    <!-- Left side end -->
+    
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <a href="${rc.contextPath}/index">统一监控平台</a><a href="${rc.contextPath}/app/index">/ 方法监控</a> 
+            <a href="${rc.contextPath}/app/index" class="newbtn pull-right btnBack">返回</a>
+        </section>
+
+        <!-- search content -->
+        <section  class="content contentSty">
+			<TABLE height=500 cellSpacing=0 cellPadding=0 width=500 align=center
+				background=../image/yelang.gif border=0>
+				<TBODY>
+					<TR>
+						<TD height=330>&nbsp;</TD>
+					</TR>
+					<TR>
+						<TD vAlign=top>
+							<DIV class=font14 align=center>
+								<STRONG>没有符合条件的内容，请返回重新输入
+								<FONT color=#0099ff></FONT>
+								<FONT color=#ff0000><BR></FONT>
+								</STRONG>
+							</DIV>
+						</TD>
+					</TR>
+				</TBODY>
+			</TABLE>
+        </section>   
+    </div>
+    
+     <!-- footer start -->
+      #parse("common/footer.vm")
+    <!-- footer end -->
+
+
+    <!-- Control Sidebar -->
+      #parse("common/controlSidebar.vm")
+    <!-- Control Sidebar end-->
+    
+</div><!-- ./wrapper -->
+<script src="${rc.contextPath}/js/jQuery/jQuery-2.1.3.min.js"></script>
+<!-- AdminLTE App -->
+</body>
+</html>

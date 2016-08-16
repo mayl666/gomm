@@ -41,7 +41,7 @@
 	                               #end
 	                               
 	                               <td >
-	                                    <a href="${rc.contextPath}/url/report?id=$!url.id" class="operation" style="margin-right: 8px;">明细</a>
+	                                    <a href="${rc.contextPath}/url/report?id=$!url.id&pageNum=$!{page.pageNo}" class="operation" style="margin-right: 8px;">明细</a>
 	                                    <a  data-toggle="modal" data-target="#updateMyModal"  name="edit_table" class="operation" urlId="$!url.id" style="cursor:pointer;">编辑</a>
 	                                    #if($!url.status == 1)
 	                                    <a   urlId="$!url.id" name="status" class="operation" urlStatus="0" style="cursor:pointer;">禁用</a>
@@ -66,7 +66,7 @@
                           
                           
                           
-<div class="modal fade" id="updateMyModal" tabindex="-1" >
+<div class="modal fade" id="updateMyModal" tabindex="-1" aria-hidden="true" data-backdrop="static" >
   <div class="modal-dialog" >
     <div class="modal-content">
       <div class="modal-header">
@@ -178,7 +178,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="importExcel" tabindex="-1" >
+<div class="modal fade" id="importExcel" tabindex="-1" aria-hidden="true" data-backdrop="static" >
   <div class="modal-dialog" >
     <div class="modal-content">
       <div class="modal-header">

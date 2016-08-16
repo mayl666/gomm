@@ -1,7 +1,7 @@
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$("#searchbtn").unbind("click");
+	$("#searchbtn").bind("click", function(){
 		var content = {};
 		content.orderBy = $("#orderBy").val();
 		content.orderByCpu = $("#orderByCpu").val();
@@ -29,7 +29,7 @@ $(function(){
 			},
 			error:function(){
 				//pop_up("系统异常",false);
-				alert("服务器异常");
+				layer.msg("服务器异常");
 			}
 		});
 	});
@@ -53,7 +53,7 @@ $("#group").change(function(obj){
 			}
 		},
 		error:function(){
-			alert("操作失败");
+			layer.msg("操作失败");
 		}
 	});
 });
@@ -95,7 +95,7 @@ function orderByCpuM(){
 			$(".list_table").append(data);
 		},
 		error:function(){
-			alert("服务器异常");
+			layer.msg("服务器异常");
 		}
 	});
 }
@@ -138,7 +138,7 @@ function orderByLoadM(){
 			$(".list_table").append(data);
 		},
 		error:function(){
-			alert("服务器异常");
+			layer.msg("服务器异常");
 		}
 	});
 }
@@ -181,7 +181,7 @@ function orderByMemoryM(){
 			$(".list_table").append(data);
 		},
 		error:function(){
-			alert("服务器异常");
+			layer.msg("服务器异常");
 		}
 	});
 }

@@ -52,17 +52,15 @@ function change(count){
 function regCode(){
 	var returnCode= $("#returnCode").val();
 		if(returnCode.length==0){
-			$("#returnCode_error").text("URL请求返回码不能为空");
+			layer.msg("URL请求返回码不能为空");
 			$("#returnCode").focus();
-			$("#returnCode_error").show();
 			return false;
 		}else{
 			var reg= /(([2-9]\d{2})+[,]?)+/;
 			var out= reg.test(returnCode);
 			if(!out){
-				$("#returnCode_error").text("URL请求返回码格式错误");
+				layer.msg("URL请求返回码格式错误");
 				$("#returnCode").focus();
-				$("#returnCode_error").show();
 				return false;
 			}
 			var s =returnCode.split(",")
@@ -71,9 +69,8 @@ function regCode(){
 					if(s[i]>=200&&s[i]<=600){
 						
 					}else{
-						$("#returnCode_error").text("URL请求返回码格式错误");
+						layer.msg("URL请求返回码格式错误");
 						$("#returnCode").focus();
-						$("#returnCode_error").show();
 						return false;
 					}
 				}
@@ -81,13 +78,11 @@ function regCode(){
 				if(returnCode>=200&&returnCode<=600){
 					
 				}else{
-					$("#returnCode_error").text("URL请求返回码格式错误");
+					layer.msg("URL请求返回码格式错误");
 						$("#returnCode").focus();
-						$("#returnCode_error").show();
 						return false;
 				}
 			}
-			$("#returnCode_error").hide();
 			return true;
 		}
 }

@@ -53,11 +53,11 @@
 				<form class="form-inline" style="padding: 20px;">
 					<div class="form-group">
 						<label for="startTime">时间：</label> <input type="text"
-							class="form-control" id="startTime_alarm">
+							class="form-control laydate-icon" id="startTime_alarm">
 					</div>
 					<div class="form-group">
 						<label for="endTime">至</label> <input type="text"
-							class="form-control" id="endTime_alarm">
+							class="form-control laydate-icon" id="endTime_alarm">
 					</div>
 					<div class="form-group" style="margin-right: 20px;">
 					  	<label>类型:</label>
@@ -74,7 +74,7 @@
 				</form>
 			</div>
 			<div class="list_table" style="margin-top: 10px;">
-            	#parse("alarm/alarmTable.vm")
+            	#parse("business/moAlarmTable.vm")
             </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
@@ -89,8 +89,6 @@
     <!-- Control Sidebar end-->
     
 </div><!-- ./wrapper -->
-
-#parse("business/moAlarmScript.vm")
 
 <!-- jQuery 2.1.3 -->
 <script src="${rc.contextPath}/js/jQuery/jQuery-2.1.3.min.js"></script>
