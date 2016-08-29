@@ -72,6 +72,7 @@ public class InitConfigTableBean {
 			if(count <= 0){
 				i++;
 				thresholdConfig.setAlarmLevel(0);
+				thresholdConfig.setAlarmReason(0);
 				thresholdConfig.setDbType(dbConnection.getDbType());
 				thresholdConfig.setActiveLevel1Threshold(30);
 				thresholdConfig.setActiveLevel2Threshold(50);
@@ -97,6 +98,7 @@ public class InitConfigTableBean {
 			if(count <= 0){
 				i++;
 				thresholdConfig.setAlarmLevel(0);
+				thresholdConfig.setAlarmReason(0);
 				thresholdConfig.setLevel1Threshold(0.8f);
 				thresholdConfig.setLevel2Threshold(0.9f);
 				thresholdConfigService.addThresholdConfig(thresholdConfig);
@@ -119,6 +121,7 @@ public class InitConfigTableBean {
 			if(count <= 0){
 				i++;
 				thresholdConfig.setAlarmLevel(0);
+				thresholdConfig.setAlarmReason(0);
 				thresholdConfig.setLevel1Threshold(0.8f);
 				thresholdConfig.setLevel2Threshold(0.9f);
 				thresholdConfigService.addThresholdConfig(thresholdConfig);

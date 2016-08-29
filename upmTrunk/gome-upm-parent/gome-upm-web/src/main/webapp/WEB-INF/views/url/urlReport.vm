@@ -44,9 +44,9 @@
         <section class="content-header">
 			<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/url/get">/ URL存活监控</a> <a href="${rc.contextPath}/url/report?id=$!url.id" title="$!url.url">/ $!url.shortUrl</a>
         	#if($!type==1)
-        	<a href="${rc.contextPath}/url/warning?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	<a href="${rc.contextPath}/url/warning?pageNum=$!pageNum&start=$!start&end=$!end&search=$!search" class="newbtn pull-right btnBack">返回</a>
         	#else
-        	<a href="${rc.contextPath}/url/get?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	<a href="${rc.contextPath}/url/get?pageNum=$!pageNum&search=$!search" class="newbtn pull-right btnBack">返回</a>
         	#end
         </section>
 

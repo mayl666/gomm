@@ -31,10 +31,11 @@ public class UrlMonitor {
 	private String shortUrl;
 	
 	/** 访问频率(单位：分钟) */
-	@XmlElement(name = "访问频率(5,10,15)分钟")
+	@XmlElement(name = "访问频率(3,5,10)分钟")
 	private Integer frequency;
 	
 	/** 访问超时时间(单位：秒) */
+	@XmlElement(name = "超时时间(3,5,30,180)秒")
 	private Integer timeout;
 	
 	/** 超时次数  */
@@ -59,7 +60,7 @@ public class UrlMonitor {
 	private String matchContent;
 	
 	/** 返回码  */
-	@XmlElement(name = "URL请求返回码(空为200,其它请输入)")
+	@XmlElement(name = "URL请求返回码(空为默认值:200,301,302其它请输入)")
 	private String returnCode;
 	
 	/** 报警方式(no：不报警；mail：邮件) */

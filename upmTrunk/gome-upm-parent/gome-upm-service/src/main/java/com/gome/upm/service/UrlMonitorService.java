@@ -209,4 +209,25 @@ public interface UrlMonitorService {
 	 * @return
 	 */
 	int deleteByTime(String startTime);
+	
+	/**
+	 * 从Elasticsearch查询历史数据
+	 * @param keyWard 根据id查询
+	 * @param start
+	 * @param size
+	 * @return
+	 */
+	Page<UrlRecord> search(String id,int start,int size);
+	/**
+	 * 向Elasticsearch插入历史数据
+	 * @param list 数据集合
+	 */
+	void add(List<UrlRecord> list);
+	
+	/**
+	 * 根据indexName 删除Elasticsearch里的数据
+	 * @param indexName
+	 * @return
+	 */
+	int deleteRecord(String indexName);
 }

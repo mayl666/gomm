@@ -9,6 +9,7 @@
 						<th>CPU使用率<span class="tableSort" onclick="orderByCpuM()"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down" style="display: block;position: absolute;margin-top: -10px;"></i></span></th>
 						<th>1分钟负载<span class="tableSort" onclick="orderByLoadM()"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down" style="display: block;position: absolute;margin-top: -10px;"></i></span></th>
 						<th>内存使用率<span class="tableSort" onclick="orderByMemoryM()"><i class="fa fa-caret-up"></i><i class="fa fa-caret-down" style="display: block;position: absolute;margin-top: -10px;"></i></span></th>
+						<th>状态</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -22,15 +23,30 @@
 									<td>$!i</td>
 									<td>$!serverHost.groupName</td>
 									<td>$!serverHost.host</td>
-									<td>$!serverHost.cpu%</td>
+									#if($!serverHost.cpu!='' && $!serverHost.cpu!='0.00' && $!serverHost.cpu!='null')
+										<td>$!serverHost.cpu%</td>
+									#else
+										<td>$!serverHost.cpu</td>
+									#end
 									<td>$!serverHost.load</td>
-									<td>$!serverHost.memory%</td>
+									#if($!serverHost.memory!='' && $!serverHost.memory!='0.00')
+										<td>$!serverHost.memory%</td>
+									#else
+										<td>$!serverHost.memory</td>
+									#end
+									#if($!serverHost.status=='0')
+										<td>正常</td>
+									#else
+										<td>不可用</td>
+									#end
 									<td class="operate-td">
 										<a class="operation" href="../server/goToDetail?hostid=$!serverHost.hostId">明细</a>
 									</td>
 								</tr>
 						 	#end
-						 #end
+						#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
+				#end
 					</tr>
 				</tbody>
 			</table>

@@ -30,12 +30,14 @@
                                     <td class="yes_green">$!record.survivalStr</td>
                                 </tr>
                         	#end
-                            #end
-                                
+                            #else
+                        	<tr><td colspan='3' align='center'>没有查到任何记录</td></tr>
+                        	#end    
                                 </tbody>
                             </table>
+							#if($!page.data.size() > 0)
                              #parse("common/pageToolbar.vm")
-                            
+                            #end
                             
                          <!--<div class="page">
                             <div class="page_info">

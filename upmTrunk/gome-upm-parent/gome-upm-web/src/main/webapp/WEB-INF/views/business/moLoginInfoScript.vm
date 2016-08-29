@@ -79,7 +79,7 @@ function initLoginInfo(){
             }
         },
         title: {
-            text: '5分钟登录'
+            text: ''    //by wangxiaye  去掉标题
         },
         xAxis: {
         	type: 'datetime',
@@ -135,6 +135,21 @@ function searchLoginInfoData(){
 	var startTimeStr=$('#startTimeLoginInfo').val();
 	var endTimeStr=$('#endTimeLoginInfo').val();
 	
+ 	if(startTimeStr==''){
+		//获取结束时间
+		startTimeStr=new Date();
+		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
+		startTimeStr.setTime(yesterday_milliseconds);     
+		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
+		$("#startTimeLoginInfo").val(startTimeStr);
+	}
+	var endTimeStr=$('#endTimeLoginInfo').val();
+	if(endTimeStr==''){
+		//获取结束时间
+		endTimeNow=new Date();
+		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
+		$("#endTimeLoginInfo").val(endTimeStr);
+	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);
  	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
@@ -142,7 +157,6 @@ function searchLoginInfoData(){
  	endTimeStr=endTimeStr.replace(/-/g,"/");
  	var oDate2 = new Date(endTimeStr);
  	endTimeStr=oDate2.Format('yyyy-MM-dd HH:m5:s0');
- 	
  	reloadLoginInfoData(startTimeStr,endTimeStr,true);
 }
 function reloadLoginInfoData(stLogin,etLogin,waitTimeReload){

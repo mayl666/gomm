@@ -5,18 +5,27 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class ZabbixCreateUtils {
-	private static String URL      = "http://zabbix.ds.gome.com.cn/zabbix/api_jsonrpc.php";
+	private static final Logger logger = LoggerFactory.getLogger(ZabbixCreateUtils.class);
+	private static Date date;
+	private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	private static String URL      = "http://10.58.44.57/zabbix/api_jsonrpc.php";
 	private static String AUTH     = null;
 	private static String USERNAME = "liuhaikun-ds";
 	private static String PASSWORD = "haikun";
@@ -176,7 +185,7 @@ public class ZabbixCreateUtils {
 	}
 
 
-	private static String createHost(String host, String ip, String port, String groupid, String templateId) throws Exception {
+	private static String createHost(String host, String ip, String port, String groupid, String templateId,String templateCommonId) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> interfaces = new HashMap<String, Object>();
 		List<Map<String, Object>> listinterfaces = new ArrayList<Map<String, Object>>();
@@ -192,9 +201,12 @@ public class ZabbixCreateUtils {
 		groups.put("groupid", groupid);
 		listgroups.add(groups);
 		Map<String, Object> templates = new HashMap<String, Object>();
+		Map<String, Object> templatesCommon = new HashMap<String, Object>();
 		List<Map<String, Object>> listtemplates = new ArrayList<Map<String, Object>>();
 		templates.put("templateid", templateId);
+		templatesCommon.put("templateid", templateCommonId);
 		listtemplates.add(templates);
+		listtemplates.add(templatesCommon);
 		Map<String, Object> inventory = new HashMap<String, Object>();
 		inventory.put("macaddress_a", "01234");
 		inventory.put("macaddress_b", "56789");
@@ -211,7 +223,8 @@ public class ZabbixCreateUtils {
 		map.put("auth", AUTH);
 		map.put("id", 1);
 		String param = JSON.toJSONString(map);
-		System.out.println("param JSON-------"+param);
+		date = new Date();
+		logger.info(df.format(date) +"---------创建host，JSON参数格式----------"+param);
 		String response = sendPost(param);
 		JSONObject object = JSON.parseObject(response).getJSONObject("result");
 		String hostids = object.getString("hostids");
@@ -232,7 +245,6 @@ public class ZabbixCreateUtils {
 		JSONObject object = JSON.parseObject(response).getJSONObject("result");
 		JSONArray jsonArray = (JSONArray) object.get("groupids");
 		String groupid = (String) jsonArray.get(0);
-		System.out.println("createHostGroup-----"+groupid);
 		return groupid;
 	}
 
@@ -251,7 +263,6 @@ public class ZabbixCreateUtils {
 		String response = sendPost(param);
 		JSONObject object = JSON.parseObject(response);
 		boolean result = object.getBooleanValue("result");
-		System.out.println("isExistHostGroup-----"+result);
 		return result;
 	}
 
@@ -270,7 +281,6 @@ public class ZabbixCreateUtils {
 		String response = sendPost(param);
 		JSONObject object = JSON.parseObject(response);
 		boolean result = object.getBooleanValue("result");
-		System.out.println("isExistHost-----"+result);
 		return result;
 	}
 	
@@ -356,7 +366,6 @@ public class ZabbixCreateUtils {
 		String response = sendPost(param);
 		JSONObject object = JSON.parseObject(response);
 		String result = object.getString("result");
-		System.out.println("updateHsot---"+result);
 	}
 	private static void deleteHsot(String hostid) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -373,7 +382,6 @@ public class ZabbixCreateUtils {
 		String response = sendPost(param);
 		JSONObject object = JSON.parseObject(response);
 		String result = object.getString("result");
-		System.out.println("deleteHsot---"+result);
 	}
 	/**
 	 * 获得主机host列表
@@ -449,10 +457,14 @@ public class ZabbixCreateUtils {
 	 */
 	public static boolean createServerMonitor(String osType,String host,String hostgroup,String ip,String port) throws Exception{
 		//1、用户验证
+		date = new Date();
+		logger.info(df.format(date) +"---------用户校验开始----------");
 		setAuth();
+		logger.info(df.format(date) +"---------用户校验通过----------");
 		//操作系统类型0、Windows 1、Linux
 		//2、判断host是否存在一般是IP
 		boolean isExistHost = isExistHost(host);
+		logger.info(df.format(date) +"---------判断host是否存在，结果为----------："+isExistHost);
 		if(isExistHost){
 			//host已存在，请重新命名
 			//throw new RuntimeException("host已存在,请重新命名!");
@@ -460,10 +472,14 @@ public class ZabbixCreateUtils {
 		//3、判断host group是否存在，存在关联，不存在创建新的group
 		String groupid = "";
 		boolean isExistHostGroup = isExistHostGroup(hostgroup);
+		logger.info(df.format(date) +"---------判断host group是否存在，结果为----------："+isExistHostGroup);
 		if(!isExistHostGroup){
+			logger.info(df.format(date) +"---------创建hostGroup开始----------");
 			groupid = createHostGroup(hostgroup);
+			logger.info(df.format(date) +"---------创建hostGroup完成----------groupid为："+groupid);
 		}else{
 			groupid = getHostGroup(hostgroup);
+			logger.info(df.format(date) +"---------判断host group已经存在，groupid为："+groupid);
 		}
 		/**
 		 * 4、根据OS类型，选择对应的template,window和linux两种模板
@@ -476,14 +492,23 @@ public class ZabbixCreateUtils {
 			template = "gome linux";
 		}
 		String templateId = queryTemplate(template);
+		logger.info(df.format(date) +"--------获取到"+template+"的templateId为："+templateId);
+		//TODO 此处为新加业务
+		/**
+		 * 不管是windows还是linux  都要关联一个Template ICMP Ping 这个模板监控ping的比较重要
+		 */
+		String templateCommonId = queryTemplate("Template ICMP Ping");
+		logger.info(df.format(date) +"--------获取到【Template ICMP Ping】的templateCommonId为："+templateCommonId);
 		//5、创建host
 		String hostId="";
 		if(!isExistHost){
-			hostId = createHost(host,ip,port,groupid,templateId);
+			logger.info(df.format(date) +"---------创建host开始----------");
+			hostId = createHost(host,ip,port,groupid,templateId,templateCommonId);
+			logger.info(df.format(date) +"---------创建host完成----------hostId为："+hostId);
 		}else{
 			hostId = getHostId(host);
+			logger.info(df.format(date) +"---------监控服务host已经存在----------hostId为："+hostId);
 		}
-		System.out.println("hostId"+hostId);
 		/**
 		 * 6、根据代理选择策略，选择指定的代理proxy，并关联hsot
 		 * 代理当前只有两个
@@ -500,27 +525,36 @@ public class ZabbixCreateUtils {
         	proxyName = "proxy2-10.58.44.92";
         }
 		String proxyid = getProxy(proxyName);
+		logger.info(df.format(date) +"---------本次创建监控服务随机分配的代理为：【"+proxyName+"】获取到的proxyid为"+proxyid);
 		if(proxyid!=null && proxyid!=""){
 			//proxyid = updateProxy(hostId,proxyid);
 		}else{
+			logger.info(df.format(date) +"---------创建proxy开始----------");
 			proxyid = createProxy(hostId,proxyName);
+			logger.info(df.format(date) +"---------创建proxy完成----------proxyid为："+proxyid);
 		}
-		System.out.println("proxyid"+proxyid);
-		String status = "0";
+		/**
+		 * 更新和删除监控，暂时不需要就注释
+		 */
+		//String status = "0";
 		//更新host
-		updateHost(hostId,status);
+		logger.info(df.format(date) +"---------更新host开始----------");
+		//updateHost(hostId,status);
+		logger.info(df.format(date) +"---------更新host完成----------");
 		//删除host
+		logger.info(df.format(date) +"---------删除host开始----------hostId为："+hostId);
 		//deleteHsot(hostId);
+		logger.info(df.format(date) +"---------删除host完成----------hostId为："+hostId);
 		return true;
 	}
 	public static void main(String[] args) throws Exception {
 		 // 操作系统类型0、Windows 1、Linux
         String osType = "1";
         // host一般就是IP
-        String host = "VM-10-58-57-90";
+        String host = "10.58.57.103";
         // 应用服务器+应用名称
-        String hostgroup = "ECec-dpc";
-        String ip = "10.58.57.90";
+        String hostgroup = "jiagou_jg-zjj";
+        String ip = "10.58.57.103";
         // 端口默认为10050
         String port = "10050";
         boolean createServerMonitor = createServerMonitor(osType, host, hostgroup, ip, port);

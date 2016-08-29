@@ -3,12 +3,8 @@ package com.gome.upm.controler;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +14,6 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.gome.upm.domain.ServerHost;
 
 public class ZabbixUtils2 {
 	private static String URL      = "http://zabbix.ds.gome.com.cn/zabbix/api_jsonrpc.php";

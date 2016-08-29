@@ -34,8 +34,8 @@ public class UrlMonitorConvertUtils {
 						urlMonitor.setSurvivalStr("匹配失败");
 					}
 				}
-				if(urlMonitor.getUrl().length()>100){
-					urlMonitor.setShortUrl(urlMonitor.getUrl().substring(0,100)+"...");
+				if(urlMonitor.getUrl().length()>80){
+					urlMonitor.setShortUrl(urlMonitor.getUrl().substring(0,80)+"...");
 				}else{
 					urlMonitor.setShortUrl(urlMonitor.getUrl());
 				}

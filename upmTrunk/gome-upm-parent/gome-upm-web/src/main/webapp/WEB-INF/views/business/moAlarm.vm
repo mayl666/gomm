@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -62,6 +62,7 @@
 					<div class="form-group" style="margin-right: 20px;">
 					  	<label>类型:</label>
 					    <select class="form-control" id="alarmType"> 
+					      	<option value=''>全部</option>
 					      	<option value='dragon'>DRAGON</option>
 					      	<option value='oms'>OMS</option>
 					      	<option value='forward'>正向单</option>

@@ -20,6 +20,9 @@ $(function(){
 	$(".form-control").focus(function(){
 		$(this).siblings(".error_span").hide();
 	});
+	$("#accTimeOut").change(function(){
+		isNumber();
+	});
 	$("#resContent").mouseout(function(){
 		var resContent =$("#resContent").val();
 		   if(resContent.length>0){
@@ -47,6 +50,24 @@ function change(count){
 	}else{
 		$("#post_param").hide();
 		$("#postParameter").text("");
+	}
+}
+function isNumber(){
+	var accTimeOut = $("#accTimeOut").val().trim();
+	var re =/^[1-9]\d*$/;
+	if(re.test(accTimeOut)){
+		if(accTimeOut>0){
+			$("#accTimeOut").siblings(".info_span").hide();
+			return true;
+		}else{
+			$("#accTimeOut").siblings(".info_span").show().text("请输入正整数");
+			$("#accTimeOut").focus();
+			return false;
+		}
+	}else{
+		$("#accTimeOut").siblings(".info_span").show().text("请输入正整数");
+		$("#accTimeOut").focus();
+		return false;
 	}
 }
 function regCode(){
@@ -122,7 +143,7 @@ var createUrl = {
 			content.key = $("#urlKey").val();
 			content.desc = $("#urlDesc").val();
 			content.app = $("#urlApp").val();
-			content.urlAddress = $("#urlAddress").val();
+			content.urlAddress = $("#urlAddress").val().trim();
 			content.accFre = $("#accFre").val();
 			content.accTimeOut = $("#accTimeOut").val();
 			content.timeOutNum = $("#timeOutNum").val();
@@ -158,10 +179,10 @@ var createUrl = {
 			var key = $("#urlKey").val();
 			var desc = $("#urlDesc").val();
 			var app = $("#urlApp").val();
-			var urlAddress = $("#urlAddress").val();
+			var urlAddress = $("#urlAddress").val().trim();
 			var postParameter =$("#postParameter").val();
 			var accFre = $("#accFre").val();
-			var accTimeOut = 0//$("#accTimeOut").val();
+			var accTimeOut = $("#accTimeOut").val().trim();
 			var timeOutNum = $("#timeOutNum").val();
 			var alarmInter = 0;//$("#alarmInter").val();
 			var method = $("input[name='method']:checked").val();
@@ -234,10 +255,11 @@ var createUrl = {
 			
 			var flag = createUrl.controller.isUrlExists();
 			console.info("flagtoStep3:"+flag);
+			var isNum = isNumber();
 			if(!regCode()){
 				return;
 			}
-			if(flag){
+			if(flag&&isNum){
 				//window.location.href=url;
 				StandardPost(contextPath+'/url/create/step3',data);
 			}
@@ -255,6 +277,7 @@ var createUrl = {
 		   var url = $("#urlAddress").val().trim();
 		   if(url == ""){
 			   $("#urlAddress").siblings(".info_span").show().text("监控地址不能为空");
+			   $("#urlAddress").focus();
 			   return flag;
 		   }
 		var check = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/
@@ -271,10 +294,11 @@ var createUrl = {
 										if(data.attach == 0){
 											flag = true;
 											$("#urlAddress").siblings(".info_span").show().text("监控地址可以使用")
-											console.info("ajaxflag:"+flag);
+											
 											return flag;
 										}else{
 											$("#urlAddress").siblings(".info_span").show().text("监控地址地址已存在");
+											$("#urlAddress").focus();
 											return false;
 										}
 				
@@ -282,6 +306,7 @@ var createUrl = {
 								},
 								error:function(){
 									$("#urlAddress").siblings($(".info_span")).show().text("验证失败");
+									$("#urlAddress").focus();
 									return false;
 								}
 								
@@ -291,6 +316,7 @@ var createUrl = {
 						
 					}else{
 						$("#urlAddress").siblings($(".info_span")).show().text("监控地址输入不正确");
+						$("#urlAddress").focus();
 						return false;
 					}
 			return flag;

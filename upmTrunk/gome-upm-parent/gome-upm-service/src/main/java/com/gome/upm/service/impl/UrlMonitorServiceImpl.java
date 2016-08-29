@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gome.upm.common.Page;
 import com.gome.upm.dao.AlarmRecordMapper;
+import com.gome.upm.dao.ElasticSearchDAO;
 import com.gome.upm.dao.UrlMonitorMapper;
 import com.gome.upm.dao.UrlRecordMapper;
 import com.gome.upm.domain.AlarmRecord;
@@ -40,6 +41,8 @@ public class UrlMonitorServiceImpl implements UrlMonitorService {
 	
 	@Resource
 	private AlarmRecordMapper alarmRecordMapper;
+	@Resource
+	private ElasticSearchDAO elasticSearchDao;
 	
 	public int addUrlMonitor(UrlMonitor urlMonitor) {
 		DBContextHolder.setDataSource("dataSourceOne");
@@ -132,5 +135,21 @@ public class UrlMonitorServiceImpl implements UrlMonitorService {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return urlRecordMapper.selectUrlRecordListByUrlRecord(urlRecord);
 	}
+
+	@Override
+	public Page<UrlRecord> search(String id, int start, int size) {
+		return elasticSearchDao.searchUrlRecord(id, start, size);
+	}
+
+	@Override
+	public void add(List<UrlRecord> list) {
+		elasticSearchDao.insertUrlRecord(list);
+	}
+
+	@Override
+	public int deleteRecord(String indexName) {
+		return elasticSearchDao.deleteRecord(indexName);
+	}
+	
 
 }

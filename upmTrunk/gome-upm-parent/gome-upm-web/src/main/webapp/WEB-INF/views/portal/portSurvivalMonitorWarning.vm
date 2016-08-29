@@ -45,22 +45,24 @@
             <a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/portal/get"> / 端口存活监控</a><a href="${rc.contextPath}/portal/warning"> / 报警记录</a>
         	<a href="${rc.contextPath}/portal/get" class="newbtn pull-right btnBack">返回</a>
         </section>
-
+		<input type="hidden" id="start"/>
+		<input type="hidden" id="end"/>
+		<input type="hidden" id="search"/>
         <!-- Main content -->
         <section class="content contentSty">
         	
                     <div class="toolbar">
 		                <form class="form-inline tool_select">
 							<div class="form-group">
-								<label for="startTime">报警时间：</label> <input type="text"
+								<label for="startTime">报警时间：</label> <input type="text" value="$!start"
 									class="form-control laydate-icon" id="startTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
 							</div>
 							<div class="form-group">
-								<label for="endTime">至</label> <input type="text"
+								<label for="endTime">至</label> <input type="text" value="$!end"
 									class="form-control laydate-icon" id="endTime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
 							</div>
 							<div class="form-group">
-								<label for="startTime">监控点地址：</label> <input type="text"
+								<label for="startTime">监控点地址：</label> <input type="text" value="$!search"
 									class="form-control" id="urlAddress">
 							</div>
 							<!--<div class="form-group" style="margin-right: 20px;">

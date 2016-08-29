@@ -19,7 +19,7 @@ function initCo(){
             renderTo: 'highchart_Co'
         },
         title: {
-            text: '正向单'
+            text: ''    //by wangxiaye  去掉标题
         },
         credits:{
             enabled:false

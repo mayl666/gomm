@@ -24,13 +24,26 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 public class SendMail {
 
 	// 设置发件人的邮箱信息，邮件服务器地址
-	private static String mailAddress = "caowei-ds1@yolo24.com";
-	private static String mailCount = "caowei-ds1"; // @前的邮件地址和用户名要一致
-	private static String mailPassword = "1q2w3e4r@@";
-	private static String mailServer = "mail.yolo24.com";
+	private static String mailAddress = null;
+	private static String mailCount = null; // @前的邮件地址和用户名要一致
+	private static String mailPassword = null;
+	private static String mailServer = null;
+	
+	static {
+        try {
+        	mailAddress = AppConfigUtil.getStringValue("mailAddress");
+        	mailCount = AppConfigUtil.getStringValue("mailCount");
+        	mailPassword = AppConfigUtil.getStringValue("mailPassword");
+        	mailServer = AppConfigUtil.getStringValue("mailServer");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 	/**
 	 * 发送简单邮件
 	 * 

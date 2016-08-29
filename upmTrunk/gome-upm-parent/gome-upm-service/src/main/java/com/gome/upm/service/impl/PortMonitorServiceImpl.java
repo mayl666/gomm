@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gome.upm.common.Page;
 import com.gome.upm.dao.AlarmRecordMapper;
+import com.gome.upm.dao.ElasticSearchDAO;
 import com.gome.upm.dao.PortMonitorMapper;
 import com.gome.upm.dao.PortRecordMapper;
 import com.gome.upm.domain.AlarmRecord;
@@ -40,6 +41,9 @@ public class PortMonitorServiceImpl implements PortMonitorService {
 	
 	@Resource
 	private AlarmRecordMapper alarmRecordMapper;
+	@Resource
+	private ElasticSearchDAO elasticSearchDao;
+	
 	
 	public int addPortMonitor(PortMonitor portMonitor) {
 		DBContextHolder.setDataSource("dataSourceOne");
@@ -130,6 +134,17 @@ public class PortMonitorServiceImpl implements PortMonitorService {
 	public List<PortRecord> findPortRecordList(PortRecord portRecord) {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return portRecordMapper.selectPortRecordListByPortRecord(portRecord);
+	}
+
+	@Override
+	public Page<PortRecord> search(String id, int start, int size) {
+		return elasticSearchDao.searchPortRecord(id, start, size);
+	}
+
+	@Override
+	public void add(List<PortRecord> list) {
+		elasticSearchDao.insertPortRecord(list);
+		
 	}
 	
 }

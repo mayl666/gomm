@@ -78,6 +78,12 @@ public class ThresholdHistory {
 	
 	/** 外键 */
 	private Long pid;
+	
+	/** 报警原因（1：长时间未更新；2：活跃连接数超出；3：总连接数超出；4：已使用百分比超出；5：报警等级提升；6：活跃连接数和总连接数均超出） */
+	private Integer alarmReason;
+	
+	/** 报警原因字符串 */
+	private String alarmReasonStr;
 
 	public Long getId() {
 		return id;
@@ -262,6 +268,37 @@ public class ThresholdHistory {
 
 	public void setUpdateTimeStr(String updateTimeStr) {
 		this.updateTimeStr = updateTimeStr;
+	}
+
+	public Integer getAlarmReason() {
+		return alarmReason;
+	}
+
+	public void setAlarmReason(Integer alarmReason) {
+		this.alarmReason = alarmReason;
+		if(alarmReason == 1){
+			this.alarmReasonStr = "长时间未更新";
+		}else if(alarmReason == 2){
+			this.alarmReasonStr = "活跃连接数超出";
+		}else if(alarmReason == 3){
+			this.alarmReasonStr = "总连接数超出";
+		}else if(alarmReason == 4){
+			this.alarmReasonStr = "已使用百分比超出";
+		}else if(alarmReason == 5){
+			this.alarmReasonStr = "报警等级提升";
+		}else if(alarmReason == 6){
+			this.alarmReasonStr = "活跃连接数、总连接数均超出";
+		}else{
+			this.alarmReasonStr = "未知";
+		}
+	}
+
+	public String getAlarmReasonStr() {
+		return alarmReasonStr;
+	}
+
+	public void setAlarmReasonStr(String alarmReasonStr) {
+		this.alarmReasonStr = alarmReasonStr;
 	}
 	
 }

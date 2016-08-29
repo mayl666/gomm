@@ -20,6 +20,11 @@
 						<i class="fa fa-angle-left pull-right"></i> 
 					</a>
 					<ul class="treeview-menu">
+						<li class="treeview" id="alarmMenu">
+							<a href="${rc.contextPath}/alarm/list"> 
+								<span>报警记录</span>
+							</a>
+						</li>
 						<li class="treeview" id="serverMenu">
 							<a href="${rc.contextPath}/server/goToHostAll"> 
 								<span>服务器监控</span>
@@ -72,17 +77,14 @@
 								<span>业务监控</span>
 							</a>
 						</li>
-						<li class="treeview" id="alarmMenu">
-							<a href="${rc.contextPath}/alarm/list"> 
-								<span>报警记录</span>
-							</a>
-						</li>
+						
 					</ul>
 				</li>
             </ul>
+            <div class="left-bg"></div>
         </section>
         <!-- /.sidebar -->
-        <div class="left-bg"></div>
+        
     </aside>
     <script src="${rc.contextPath}/js/jQuery/jQuery-2.1.3.min.js"></script>
     <script type="text/javascript">

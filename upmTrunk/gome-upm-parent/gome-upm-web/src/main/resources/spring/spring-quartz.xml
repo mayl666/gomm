@@ -68,9 +68,9 @@
      <bean id="dbTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
           <property name="jobDetail" ref="dbJobDetail"/>
           <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="120000"/>
+          <property name="startDelay" value="180000"/>
           <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="120000"/>
+          <property name="repeatInterval" value="180000"/>
           <!--计数，从0开始，设置为9，任务会执行10次然后结束任务
           <property name="repeatCount" value="0"/>
             -->

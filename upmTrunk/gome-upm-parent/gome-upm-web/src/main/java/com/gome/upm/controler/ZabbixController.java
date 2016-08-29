@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,14 +36,12 @@ import com.gome.upm.domain.ServerItem;
 import com.gome.upm.domain.ServerItemDetail;
 import com.gome.upm.domain.prtg.IndexTOP5;
 import com.gome.upm.service.ServerMonitorService;
-
-import redis.Gcache;
 @Controller
 @RequestMapping(value="/server")
 public class ZabbixController {
 	
-	@Resource(name = "monitorGcache")
-	Gcache monitorGcache;
+	/*@Resource(name = "monitorGcache")
+	Gcache monitorGcache;*/
 	@Resource(name = "serverMonitorService")
 	ServerMonitorService serverMonitorService;
 	
@@ -89,7 +86,10 @@ public class ZabbixController {
 		serverHost.setHostId(hostid);
 		//List<HashMap<String, String>> items = ZabbixUtils.getItems(hostid);
 		//model.addObject("items", items);
-		serverHost = serverMonitorService.queryHost(hostid);
+		List<ServerHost> serverHostList = serverMonitorService.queryHost(hostid);
+		if(serverHostList!=null && serverHostList.size()>0){
+			serverHost = serverHostList.get(0);
+		}
 		model.addObject("serverHost", serverHost);
 		model.addObject("leftMenu", "serverMenu");
 		model.setViewName("/upm/serverMonitor-detail");
@@ -109,7 +109,10 @@ public class ZabbixController {
 		serverHost.setHostId(hostid);
 		List<HashMap<String, String>> items = ZabbixUtils.getItems(hostid);
 		model.addObject("items", items);
-		serverHost = serverMonitorService.queryHost(hostid);
+		List<ServerHost> serverHostList = serverMonitorService.queryHost(hostid);
+		if(serverHostList!=null && serverHostList.size()>0){
+			serverHost = serverHostList.get(0);
+		}
 		model.addObject("serverHost", serverHost);
 		model.addObject("leftMenu", "serverMenu");
 		model.setViewName("/upm/trigger");
@@ -177,20 +180,29 @@ public class ZabbixController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/getIndex", method={RequestMethod.POST,RequestMethod.GET}, produces = "application/json;charset=utf-8")
-	public ResponsesDTO getIndex (HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "content", required = true) String content) throws Exception{
+	public ResponsesDTO getIndex (HttpServletRequest request, HttpServletResponse response) throws Exception{
 		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
 		try{
-			String totalHost = monitorGcache.get("totalHost");
-			String validHost = monitorGcache.get("validHost");
-			String validPHost = monitorGcache.get("validPHost");
-			String invalidHost = monitorGcache.get("invalidHost");
-			String invalidPHost = monitorGcache.get("invalidPHost");
+//			String totalHost = monitorGcache.get("totalHost");
+//			String validHost = monitorGcache.get("validHost");
+//			String validPHost = monitorGcache.get("validPHost");
+//			String invalidHost = monitorGcache.get("invalidHost");
+//			String invalidPHost = monitorGcache.get("invalidPHost");
 			ServerHost serverHost = new ServerHost();
-			serverHost.setTotal(totalHost);
-			serverHost.setValid(validHost);
-			serverHost.setValidP(validPHost);
-			serverHost.setInvalid(invalidHost);
-			serverHost.setInvalidP(invalidPHost);
+			serverHost.setStatus("1");
+			int invalidPServer = serverMonitorService.queryServerTotal(serverHost);
+			serverHost.setStatus("0");
+			int validPServer = serverMonitorService.queryServerTotal(serverHost);
+			serverHost.setTotal(String.valueOf(invalidPServer+validPServer));
+			serverHost.setValid(String.valueOf(validPServer));
+			BigDecimal bdDisk1 = new BigDecimal(Double.parseDouble(String.valueOf(validPServer))*100/(Double.parseDouble((String.valueOf(validPServer+invalidPServer))+"")));
+			bdDisk1 = bdDisk1.setScale(1,BigDecimal.ROUND_HALF_UP);
+			BigDecimal bdDisk = new BigDecimal(Double.parseDouble(String.valueOf(invalidPServer))*100/(Double.parseDouble((String.valueOf(validPServer+invalidPServer))+"")));
+			bdDisk = bdDisk.setScale(1,BigDecimal.ROUND_HALF_UP);
+			
+			serverHost.setValidP(bdDisk1+"");
+			serverHost.setInvalid(String.valueOf(invalidPServer));
+			serverHost.setInvalidP(bdDisk+"");
 			
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
 			res.setAttach(serverHost);
@@ -211,21 +223,28 @@ public class ZabbixController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/getItemIndex", method={RequestMethod.POST,RequestMethod.GET}, produces = "application/json;charset=utf-8")
-	public ResponsesDTO getItemIndex (HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "content", required = true) String content) throws Exception{
+	public ResponsesDTO getItemIndex (HttpServletRequest request, HttpServletResponse response) throws Exception{
 		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
 		try{
-			String totalItems = monitorGcache.get("totalItems");
-			String validItems = monitorGcache.get("validItems");
-			String validPItems = monitorGcache.get("validPItems");
-			String invalidItems = monitorGcache.get("invalidItems");
-			String invalidPItems = monitorGcache.get("invalidPItems");
-			
+//			String totalItems = monitorGcache.get("totalItems");
+//			String validItems = monitorGcache.get("validItems");
+//			String validPItems = monitorGcache.get("validPItems");
+//			String invalidItems = monitorGcache.get("invalidItems");
+//			String invalidPItems = monitorGcache.get("invalidPItems");
 			ServerHost serverHost = new ServerHost();
-			serverHost.setTotal(totalItems);
-			serverHost.setValid(validItems);
-			serverHost.setValidP(validPItems);
-			serverHost.setInvalid(invalidItems);
-			serverHost.setInvalidP(invalidPItems);
+			serverHost.setStatus("0");
+			int invalidPItem = serverMonitorService.queryItemInvalidTotal(serverHost);
+			serverHost.setStatus("1");
+			int validPItem = serverMonitorService.queryItemInvalidTotal(serverHost);
+			serverHost.setTotal(String.valueOf(invalidPItem+validPItem));
+			serverHost.setValid(String.valueOf(validPItem));
+			BigDecimal bdDisk1 = new BigDecimal(Double.parseDouble(String.valueOf(validPItem))*100/(Double.parseDouble((String.valueOf(validPItem+invalidPItem))+"")));
+			bdDisk1 = bdDisk1.setScale(1,BigDecimal.ROUND_HALF_UP);
+			BigDecimal bdDisk = new BigDecimal(Double.parseDouble(String.valueOf(invalidPItem))*100/(Double.parseDouble((String.valueOf(validPItem+invalidPItem))+"")));
+			bdDisk = bdDisk.setScale(1,BigDecimal.ROUND_HALF_UP);
+			serverHost.setValidP(bdDisk1+"");
+			serverHost.setInvalid(String.valueOf(invalidPItem));
+			serverHost.setInvalidP(bdDisk+"");
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
 			res.setAttach(serverHost);
 		}catch(Exception e){
@@ -248,20 +267,20 @@ public class ZabbixController {
 	public ResponsesDTO getTriggerIndex (HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "content", required = true) String content) throws Exception{
 		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
 		try{
-			String totalTrigger = monitorGcache.get("totalTrigger");
-			String validTrigger = monitorGcache.get("validTrigger");
-			String validPTrigger = monitorGcache.get("validPTrigger");
-			String invalidTrigger = monitorGcache.get("invalidTrigger");
-			String invalidPTrigger = monitorGcache.get("invalidPTrigger");
-			
-			ServerHost serverHost = new ServerHost();
-			serverHost.setTotal(totalTrigger);
-			serverHost.setValid(validTrigger);
-			serverHost.setValidP(validPTrigger);
-			serverHost.setInvalid(invalidTrigger);
-			serverHost.setInvalidP(invalidPTrigger);
+//			String totalTrigger = monitorGcache.get("totalTrigger");
+//			String validTrigger = monitorGcache.get("validTrigger");
+//			String validPTrigger = monitorGcache.get("validPTrigger");
+//			String invalidTrigger = monitorGcache.get("invalidTrigger");
+//			String invalidPTrigger = monitorGcache.get("invalidPTrigger");
+//			
+//			ServerHost serverHost = new ServerHost();
+//			serverHost.setTotal(totalTrigger);
+//			serverHost.setValid(validTrigger);
+//			serverHost.setValidP(validPTrigger);
+//			serverHost.setInvalid(invalidTrigger);
+//			serverHost.setInvalidP(invalidPTrigger);
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
-			res.setAttach(serverHost);
+//			res.setAttach(serverHost);
 		}catch(Exception e){
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 			throw new Exception(e);
@@ -302,11 +321,23 @@ public class ZabbixController {
 //			Collections.sort(listMemory);
 //			//{memory=[IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=99.44, host=10.63.9.17], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=99.29, host=10.58.46.167], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=99.28, host=10.58.69.71], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=99.26, host=10.58.72.44], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=99.25, host=10.58.46.208]]}
 //			map.put("memory", listMemory.size() < 5 ? listMemory : listMemory.subList(0, 5));
-			String memoryTOP5 = monitorGcache.get("memoryTOP5");
-			ObjectMapper mapper = new ObjectMapper();  
-			Map<String,Object> productMap = mapper.readValue(memoryTOP5, map.getClass());//转成map
+			List<IndexTOP5> listCPU = new ArrayList<IndexTOP5>();
+			List<ServerHost> serverHostsList = serverMonitorService.queryHostsList();
+			for (int i = 0; i < serverHostsList.size(); i++) {
+				IndexTOP5 indexTOP5 = new IndexTOP5();
+				if(serverHostsList.get(i).getCpu()==null){
+					indexTOP5.setLastVal(0.00);
+				}else{
+					indexTOP5.setLastVal(Double.parseDouble(serverHostsList.get(i).getMemory()));
+				}
+				indexTOP5.setDeviceId(serverHostsList.get(i).getHostId());
+				indexTOP5.setHost(serverHostsList.get(i).getHost());
+				listCPU.add(indexTOP5);
+			}
+			Collections.sort(listCPU);
+			map.put("memory", listCPU.size() < 5 ? listCPU : listCPU.subList(0, 5));
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
-			res.setAttach(productMap);
+			res.setAttach(map);
 		}catch(Exception e){
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 			throw new Exception(e);
@@ -347,11 +378,29 @@ public class ZabbixController {
 //			Collections.sort(listCpu);
 //			//{cpu=[IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=75.03, host=10.58.47.109], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=71.21, host=10.58.222.103], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=65.37, host=10.58.222.107], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=58.85, host=10.58.51.153], IndexTOP5 [deviceId=null, deviceName=null, sensorId=null, sensorName=null, lastVal=58.18, host=10.58.53.33]]}
 //			map.put("cpu", listCpu.size() < 5 ? listCpu : listCpu.subList(0, 5));
-			String cpuTOP5 = monitorGcache.get("cpuTOP5");
-			ObjectMapper mapper = new ObjectMapper();  
-			Map<String,Object> productMap = mapper.readValue(cpuTOP5, map.getClass());//转成map
+			List<IndexTOP5> listCPU = new ArrayList<IndexTOP5>();
+			List<ServerHost> serverHostsList = serverMonitorService.queryHostsList();
+			for (int i = 0; i < serverHostsList.size(); i++) {
+				IndexTOP5 indexTOP5 = new IndexTOP5();
+				if(serverHostsList.get(i).getCpu()==null){
+					indexTOP5.setLastVal(0.00);
+				}else{
+					indexTOP5.setLastVal(Double.parseDouble(serverHostsList.get(i).getCpu()));
+				}
+				indexTOP5.setDeviceId(serverHostsList.get(i).getHostId());
+				indexTOP5.setHost(serverHostsList.get(i).getHost());
+				listCPU.add(indexTOP5);
+			}
+			Collections.sort(listCPU);
+			map.put("cpu", listCPU.size() < 5 ? listCPU : listCPU.subList(0, 5));
+//			String cpuTOP5 = monitorGcache.get("cpuTOP5");
+//			Map<String,Object> productMap = new HashMap<String,Object>();
+//			if(cpuTOP5!=null){
+//				ObjectMapper mapper = new ObjectMapper();  
+//				productMap = mapper.readValue(cpuTOP5, map.getClass());//转成map
+//			}
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
-			res.setAttach(productMap);
+			res.setAttach(map);
 		}catch(Exception e){
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 			throw new Exception(e);
@@ -392,11 +441,23 @@ public class ZabbixController {
 //			Collections.sort(listLoad);
 //			//{load=[IndexTOP5 [deviceId=10538, deviceName=null, sensorId=null, sensorName=null, lastVal=25.66, host=10.58.11.1], IndexTOP5 [deviceId=10573, deviceName=null, sensorId=null, sensorName=null, lastVal=20.38, host=10.126.53.52], IndexTOP5 [deviceId=11330, deviceName=null, sensorId=null, sensorName=null, lastVal=18.66, host=10.58.52.45], IndexTOP5 [deviceId=10341, deviceName=null, sensorId=null, sensorName=null, lastVal=16.47, host=10.58.47.109], IndexTOP5 [deviceId=12119, deviceName=null, sensorId=null, sensorName=null, lastVal=15.49, host=10.58.223.35]]}
 //			map.put("load", listLoad.size() < 5 ? listLoad : listLoad.subList(0, 5));
-			String LoadTOP5 = monitorGcache.get("LoadTOP5");
-			ObjectMapper mapper = new ObjectMapper();  
-			Map<String,Object> productMap = mapper.readValue(LoadTOP5, map.getClass());//转成map
+			List<IndexTOP5> listCPU = new ArrayList<IndexTOP5>();
+			List<ServerHost> serverHostsList = serverMonitorService.queryHostsList();
+			for (int i = 0; i < serverHostsList.size(); i++) {
+				IndexTOP5 indexTOP5 = new IndexTOP5();
+				if(serverHostsList.get(i).getCpu()==null){
+					indexTOP5.setLastVal(0.00);
+				}else{
+					indexTOP5.setLastVal(Double.parseDouble(serverHostsList.get(i).getLoad()));
+				}
+				indexTOP5.setDeviceId(serverHostsList.get(i).getHostId());
+				indexTOP5.setHost(serverHostsList.get(i).getHost());
+				listCPU.add(indexTOP5);
+			}
+			Collections.sort(listCPU);
+			map.put("load", listCPU.size() < 5 ? listCPU : listCPU.subList(0, 5));
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
-			res.setAttach(productMap);
+			res.setAttach(map);
 		}catch(Exception e){
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 			throw new Exception(e);
@@ -437,11 +498,11 @@ public class ZabbixController {
 //			Collections.sort(listLoad);
 //			map.put("io", listLoad.size() < 5 ? listLoad : listLoad.subList(0, 5));
 			
-			String IOTOP5 = monitorGcache.get("IOTOP5");
-			ObjectMapper mapper = new ObjectMapper();  
-			Map<String,Object> productMap = mapper.readValue(IOTOP5, map.getClass());//转成map
+//			String IOTOP5 = monitorGcache.get("IOTOP5");
+//			ObjectMapper mapper = new ObjectMapper();  
+//			Map<String,Object> productMap = mapper.readValue(IOTOP5, map.getClass());//转成map
 			res.setCode(ReturnCode.ACTIVE_SUCCESS.code());
-			res.setAttach(productMap);
+			res.setAttach(map);
 		}catch(Exception e){
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 			throw new Exception(e);
@@ -498,7 +559,7 @@ public class ZabbixController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="getHostAll" , method={RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView getHostAll(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size,HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception{
+	public ModelAndView getHostAll(@Param(value="content")String content, @Param(value="page")String page,@Param(value="status")String status, @Param(value="size")String size,HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception{
 		if(StringUtils.isEmpty(content)){
 			model.setViewName("/upm/serverMonitor-allfacility");
 		}else{
@@ -530,14 +591,16 @@ public class ZabbixController {
 			}
 		} else {
 			condition = new ServerHost();
+			condition.setStatus(status);
 		}
 		p.setConditions(condition);
-		String[] groupList = serverMonitorService.queryHostGroup();
-		String[] hostNameList = serverMonitorService.queryHostName(groupName);
+		String[] groupList = serverMonitorService.queryHostGroup(condition);
+		String[] hostNameList = serverMonitorService.queryHostName(condition);
 		Page<ServerHost>  hostList = serverMonitorService.queryHostList(p);
 		model.addObject("groupList", groupList);
 		model.addObject("hostNameList", hostNameList);
 		model.addObject("page", hostList);
+		model.addObject("status", status);
 		model.addObject("leftMenu", "serverMenu");
 		return model;
 	}
@@ -552,10 +615,39 @@ public class ZabbixController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/getHost", method={RequestMethod.POST,RequestMethod.GET}, produces = "application/json;charset=utf-8")
-	public ResponsesDTO getHost(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "group", required = true) String group) throws Exception{
+	public ResponsesDTO getHost(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "group", required = true) String group,@RequestParam(value = "status", required = true) String status) throws Exception{
 		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
 		try{
-			String[] hostNameList = serverMonitorService.queryHostName(group);
+			ServerHost serverHost = new ServerHost();
+			serverHost.setGroupName(group);
+			serverHost.setStatus(status);
+			String[] hostNameList = serverMonitorService.queryHostName(serverHost);
+			res.setReturnCode(ReturnCode.ACTIVE_SUCCESS);
+			res.setAttach(hostNameList);
+		}catch(Exception e){
+			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
+			throw new Exception(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * 获取host查询条件列表
+	 * @param request
+	 * @param response
+	 * @param content
+	 * @return
+	 * @throws Exception 
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getHostNew", method={RequestMethod.POST,RequestMethod.GET}, produces = "application/json;charset=utf-8")
+	public ResponsesDTO getHostNew(HttpServletRequest request, HttpServletResponse response,@RequestParam(value = "group", required = true) String group,@RequestParam(value = "status", required = true) String status) throws Exception{
+		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
+		try{
+			ServerHost serverHost = new ServerHost();
+			serverHost.setGroupName(group);
+			serverHost.setStatus(status);
+			String[] hostNameList = serverMonitorService.queryHostNameNew(serverHost);
 			res.setReturnCode(ReturnCode.ACTIVE_SUCCESS);
 			res.setAttach(hostNameList);
 		}catch(Exception e){
@@ -1003,19 +1095,13 @@ public class ZabbixController {
 	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/list", method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView toAlarmListView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws UnsupportedEncodingException{
+	public ModelAndView toAlarmListView(@Param(value="content")String content, @Param(value="page")String page,@Param(value="status")String status, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws UnsupportedEncodingException{
 		if(StringUtils.isEmpty(content)){
 			model.setViewName("/upm/serverMonitor-alarmlog");
 			//下拉列表
 		} else {
 			model.setViewName("/upm/serverMonitor-alarmlogTable");
 		}
-		String groupName = "";
-		String hostName = "";
-		String[] groupList = serverMonitorService.queryHostGroupNew();
-		String[] hostNameList = serverMonitorService.queryHostNameNew(groupName);
-		model.addObject("groupList", groupList);
-		model.addObject("hostNameList", hostNameList);
 		model.addObject("leftMenu", "serverMenu");
 		int pageNo = 1;
 		if(StringUtils.isNotEmpty(page)){
@@ -1026,7 +1112,8 @@ public class ZabbixController {
 			pageSize = Integer.parseInt(size);
 		}
 		Page<ServerAlarmRecord> p = new Page<ServerAlarmRecord>(pageNo, pageSize);
-		
+		String groupName = "";
+		String hostName = "";
 		ServerAlarmRecord condition = null;
 		//通过数据库类型查找
 		if(StringUtils.isNotEmpty(content)){
@@ -1041,13 +1128,22 @@ public class ZabbixController {
 				hostName=java.net.URLDecoder.decode(hostName,"UTF-8");
 				condition.setHost(hostName);
 			}
-		} else {
+			status = condition.getStatus();
+		}else{
 			condition = new ServerAlarmRecord();
-			condition.setStatus("0");
+			condition.setStatus(status);
 		}
+		ServerHost serverHost = new ServerHost();
+		serverHost.setGroupName(groupName);
+		serverHost.setStatus(status);
+		String[] groupList = serverMonitorService.queryHostGroupNew(serverHost);
+		String[] hostNameList = serverMonitorService.queryHostNameNew(serverHost);
+		model.addObject("groupList", groupList);
+		model.addObject("hostNameList", hostNameList);
 		p.setConditions(condition);
 		Page<ServerAlarmRecord> pageAlarm = serverMonitorService.findAlarmRecordListByPage(p);
 		model.addObject("page", pageAlarm);
+		model.addObject("status", status);
 		return model;
 	}
 }

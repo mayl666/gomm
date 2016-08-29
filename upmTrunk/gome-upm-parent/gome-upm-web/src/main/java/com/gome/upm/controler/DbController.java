@@ -65,11 +65,14 @@ public class DbController extends BaseController {
 		
 		int connLevel1 = 0;
 		int connLevel2 = 0;
+		int connLevel3 = 0;
 		int tbsLevel1 = 0;
 		int tbsLevel2 = 0;
+		int tbsLevel3 = 0;
 		int asmLevel1 = 0;
 		int asmLevel2 = 0;
-		//查询报警级别为一般的个数
+		int asmLevel3 = 0;
+		//查询报警级别为一级的个数
 		List<ThresholdConfig> level1List = thresholdConfigService.findTotalResultByAlarmLevel(1);
 		for (ThresholdConfig thresholdConfig : level1List) {
 			if("CONN".equals(thresholdConfig.getDataType())){
@@ -80,7 +83,7 @@ public class DbController extends BaseController {
 				asmLevel1 = thresholdConfig.getNum();
 			}
 		}
-		//查询报警级别为严重的个数
+		//查询报警级别为二级的个数
 		List<ThresholdConfig> level2List = thresholdConfigService.findTotalResultByAlarmLevel(2);
 		for (ThresholdConfig thresholdConfig : level2List) {
 			if("CONN".equals(thresholdConfig.getDataType())){
@@ -92,12 +95,27 @@ public class DbController extends BaseController {
 			}
 		}
 		
+		//查询报警级别为三级的个数
+		List<ThresholdConfig> level3List = thresholdConfigService.findTotalResultByAlarmLevel(3);
+		for (ThresholdConfig thresholdConfig : level3List) {
+			if("CONN".equals(thresholdConfig.getDataType())){
+				connLevel3 = thresholdConfig.getNum();
+			} else if("TBS".equals(thresholdConfig.getDataType())){
+				tbsLevel3 = thresholdConfig.getNum();
+			} else if("ASM".equals(thresholdConfig.getDataType())){
+				asmLevel3 = thresholdConfig.getNum();
+			}
+		}
+		
 		model.addObject("connLevel1", connLevel1);
 		model.addObject("connLevel2", connLevel2);
+		model.addObject("connLevel3", connLevel3);
 		model.addObject("tbsLevel1", tbsLevel1);
 		model.addObject("tbsLevel2", tbsLevel2);
+		model.addObject("tbsLevel3", tbsLevel3);
 		model.addObject("asmLevel1", asmLevel1);
 		model.addObject("asmLevel2", asmLevel2);
+		model.addObject("asmLevel3", asmLevel3);
 		
 		//查询连接数异常的top5
 		List<ThresholdConfig> connList= thresholdConfigService.findConnTop5("CONN");

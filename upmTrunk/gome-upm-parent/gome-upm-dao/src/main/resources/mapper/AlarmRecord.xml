@@ -8,10 +8,11 @@
     <result column="sendTime" property="sendTime" jdbcType="TIMESTAMP" />
     <result column="pid" property="pid" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="level" property="level" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List" >
-    id, type, content, sendTime, pid, status
+    id, type, content, sendTime, pid, status, level
   </sql>
   
   <select id="selectAlarmRecordListByPage" resultMap="BaseResultMap" parameterType="com.gome.upm.common.Page">
@@ -22,8 +23,11 @@
  	<if test="conditions.id != null" >
       and id = #{conditions.id,jdbcType=BIGINT} 
     </if>  
-    <if test="conditions.type != null and conditions.type != ''" >
+    <if test="conditions.type != null and conditions.type != '' and conditions.type != 'business'.toString()" >
       and type = #{conditions.type,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.type == 'business'.toString()">
+      and (type = 'dragon' or  type = 'oms' or  type = 'forward')
     </if>
     <if test="conditions.pid != null" >
       and pid = #{conditions.pid,jdbcType=BIGINT}
@@ -37,6 +41,9 @@
     <if test="conditions.status != null" >
       and status = #{conditions.status,jdbcType=INTEGER}
     </if>
+    <if test="conditions.level != null" >
+      and level = #{conditions.level,jdbcType=INTEGER}
+    </if>
     order by sendTime desc
     <if test="start != null and pageSize != null">
     	LIMIT #{start},#{pageSize}
@@ -48,8 +55,11 @@
  	<if test="id != null" >
       and id = #{id,jdbcType=BIGINT} 
     </if>  
-    <if test="type != null and type != ''" >
+    <if test="type != null and type != '' and type != 'business'.toString()" >
       and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="type == 'business'.toString()">
+      and (type = 'dragon' or  type = 'oms' or  type = 'forward')
     </if>
     <if test="pid != null" >
       and pid = #{pid,jdbcType=BIGINT} 
@@ -62,6 +72,9 @@
     </if>
     <if test="status != null" >
       and status = #{status,jdbcType=INTEGER} 
+    </if>
+    <if test="level != null" >
+      and level = #{level,jdbcType=INTEGER} 
     </if>
   </select>
   <select id="selectAlarmRecordById" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -92,6 +105,9 @@
     </if>
     <if test="status != null" >
       and status = #{status,jdbcType=INTEGER} 
+    </if>
+    <if test="level != null" >
+      and level = #{level,jdbcType=INTEGER} 
     </if>
   </select>
   

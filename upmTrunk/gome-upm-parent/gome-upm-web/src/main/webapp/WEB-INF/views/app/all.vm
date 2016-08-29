@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>UMP</title>
+<title>统一监控平台</title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- Bootstrap 3.3.4 -->
@@ -39,7 +39,7 @@
 			<!-- 搜索部分-->
 			<section class="content contentSty">
 				<div class="input-group" style="width: 500px;margin-bottom: 20px;">
-	              	<input type="text" class="form-control" id="searchKey" value="$!businessKey" >
+	              	<input type="text" class="form-control" id="searchKey" value='$!businessKey' >
 	              	<span class="input-group-btn">
 	                	<a class="btn" href="javascript:void(0);" id="searchBtn">搜索</a>
 	              	</span>

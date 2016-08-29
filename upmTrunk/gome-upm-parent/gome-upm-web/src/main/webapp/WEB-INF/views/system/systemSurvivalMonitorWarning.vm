@@ -54,17 +54,18 @@
                     <div class="toolbar">
 				<form class="form-inline tool_select">
 					<div class="form-group">
-						<label for="startTime">报警时间：</label> <input type="text"
+						<label for="startTime">报警时间：</label> <input type="text" value="$!startTime"
 									class="form-control laydate-icon" id="startTime" onclick="laydate({istime: true,format: 'YYYY-MM-DD hh:mm:ss'})">
 					</div>
 					<div class="form-group">
-						<label for="endTime">至</label> <input type="text"
+						<label for="endTime">至</label> <input type="text" value="$!endTime"
 							class="form-control laydate-icon" id="endTime" onclick="laydate({istime: true,format: 'YYYY-MM-DD hh:mm:ss'})">
 					</div>
 					<div class="form-group">
 						<label>部门：</label> 
 						<select name="parentSelect" id="parentSelect" class="form-control system-appRecite" style="width: 180px;" onChange="getXmm()">
-							<option value="0" selected="selected">请选择</option>
+							
+                            <option value="0" selected="selected">$!ssz</option>
 							#foreach($ssz in $!sszList)
 							<option value="ssz">$!ssz</option>
 							#end
@@ -73,12 +74,13 @@
 					<div class="form-group">
 						<label>应用名：</label> 
 						<select id="select" class="form-control  system-appNameRecite" style="width: 180px;" name="sel">
-							<option value="0" selected="selected">请选择</option>
-							<!--
-								#foreach($xmm in $!xmmList)
-							<option value="xmm">$!xmm</option>
-							#end
-							-->
+							
+							<!---->
+							
+							<option value="0" selected="selected">$!xmm</option>
+							#foreach($xmm in $!xmmList)
+									<option value="xmm">$!xmm</option>
+    							#end
 						</select>
 					</div>
 					<!--

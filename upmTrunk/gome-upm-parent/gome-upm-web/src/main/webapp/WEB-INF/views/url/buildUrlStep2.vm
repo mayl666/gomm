@@ -74,6 +74,11 @@
                             <td class="title_td"><strong class="null_red">*</strong>访问时间频率</td>
                             <td >
                                 <select name="" class="form-control" id="accFre" style="width: 21.3%;">
+                                    #if($!accFre == "3")
+                                    <option value="3" selected="selected">3分钟</option>
+                                    #else
+                                    <option value="3">3分钟</option>
+                                    #end
                                     #if($!accFre == "5")
                                     <option value="5" selected="selected">5分钟</option>
                                     #else
@@ -84,22 +89,37 @@
                                     #else
                                     <option value="10">10分钟</option>
                                     #end
-                                    #if($!accFre == "15")
-                                    <option value="15" selected="selected">15分钟</option>
-                                    #else
-                                    <option value="15">15分钟</option>
-                                    #end
 
                                 </select>
                             </td>
                         </tr>
-                        <!--<tr>
-                            <td class="title_td"><strong class="null_red">*</strong>访问超时时间</td>
-                            <td style="text-align: left">
-                                <input type="text" class="form-control half_td " id="accTimeOut" value="$!accTimeOut" placeholder="5" style="ime-mode:disabled;" onpaste="return false;" onkeyup="this.value=this.value.replace(/[^\d]/g,'');" /> <label style="margin-left: 6px;">秒</label>
-                                <span class="error_span" style="text-decoration:none;display: none"></span>
-                            </td>
-                        </tr>-->
+                        <tr>
+	                            <td class="title_td"><strong class="null_red">*</strong>访问超时时间</td>
+	                            <td >
+	                            	<select name="" class="form-control" id="accTimeOut" style="width: 21.3%;">
+                                        #if($!accTimeOut == "3")
+                                        <option value="3" selected="selected">3s</option>
+                                        #else
+                                        <option value="3">3s</option>
+                                        #end
+                                        #if($!accTimeOut == "5")
+                                        <option value="5" selected="selected">5s</option>
+                                        #else
+                                        <option value="5">5s</option>
+                                        #end
+                                        #if($!accTimeOut == "30")
+                                        <option value="30" selected="selected">30s</option>
+                                        #else
+                                        <option value="30">30s</option>
+                                        #end
+    									#if($!accTimeOut == "180")
+                                        <option value="180" selected="selected">180s</option>
+                                        #else
+                                        <option value="180">180s</option>
+                                        #end
+									</select>
+	                            </td>
+	                        </tr>
                         <tr>
                             <td class="title_td"><strong class="null_red">*</strong>超时次数</td>
                             <td  >
@@ -130,6 +150,7 @@
                                 <span class="error_span" style="text-decoration:none;display: none"></span>
                             </td>-->
                         </tr>
+						
                         <tr style="display:none">
                             <td class="title_td"><strong class="null_red">*</strong>HTTP请求方式</td>
                              <td >
@@ -177,9 +198,9 @@
                             <div style="padding-top: 7px;">
                                 #if($!isContainsCon == "include")
                                 <label class="radio-inline"><input type="radio" name="isContainsContent" value="include" checked>包含匹配内容</label>
-                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  >不包含匹配内容</span>
+                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  >不包含匹配内容</label>
                                 #else
-                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="include"  >包含匹配内容</span>
+                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="include"  >包含匹配内容</label>
                                 <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  checked>不包含匹配内容</label>
                                 #end
 
@@ -194,9 +215,9 @@
                             <div style="padding-top: 7px;">
                                 #if($!isContainsCon == "include")
                                 <label class="radio-inline"><input type="radio" name="isContainsContent" value="include" checked>包含匹配内容</label>
-                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  >不包含匹配内容</span>
+                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  >不包含匹配内容</label>
                                 #else
-                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="include"  >包含匹配内容</span>
+                                <label class="radio-inline"><input type="radio" name="isContainsContent" value="include"  >包含匹配内容</label>
                                 <label class="radio-inline"><input type="radio" name="isContainsContent" value="exclude"  checked>不包含匹配内容</label>
                                 #end
 

@@ -210,4 +210,18 @@ public interface PortMonitorService {
 	 * @return
 	 */
 	int deleteByTime(String startTime);
+	
+	/**
+	 * 从Elasticsearch查询历史数据
+	 * @param keyWard 根据id查询
+	 * @param start
+	 * @param size
+	 * @return
+	 */
+	Page<PortRecord> search(String id,int start,int size);
+	/**
+	 * 向Elasticsearch插入历史数据
+	 * @param list 数据集合
+	 */
+	void add(List<PortRecord> list);
 }

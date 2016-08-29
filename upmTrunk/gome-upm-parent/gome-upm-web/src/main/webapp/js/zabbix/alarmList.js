@@ -31,7 +31,7 @@ $(function(){
 		if(host != "" && host != null){
 			content.host=encodeURIComponent(host);
 		}
-		var status = $("#status").val();
+		var status = $("#statusV").val();
 		if(status != "" && status != null){
 			content.status=status;
 		}
@@ -85,12 +85,14 @@ $(function(){
 });
 
 $("#groupName").change(function(obj){
+	var status = $("#statusV").val();
 	var group = $(this).children('option:selected').val();
 	$.ajax({
-		url:'../server/getHost',
+		url:'../server/getHostNew',
 		type:'POST',
 		dataType : 'json',	
-		data:{group:group},
+		data:{group:group,
+			status:status},
 		success:function(data){
 			if(data.code == 1){
 				$("#host").empty();

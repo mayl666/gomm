@@ -53,8 +53,9 @@
                     <thead>
                     <tr>
                         <th>监测项</th>
-                        <th>一般</th>
-                        <th>严重</th>
+                        <th>一级</th>
+                        <th>二级</th>
+                        <th>三级</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -66,6 +67,9 @@
                         <td>
 							<a href="${rc.contextPath}/db/alarm?dataType=CONN&alarmLevel=2" class="color_FF0000">$!connLevel2</a>
 						</td>
+						<td>
+							<a href="${rc.contextPath}/db/alarm?dataType=CONN&alarmLevel=3" class="color_FF0000">$!connLevel3</a>
+						</td>
                     </tr>
                     <tr>
                         <td>表空间</td>
@@ -75,6 +79,9 @@
                         <td>
 							<a href="${rc.contextPath}/db/alarm?dataType=TBS&alarmLevel=2" class="color_FF0000">$!tbsLevel2</a>
 						</td>
+						<td>
+							<a href="${rc.contextPath}/db/alarm?dataType=TBS&alarmLevel=3" class="color_FF0000">$!tbsLevel3</a>
+						</td>
                     </tr>
                     <tr>
                         <td>ASM空间</td>
@@ -83,6 +90,9 @@
                         </td>
                         <td>
 							<a href="${rc.contextPath}/db/alarm?dataType=ASM&alarmLevel=2" class="color_FF0000">$!asmLevel2</a>
+						</td>
+						<td>
+							<a href="${rc.contextPath}/db/alarm?dataType=ASM&alarmLevel=3" class="color_FF0000">$!asmLevel3</a>
 						</td>
                     </tr>
                     </tbody>
@@ -130,6 +140,7 @@
 							<th>表空间</th>
 	                        <th>总容量(MB)</th>
 	                        <th>已使用容量(MB)</th>
+	                        <th>已使用百分比</th>
 	                    </tr>
 	                    </thead>
 	                    <tbody>
@@ -141,10 +152,11 @@
 							<td>$!tbs.tbsName</td>
 	                        <td>$!tbs.totalMB</td>
 	                        <td>$!tbs.usedMB</td>
+	                        <td>$!tbs.usedPercent</td>
 	                    </tr>
 						#end
     					#else
-						<tr><td colspan='5' align='center'>没有查到任何记录</td></tr>
+						<tr><td colspan='6' align='center'>没有查到任何记录</td></tr>
 						#end
 	                    </tbody>
 	                </table>

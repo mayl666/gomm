@@ -106,6 +106,9 @@ function searchOrderCount(){
 			$('#order_notpay').text(obj[2].count);
 			$('#order_relpay').text(obj[3].count);
 			$('#order_delivery').text(obj[4].count);
+			$('#order_web').text(obj[5][0].y);
+			$('#order_wap').text(obj[5][1].y);
+			$('#order_app').text(obj[5][2].y);
 			drowPie_order_analysis(obj[5])
      	},
      	error : function(){
@@ -316,7 +319,7 @@ function drowMap_city_sales(maxValue){
 		    dataRange: {
 		        min : 0,
 		        max : maxValue,
-		        calculable : true,
+		        calculable : false,
 		        color: ['maroon','purple','red','orange','yellow','lightgreen']
 		    },
 		    series : [
@@ -356,7 +359,7 @@ function drowMap_city_sales(maxValue){
 		            markPoint : {
 		                symbol:'emptyCircle',
 		                symbolSize : function (v){
-		                    return 10 + v/100
+		                    return 10 + v/200
 		                },
 		                effect : {
 		                    show: true,

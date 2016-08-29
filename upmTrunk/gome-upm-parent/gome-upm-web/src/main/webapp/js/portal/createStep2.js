@@ -11,6 +11,7 @@ $(function(){
 	$("#portalAddress").change(function(){
 		createPortal.controller.isPortalExists();
 	});
+
 });
 function StandardPost (url,args) 
 {
@@ -24,6 +25,25 @@ function StandardPost (url,args)
         form.append(input);
     }
     $("#submit_id").click();
+}
+
+function isNumber(){
+	var accTimeOut = $("#accTimeOut").val().trim();
+	var re =/^[1-9]\d*$/;
+	if(re.test(accTimeOut)){
+		if(accTimeOut>0){
+			$("#accTimeOut").siblings(".info_span").hide();
+			return true;
+		}else{
+			$("#accTimeOut").siblings(".info_span").show().text("请输入正整数");
+			$("#accTimeOut").focus();
+			return false;
+		}
+	}else{
+		$("#accTimeOut").siblings(".info_span").show().text("请输入正整数");
+		$("#accTimeOut").focus();
+		return false;
+	}
 }
 
 var createPortal = {
@@ -116,11 +136,10 @@ var createPortal = {
 	   toStep3 : function(){
 		   $(".info_span.ele_hide").hide();
 		   // var flag = true;
-			var portalAddress = $("#portalAddress").val();
+			var portalAddress = $("#portalAddress").val().trim();
 			var monitorType = $("#monitorType").val();
 			var overtimes = $("#overtimes").val();
 			var frequency = $("#frequency").val();
-			var url = contextPath+"/portal/create/step3?portalAddress="+portalAddress+"&monitorType="+monitorType+"&overtimes="+overtimes+"&frequency="+frequency;
 //			if(urlAddress == "" ){
 //				$("#urlAddress").siblings($(".error_span")).show().text("请输入监控地址");
 //				flag = false;

@@ -22,14 +22,9 @@ public class Alarm {
 	//关联id（对应url、port表中主键id）
 	private Long pid;
 	
-	public Long getPid() {
-		return pid;
-	}
-
-	public void setPid(Long pid) {
-		this.pid = pid;
-	}
-
+	//报警级别
+	private Integer level;
+	
 	//报警时间
 	private Date sendTime;
 
@@ -64,4 +59,21 @@ public class Alarm {
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
 	}
+	
+	public Long getPid() {
+		return pid;
+	}
+
+	public void setPid(Long pid) {
+		this.pid = pid;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
 }

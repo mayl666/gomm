@@ -1,6 +1,7 @@
 package com.gome.upm.controler;
 
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,24 +56,36 @@ public class PortalController {
 	private PortMonitorService  portMonitorService;
 
 	@RequestMapping(value = "/get", method={RequestMethod.GET})
-	public ModelAndView get(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum) {
+	public ModelAndView get(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum,String search) {
 		if(pageNum==null||pageNum<=0){
 			pageNum=1;
 		}
 		Page<PortMonitor> page = new Page<PortMonitor>(pageNum,10);
 		PortMonitor query = new PortMonitor();
+		if(!StringUtils.isBlank(search)){
+			query.setPort(search);
+		}
 		page.setConditions(query);
 		page = portMonitorService.findPortMonitorListByPage(page);
+		int total = page.getTotalResult();
+		if(!StringUtils.isBlank(search)){
+			query.setPort(null);
+			total  =portMonitorService.findTotalResultByConditions(query);
+		}
 		query.setSurvival(1);
 		int validCount  =portMonitorService.findTotalResultByConditions(query);
-		int inValidCount = page.getTotalResult()-validCount;
-		int exponential =0;
+		int inValidCount = total-validCount;
+		float heath = 0.0f;
+		String exponential = "0.0";
+		DecimalFormat df=new DecimalFormat("0.0");
 		if(page.getTotalResult()>0){
-			exponential = validCount*100/(page.getTotalResult());
+			heath = (float)(validCount*100)/(total);
+			exponential = df.format(heath);
 		}
 		model.setViewName("/portal/portSurvivalMonitor");
 		model.addObject("leftMenu", "portMenu");
 		model.addObject("page", page);
+		model.addObject("search", search);
 		model.addObject("validCount", validCount);
 		model.addObject("inValidCount", inValidCount);
 		model.addObject("exponential", exponential);
@@ -87,17 +100,24 @@ public class PortalController {
 	 * @return
 	 */
 	@RequestMapping(value = "/warning", method={RequestMethod.GET})
-	public ModelAndView warning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum) {
+	public ModelAndView warning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum,
+			String start,String end,String search) {
 		if(pageNum==null||pageNum<=0){
 			pageNum=1;
 		}
 		Page<PortMonitor> page = new Page<PortMonitor>(pageNum,10);
 		PortMonitor query = new PortMonitor();
 		query.setSurvival(0);
+		query.setStartTime(start);
+		query.setEndTime(end);
+		query.setPort(search);
 		page.setConditions(query);
 		page = portMonitorService.findPortMonitorListByPage(page);
 		
 		model.setViewName("/portal/portSurvivalMonitorWarning");
+		model.addObject("start", start);
+		model.addObject("end", end);
+		model.addObject("search", search);
 		model.addObject("leftMenu", "portMenu");
 		model.addObject("page", page);
 		return model;
@@ -135,7 +155,8 @@ public class PortalController {
 	 */
 	@RequestMapping(value="/report")
 	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id,@RequestParam(value="type", required = false) Integer type
-			,@RequestParam(value="pageNum", required = false) Integer pageNum){
+			,@RequestParam(value="pageNum", required = false) Integer pageNum,
+			String start,String end,String search){
 		logger.info("id",id);
 		model.setViewName("/url/urlReport");
 		model.addObject("leftMenu", "urlMenu");
@@ -158,6 +179,9 @@ public class PortalController {
 			}
 			model.setViewName("/portal/portReport");
 			model.addObject("leftMenu", "portMenu");
+			model.addObject("start", start);
+			model.addObject("end", end);
+			model.addObject("search", search);
 			model.addObject("type", type);
 			model.addObject("pageNum",pageNum);
 			model.addObject("page", page1);
@@ -212,7 +236,7 @@ public class PortalController {
         					portMonitor.setMonitorType("应用服务器");
         				}
         				if(portMonitor.getFrequency()==null||portMonitor.getFrequency()==0){
-        					portMonitor.setFrequency(5);
+        					portMonitor.setFrequency(3);
         				}
         				if(portMonitor.getOvertimes()==null||portMonitor.getOvertimes()==0){
         					portMonitor.setOvertimes(5);
@@ -220,7 +244,6 @@ public class PortalController {
         				if(StringUtils.isBlank(portMonitor.getAlarmMethod())){
         					portMonitor.setAlarmMethod("email");
         				}
-        				portMonitor.setTimeout(0);
         				portMonitor.setCreateTime(new Date());
         				portMonitor.setStatus(1);
         				portMonitor.setUpdateTime(new Date());
@@ -313,7 +336,6 @@ public class PortalController {
 		model.addObject("accFre", accFre);
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("portalAddress", portalAddress);
-		model.addObject("accTimeOut", accTimeOut);
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("alarmInter", alarmInter);
 		model.addObject("leftMenu", "portMenu");
@@ -365,15 +387,23 @@ public class PortalController {
 	@ResponseBody
 	@RequestMapping(value="/save", method={RequestMethod.POST}, produces = "application/json;charset=utf-8")
 	public ResponsesDTO save(HttpServletRequest request, HttpServletResponse response,PortMonitor portal, ModelAndView model){
+		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
+		boolean isExist =portMonitorService.checkPortIsExist(portal.getPort());
+		if(isExist){
+			res = new ResponsesDTO(ReturnCode.ACTIVE_FAILURE);
+			return res;
+		}
 		portal.setSurvival(1);
 		portal.setUpdateTime(new Date());
 		portal.setStatus(1);
 		portal.setCreateTime(new Date());
-		int count =portMonitorService.addPortMonitor(portal);
-		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
-		if(count<=0){
-			res = new ResponsesDTO(ReturnCode.ACTIVE_FAILURE);
+		try{
+			portMonitorService.addPortMonitor(portal);
+		}catch(Exception e){
+			logger.error("系统出现异常", e);
+			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
 		}
+
 		
 		return res;
 

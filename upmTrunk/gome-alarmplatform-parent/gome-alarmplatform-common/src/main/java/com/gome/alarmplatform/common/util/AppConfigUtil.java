@@ -11,7 +11,7 @@ public class AppConfigUtil {
         try {
             config = new PropertiesConfiguration();
             config.setEncoding("UTF-8");
-            config.load("app.properties");
+            config.load("mail.properties");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

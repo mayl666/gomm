@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -54,8 +54,8 @@
         		<span class="health_num">健康指数：<span style="color: #9c8ade;" id="healthV"></span></span>
 	        	<div id="health_index" style="width: 320px;height: 250px;margin: auto;"></div>
 	        	<div class="health_status_count_server" style="margin-top: -2px;">
-	        		<span >故障：<a href="javascript:" style="text-decoration: none;cursor: default;" id="invalidV">1</a></span>
-	        		<span style="margin-left: 30px;">全部设备：<a href="../server/getHostAll"  id="totalV">1</a></span>
+	        		<span >故障：<a href="../server/getHostAll?status=1" id="invalidV">1</a></span>
+	        		<span style="margin-left: 30px;">正常：<a href="../server/getHostAll?status=0"  id="totalV">1</a></span>
 	        	</div>
         	</div>
         	<div class="health_index_facility">
@@ -63,11 +63,11 @@
        			<span class="health_num">健康指数：<span style="color:#9c8ade;" id="healthItemV">93</span></span>
        			<div style="width: 320px;height: 250px;margin: auto;" id="health_index_monitoring"></div>
 				<div class="health_status_count_server" style="margin-top: -2px;">
-	        		<span>异常：<a href="../server/list" id="invalidItemV">1</a></span>
-	        		<span style="margin-left: 30px;">正常：<a style="text-decoration: none;cursor: default;" href="javascript:;" id="validItems">1</a></span>
+	        		<span>异常：<a href="../server/list?status=0" id="invalidItemV">1</a></span>
+	        		<span style="margin-left: 30px;">正常：<a href="../server/list?status=1" id="validItems">1</a></span>
 	        	</div>
        		</div>
-       		<div class="health_index_facility">
+       		<div class="health_index_facility" style="display: none;">
        			<h2>触发器信息</h2>
        			<span class="health_num">健康指数：<span style="color:#9c8ade;" id="healthTriggerV">93</span></span>
        			<div style="width: 320px;height: 250px;margin: auto;" id="health_index_trigger"></div>
@@ -107,7 +107,7 @@ $(function(){
 	//监控项信息
 	health_index_monitoring();
 	//触发器信息
-	health_index_trigger();
+	//health_index_trigger();
 });
 function health_index(){
 	var total;
@@ -127,13 +127,13 @@ function health_index(){
 		success:function(data){
 			if(data.code==1){
 				total = data.attach.total;
-				valid = data.attach.available;
+				valid = data.attach.valid;
 				validP = data.attach.validP;
 				invalid = data.attach.invalid;
 				invalidP = data.attach.invalidP;
 				$("#healthV").html(validP);
 				$("#invalidV").html(invalid);
-				$("#totalV").html(total);
+				$("#totalV").html(valid);
 			}
 		},
 		error:function(){
@@ -172,7 +172,7 @@ function health_index(){
         },
         series: [{
             type: 'pie',
-            name: '健康指数',
+            name: '',
             data: [
                 {
                  	name:'正常',   
@@ -252,7 +252,7 @@ function health_index_monitoring(){
         },
         series: [{
             type: 'pie',
-            name: '健康指数',
+            name: '',
             data: [
                 {
                  	name:'正常',   
@@ -332,7 +332,7 @@ function health_index_trigger(){
         },
         series: [{
             type: 'pie',
-            name: '健康指数',
+            name: '',
             data: [
                 {
                  	name:'正常',   

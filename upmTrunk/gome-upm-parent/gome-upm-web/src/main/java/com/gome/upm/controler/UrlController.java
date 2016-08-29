@@ -2,6 +2,7 @@ package com.gome.upm.controler;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,7 +55,7 @@ public class UrlController {
 	private UrlMonitorService urlMonitorService;
 	
 	@RequestMapping(value="/get")
-	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum){
+	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum,String search){
 		logger.info("get url list");
 		if(pageNum==null||pageNum<=0){
 			pageNum=1;
@@ -62,19 +63,32 @@ public class UrlController {
 		try{
 			Page<UrlMonitor> page = new Page<UrlMonitor>(pageNum,10);
 			UrlMonitor query = new UrlMonitor();
+			if(!StringUtils.isBlank(search)){
+				query.setUrl(search);
+			}
 			page.setConditions(query);
 			page = urlMonitorService.findUrlMonitorListByPage(page);
+			int total = page.getTotalResult();
+			if(!StringUtils.isBlank(search)){
+				query.setUrl(null);
+				total =urlMonitorService.findTotalResultByConditions(query);
+			}
 			query.setSurvival(1);
 			int validCount = urlMonitorService.findTotalResultByConditions(query);
-			int inValidCount = page.getTotalResult()-validCount;
 			
-			int exponential =0;
+			int inValidCount = total-validCount;
+			
+			float heath = 0.0f;
+			String exponential = "0.0";
+			DecimalFormat df=new DecimalFormat("0.0");
 			if(page.getTotalResult()>0){
-				exponential = validCount*100/(page.getTotalResult());
+				heath = (float)(validCount*100)/(total);
+				exponential=df.format(heath);
 			}
 			model.setViewName("/url/urlSurvivalMonitor");
 			model.addObject("leftMenu", "urlMenu");
 			model.addObject("page", page);
+			model.addObject("search", search);
 			model.addObject("validCount", validCount);
 			model.addObject("inValidCount", inValidCount);
 			model.addObject("exponential", exponential);
@@ -94,7 +108,8 @@ public class UrlController {
 	 * @return 模型
 	 */
 	@RequestMapping(value="/warning")
-	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum){
+	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,@RequestParam(value="pageNum", required = false) Integer pageNum,
+			String start,String end,String search){
 		logger.info("get warning url list ");
 		if(pageNum==null||pageNum<=0){
 			pageNum=1;
@@ -103,10 +118,16 @@ public class UrlController {
 			Page<UrlMonitor> page = new Page<UrlMonitor>(pageNum,10);
 			UrlMonitor query = new UrlMonitor();
 			query.setSurvival(0);
+			query.setStartTime(start);
+			query.setEndTime(end);
+			query.setUrl(search);
 			page.setConditions(query);
 			page = urlMonitorService.findUrlMonitorListByPage(page);
 			model.setViewName("/url/urlSurvivalMonitorWarning");
 			model.addObject("leftMenu", "urlMenu");
+			model.addObject("start", start);
+			model.addObject("end", end);
+			model.addObject("search", search);
 			model.addObject("page", page);
 		}catch(Exception e){
 			logger.error("error", e);
@@ -168,7 +189,12 @@ public class UrlController {
 		model.addObject("urlAddress", urlAddress);
 		model.addObject("accFre", accFre);
 		model.addObject("postParameter", postParameter);
-		model.addObject("accTimeOut", accTimeOut);
+		if(StringUtils.isBlank(accTimeOut)){
+			model.addObject("accTimeOut", 3);
+		}else{
+			model.addObject("accTimeOut", accTimeOut);
+		}
+		
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("alarmInter", alarmInter);
 		model.addObject("method", method);
@@ -247,7 +273,14 @@ public class UrlController {
 		logger.info("content:"+content);
 		ResponsesDTO res = new ResponsesDTO(ReturnCode.ACTIVE_SUCCESS);
 		try{
+			
 			JSONObject obj = JSON.parseObject(content);
+			String url =obj.getString("urlAddress");
+			boolean  isExist = urlMonitorService.checkUrlIsExist(url);
+			if(isExist){
+				res.setReturnCode(ReturnCode.ACTIVE_FAILURE);
+				return res;
+			}
 			UrlMonitor urlm = new UrlMonitor();
 			urlm.setAlarmMethod(obj.getString("alarmWay"));
 			urlm.setCreateTime(new Date());
@@ -265,7 +298,6 @@ public class UrlController {
 			urlm.setUpdateTime(new Date());
 			urlm.setStatus(1);
 			urlMonitorService.addUrlMonitor(urlm);
-			logger.info(urlm.toString());
 		}catch(Exception e){
 			logger.error("系统出现异常", e);
 			res.setReturnCode(ReturnCode.ACTIVE_EXCEPTION);
@@ -336,7 +368,8 @@ public class UrlController {
 	 */
 	@RequestMapping(value="/report")
 	public ModelAndView report(HttpServletRequest request, HttpServletResponse response, ModelAndView model, @RequestParam(value="id", required = true) Long id
-			,@RequestParam(value="type", required = false) Integer type,@RequestParam(value="pageNum", required = false) Integer pageNum){
+			,@RequestParam(value="type", required = false) Integer type,@RequestParam(value="pageNum", required = false) Integer pageNum,
+			String start,String end,String search){
 		logger.info("id",id);
 		model.setViewName("/url/urlReport");
 		model.addObject("leftMenu", "urlMenu");
@@ -352,8 +385,8 @@ public class UrlController {
 				record.setUid(id);
 				page1.setConditions(record);
 				page1 = urlMonitorService.findUrlRecordListByPage(page1);
-				if(url.getUrl().length()>100){
-					url.setShortUrl(url.getUrl().substring(0,100)+"...");
+				if(url.getUrl().length()>80){
+					url.setShortUrl(url.getUrl().substring(0,80)+"...");
 				}else{
 					url.setShortUrl(url.getUrl());
 				}
@@ -364,7 +397,9 @@ public class UrlController {
 			}else{
 				model.setViewName("error");
 			}
-			
+			model.addObject("start", start);
+			model.addObject("end", end);
+			model.addObject("search", search);
 			model.addObject("page", page1);
 			model.addObject("type", type);
 			model.addObject("pageNum",pageNum);
@@ -415,7 +450,6 @@ public class UrlController {
         					continue;
         				}
         				resultMap.put(urlMonitor.getUrl(), "");
-        				urlMonitor.setTimeout(0);
         				if(StringUtils.isBlank(urlMonitor.getReturnCode())){
         					urlMonitor.setReturnCode("200,301,302");
         				}else{
@@ -456,10 +490,13 @@ public class UrlController {
         					
         				}
         				if(urlMonitor.getFrequency()==null||urlMonitor.getFrequency()==0){
-        					urlMonitor.setFrequency(5);
+        					urlMonitor.setFrequency(3);
         				}
         				if(urlMonitor.getOvertimes()==null||urlMonitor.getOvertimes()==0){
         					urlMonitor.setOvertimes(5);
+        				}
+        				if(urlMonitor.getTimeout()==null|| urlMonitor.getTimeout()==0){
+        					urlMonitor.setTimeout(3);
         				}
         				if(StringUtils.isBlank(urlMonitor.getAlarmMethod())){
         					urlMonitor.setAlarmMethod("email");
@@ -530,8 +567,8 @@ public class UrlController {
 			page.setConditions(record);
 			page = urlMonitorService.findUrlRecordListByPage(page);
 			UrlMonitor url = urlMonitorService.findUrlMonitorById(id);
-			if(url.getUrl().length()>100){
-				url.setShortUrl(url.getUrl().substring(0, 100)+"...");
+			if(url.getUrl().length()>80){
+				url.setShortUrl(url.getUrl().substring(0, 80)+"...");
 			}else{
 				url.setShortUrl(url.getUrl());
 			}

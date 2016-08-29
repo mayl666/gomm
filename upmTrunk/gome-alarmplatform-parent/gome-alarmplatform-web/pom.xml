@@ -52,9 +52,40 @@
 					<include>**/*.properties</include>
 					<include>spring/spring-config.xml</include>
 					<include>spring/**/*.xml</include>
-					<include>logback.xml</include>
+					<include>log4j.dtd</include>
 				</includes>
 			</resource>
 		</resources>
 	</build>
+	<profiles>
+		<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- db -->
+				<url1>
+                    <![CDATA[jdbc:mysql://10.126.56.22:3306/ump_test?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true]]>
+				</url1>
+				<driver1>com.mysql.jdbc.Driver</driver1>
+				<username1>root</username1>
+				<password1>root</password1>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<url1>       
+                   <![CDATA[jdbc:mysql://monitor-mys.cloud.db:7307/monitorplat?useUnicode=true&amp;characterEncoding=utf8]]>
+				</url1>
+				<driver1>com.mysql.jdbc.Driver</driver1>
+				<username1>monitorplat_rw</username1>
+				<password1>Inj(9^VLkm56BLcD</password1>
+			</properties>
+		</profile>
+	</profiles>
 </project>

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.gome.rocketmq.client.extension.MessageConsumer;
+import com.gome.upm.common.util.AppConfigUtil;
 import com.gome.upm.common.web.httpClient.HttpClientUtils;
 import com.gome.upm.dao.MoSynDAO;
 import com.gome.upm.domain.MoSynBO;
@@ -86,7 +87,8 @@ public class UpmSynMQ implements MessageConsumer {
 		}
 	}
 	void sendMessage(String subject, String type, Long count) {
-		String url = "http://10.58.62.204/alarmplatform/alarm";
+//		String url = "http://10.58.62.204/alarmplatform/alarm";
+		String url = AppConfigUtil.getStringValue("prtg.alarm.url");
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put("type", type);
 		paramMap.put("mail", "fangjinwei@yolo24.com");

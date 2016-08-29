@@ -20,7 +20,7 @@ function initOms(){
             renderTo: 'highchart_oms'
         },
         title: {
-            text: 'OMS'
+            text: ''    //by wangxiaye  去掉标题
         },
         credits:{
             enabled:false

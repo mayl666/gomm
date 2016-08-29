@@ -1,5 +1,6 @@
 package com.gome.upm.controler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,30 +41,59 @@ public class SystemProcessController {
 	 * @return
 	 */
 	@RequestMapping(value="/get")
-	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+	public ModelAndView getAll(HttpServletRequest request, HttpServletResponse response, ModelAndView model,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "text", required = false) String text){
 		
 		try{
-			Page<ServerInfo> page = new Page<ServerInfo>(1,10);
+			if(pageNo == null || pageNo < 1){
+				pageNo = 1;
+			}
+			Page<ServerInfo> page = new Page<ServerInfo>(pageNo,10);
 			ServerInfo serverInfo = new ServerInfo();
 			PcInfo pcInfo = new PcInfo();
 			serverInfo.setPcInfo(pcInfo);
 			page.setConditions(serverInfo);
-			page = systemProcessService.findSystemProcessByPage(page);
-			//正常
-			serverInfo.setBjzt("N");
-			int validCount = systemProcessService.findTotalResultByConditions(serverInfo);
-			//异常
-			int inValidCount = systemProcessService.findTotalResultByConditionsNotN(serverInfo);
-			int heath = 0;
-			if(validCount > 0){
-				heath = (validCount*100)/(validCount+inValidCount);				
+			int validCount = 0;
+			int inValidCount = 0;
+			if(text != null && text.length() > 0){
+				serverInfo.setBjzt("N");
+				validCount = systemProcessService.findTotalResultByConditions(serverInfo);
+				//异常
+				inValidCount = systemProcessService.findTotalResultByConditionsNotN(serverInfo);
+				//来自于主页面
+				String xmm = text;
+				serverInfo.setXmm(xmm);
+				//like 的形式匹配 xmm
+				page = systemProcessService.findSystemProcessByPageLike(page);
+				model.addObject("text", text);
+				
+			}else{
+				page = systemProcessService.findSystemProcessByPage(page);
+				//正常
+				serverInfo.setBjzt("N");
+				validCount = systemProcessService.findTotalResultByConditions(serverInfo);
+				//异常
+				inValidCount = systemProcessService.findTotalResultByConditionsNotN(serverInfo);
+				
+				
 			}
 			model.setViewName("/system/systemProcessSurvivalMonitor");
+			float heath = 0.0f;
+			String result = "0.0";
+			DecimalFormat df=new DecimalFormat("0.0");
+			if(validCount > 0){
+				heath = (float)(validCount*100)/(validCount+inValidCount);
+				result = df.format(heath);
+			}
+			
 			model.addObject("leftMenu", "systemMenu");
 			model.addObject("page", page);
+			model.addObject("pageNo", pageNo);
+			model.addObject("text", text);
 			model.addObject("validCount", validCount);
 			model.addObject("inValidCount", inValidCount);
-			model.addObject("heath",heath);
+			model.addObject("heath",result);
 		}catch(Exception e){
 			logger.error("error", e);
 			model.setViewName("/error");
@@ -119,6 +149,10 @@ public class SystemProcessController {
 				page = systemProcessService.findSystemProcessByPageNotN(page);
 				
 				model.setViewName("/system/systemWarningTable");
+				model.addObject("ssz", ssz);
+				model.addObject("xmm", xmm);
+				model.addObject("startTime", startTime);
+				model.addObject("endTime", endTime);
 			}else{
 				//来自于主页面
 				
@@ -134,37 +168,8 @@ public class SystemProcessController {
 				//异常
 				inValidCount = systemProcessService.findTotalResultByConditionsNotN(query);
 				model.setViewName("/system/systemTable");
+				model.addObject("text", text);
 			}
-			
-			/*int validCount = 0;
-			int inValidCount = 0;
-			if(text != null && text.length() > 0){
-				//来自于主页面
-				xmm = text;
-				query.setXmm(xmm);
-				//like 的形式匹配 xmm
-				page = systemProcessService.findSystemProcessByPageLike(page);
-				query.setBjzt("N");
-				validCount = systemProcessService.findTotalResultByConditionsLike(query);
-				inValidCount = systemProcessService.findTotalResultByConditionsLike(query);
-			}else{
-				if(ssz != null && !"请选择".equals(ssz) && ssz.length() >= 0){
-					Integer sszid = systemProcessService.selectSszidBySsz(ssz);
-					query.setSszid(sszid);
-				}
-				if(xmm != null && !"请选择".equals(xmm) && xmm.length() >= 0){
-					query.setXmm(xmm);
-				}
-				//来自于异常页面
-				// and 的形式匹配  ssz、xxm
-				query.setBjzt("N");
-				page = systemProcessService.findSystemProcessByPageNotN(page);
-				validCount = systemProcessService.findTotalResultByConditions(query);
-				query.setBjzt("Y");
-				inValidCount = systemProcessService.findTotalResultByConditions(query);
-				
-			}*/
-			
 			
 			model.addObject("page", page);
 			model.addObject("validCount", validCount);
@@ -186,11 +191,30 @@ public class SystemProcessController {
 	 * @return 模型
 	 */
 	@RequestMapping(value="/warning")
-	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+	public ModelAndView getWarning(HttpServletRequest request, HttpServletResponse response, ModelAndView model,
+			@RequestParam(value = "startTime", required = false) String startTime, 
+			@RequestParam(value = "endTime", required = false) String endTime,
+			@RequestParam(value = "ssz", required = false) String ssz,
+			@RequestParam(value = "xmm", required = false) String xmm,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo){
 		logger.info("get warning system list ");
 		try{
-			Page<ServerInfo> page = new Page<ServerInfo>(1,10);
+			if(pageNo == null || pageNo < 1){
+				pageNo = 1;
+			}
+			Page<ServerInfo> page = new Page<ServerInfo>(pageNo,10);
 			ServerInfo serverInfo = new ServerInfo();
+			serverInfo.setStartTime(startTime);
+			serverInfo.setEndTime(endTime);
+			if(ssz != null && !"请选择".equals(ssz) && ssz.length() >= 0){
+				Integer sszid = systemProcessService.selectSszidBySsz(ssz);
+				serverInfo.setSszid(sszid);
+			}
+			if(xmm != null && !"请选择".equals(xmm) && xmm.length() >= 0){
+				serverInfo.setXmm(xmm);
+			}
+			//来自于异常页面
+			// and 的形式匹配  ssz、xxm
 			serverInfo.setBjzt("N");
 			PcInfo pcInfo = new PcInfo();
 			serverInfo.setPcInfo(pcInfo);
@@ -199,10 +223,39 @@ public class SystemProcessController {
 			//获取部门列表信息
 			List<String> sszList = systemProcessService.selectSszList();
 			
+			List<String> xmmList = new ArrayList<String>();
+			if(ssz != null && !"请选择".equals(ssz) && ssz.length() >= 0){
+				sszList.remove(ssz);
+				serverInfo.setSsz(ssz);
+				xmmList = systemProcessService.selectXmmList(ssz);
+			}
+			if("请选择".equals(ssz) || ssz == null){
+				ssz = "请选择";
+			}
+			if(ssz != null && !"请选择".equals(ssz)){
+				sszList.add(0,"请选择");
+			}
+			
+			if(xmmList.size() > 0){
+				if(xmm != null){
+					xmmList.remove(xmm);
+				}
+			}
+			if(xmm != null && !"请选择".equals(xmm)){
+				xmmList.add(0, "请选择");
+			}
+			if("请选择".equals(xmm) || xmm == null){
+				xmm = "请选择";
+			}
 			model.setViewName("/system/systemSurvivalMonitorWarning");
 			model.addObject("leftMenu", "systemMenu");
 			model.addObject("page", page);
 			model.addObject("sszList", sszList);
+			model.addObject("startTime", startTime);
+			model.addObject("endTime", endTime);
+			model.addObject("ssz", ssz);
+			model.addObject("xmm", xmm);
+			model.addObject("xmmList", xmmList);
 			
 		}catch(Exception e){
 			logger.error("error", e);
@@ -235,8 +288,16 @@ public class SystemProcessController {
 	@RequestMapping(value="/getSystemApp")
 	public ModelAndView getSystemApp(HttpServletRequest request, HttpServletResponse response, ModelAndView model,
 			@RequestParam(value = "ssz", required = false) String ssz,
-			@RequestParam(value = "xmm", required = false) String xmm){
-		
+			@RequestParam(value = "xmm", required = false) String xmm,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "text", required = false) String text,
+			@RequestParam(value="chance",required = false) Integer chance,
+			@RequestParam(value = "startTime", required = false) String startTime, 
+			@RequestParam(value = "endTime", required = false) String endTime,
+			@RequestParam(value="xmmSearch",required=false) String xmmSearch,
+			@RequestParam(value="sszSearch",required=false) String sszSearch){
+		logger.info("ssz:"+ssz+"xmm:"+xmm+" pageNo:"+pageNo+" text:"+text+" chance:"+chance+" startTime:"
+			+startTime+" endTime:"+endTime);
 		try {
 			//服务器的数量
 			int instanceCount = 0;
@@ -331,6 +392,13 @@ public class SystemProcessController {
 					model.addObject("yyqdsj", yyqdsj);
 					model.addObject("m5", m5);
 					model.addObject("pbs", pbs);
+					model.addObject("pageNo", pageNo);
+					model.addObject("text", text);
+					model.addObject("chance", chance);
+					model.addObject("startTime", startTime);
+					model.addObject("endTime", endTime);
+					model.addObject("xmmSearch", xmmSearch);
+					model.addObject("sszSearch", sszSearch);
 					
 					//累计编译
 					Integer ljbycs = systemProcessService.selectLjbycs(xmm);
@@ -346,7 +414,7 @@ public class SystemProcessController {
 					
 					model.addObject("ljbycs", ljbycs);
 					model.addObject("ljfbcs", ljfbcs);
-					model.addObject("serverInfos", serverInfos);
+					
 					//获取部门列表信息
 					List<String> sszList = systemProcessService.selectSszList();
 					if(sszList.size() > 0){
@@ -357,11 +425,20 @@ public class SystemProcessController {
 					model.addObject("sszList", sszList);
 					model.addObject("leftMenu", "systemMenu");
 				}
+				model.addObject("serverInfos", serverInfos);
 				
 			}
 			
 			if(ssss != null && ssss.length() > 0){
-				model.setViewName("/system/systemAppTable");
+				if(chance != null ){
+					if(chance == 0){
+						//来自于warning页面
+						model.setViewName("/system/systemAppName");
+					}
+				}else{
+					
+					model.setViewName("/system/systemAppTable");
+				}
 			}else{
 				model.setViewName("/system/systemAppName");
 			}

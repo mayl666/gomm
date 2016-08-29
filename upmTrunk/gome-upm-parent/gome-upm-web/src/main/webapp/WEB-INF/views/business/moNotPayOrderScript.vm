@@ -30,7 +30,7 @@ var notPayHighChart;
 //默认每5分钟查询查询一次
 var timeNotPayCon=false;
 function initNotPayData(){
-	var obj=getSearchHour(3);
+	var obj=getSearchHour(2);
     var startTimeStr=obj.startTime;
     var endTimeStr=obj.endTime;
     reloadNotPayData(startTimeStr,endTimeStr,false);
@@ -195,7 +195,9 @@ function reloadNotPayData(st,et,waitTimeReload){
 		cache:false,
 		success: function(data){
 			var dataList=eval(data);
-			notPayDate=dataList[0][dataList[0].length-1][0];
+			if(dataList[0][dataList[0].length-1]!=null){
+				notPayDate=dataList[0][dataList[0].length-1][0];
+			}
 			copy(options_notPay,config_notPay);
 			options_notPay.series[0].data=dataList[0];
 			options_notPay.series[1].data=dataList[1];

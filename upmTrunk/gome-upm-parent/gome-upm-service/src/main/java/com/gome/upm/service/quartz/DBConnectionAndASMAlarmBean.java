@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gome.upm.common.util.AppConfigUtil;
 import com.gome.upm.common.web.httpClient.HttpClientUtils;
 import com.gome.upm.domain.Asm;
 import com.gome.upm.domain.DBConnection;
@@ -49,7 +50,7 @@ public class DBConnectionAndASMAlarmBean {
 	@Resource
 	private ThresholdHistoryService thresholdHistoryService;
 	
-	private String url = "http://10.58.62.204/alarmplatform/alarm";
+//	private String url = "http://10.58.62.204/alarmplatform/alarm";
 	
 	private Map<String,String> paramMap = new HashMap<String,String>();
 	
@@ -61,10 +62,10 @@ public class DBConnectionAndASMAlarmBean {
 	
 	public void work() {
 		logger.info("*************************************************************************************");
-		System.out.println("*************************************************************************************");
+//		System.out.println("*************************************************************************************");
 		date = new Date();
 		logger.info(df.format(date) + "-----数据库连接数、表空间、ASM定时任务启动...");
-		System.out.println(df.format(date) + "-----数据库连接数、表空间、ASM定时任务启动...");
+//		System.out.println(df.format(date) + "-----数据库连接数、表空间、ASM定时任务启动...");
         long begin = date.getTime();
         ThresholdConfig thresholdConfig = null;
         ThresholdHistory thresholdHistory = null;
@@ -76,6 +77,9 @@ public class DBConnectionAndASMAlarmBean {
 		String currentTimeStr = "";
 		int alarmLevel = 0;
 		int currentAlarmLevel = 0;
+		int currentAlarmReason = 0;
+		int alarmReason = 0;
+		String alarmReasonStr = "";
 		String alarmLevelStr = "";
 		Date updateTime = null;
 		long updateTimeMillis = 0;
@@ -83,12 +87,15 @@ public class DBConnectionAndASMAlarmBean {
 		Date alarmTime = null;//报警时间
 		String content = "";//邮件内容
 		long minusTimeMillis = 0;
+		//报警的超时时间
+		int alarmTimeout = AppConfigUtil.getIntValue("alarm.timeout");
+		logger.info("报警超时时间:" + alarmTimeout + "分钟");
 		List<ThresholdConfig> thresholdConfigList = null;
 		//查询连接表
         DBConnection dbConn = new DBConnection();
 		List<DBConnection> connList = dBConnectionService.findDBConnectionListByCondition(dbConn);
 		logger.info("连接表中共查询到" + connList.size() + "条数据......");
-		System.out.println("连接表中共查询到" + connList.size() + "条数据......");
+//		System.out.println("连接表中共查询到" + connList.size() + "条数据......");
 		for (DBConnection dbConnection : connList) {
 			//判断记录是否为当天新加入的，如果为新记录，并且在阈值配置表中没有对应的阈值配置，就插入一条阈值配置记录
 			createTime = dbConnection.getCreateTime();
@@ -110,6 +117,7 @@ public class DBConnectionAndASMAlarmBean {
 				if(thresholdConfigList == null || thresholdConfigList.size() <= 0){
 					k++;
 					thresholdConfig.setAlarmLevel(0);
+					thresholdConfig.setAlarmReason(0);
 					thresholdConfig.setDbType(dbConnection.getDbType());
 					thresholdConfig.setActiveLevel1Threshold(30);
 					thresholdConfig.setActiveLevel2Threshold(50);
@@ -124,35 +132,45 @@ public class DBConnectionAndASMAlarmBean {
 			}
 			//以下判断是否触发报警
 			alarmLevel = 0;
+			alarmReason = 0;
+			alarmReasonStr = "";
 			currentAlarmLevel = thresholdConfig.getAlarmLevel();
+			currentAlarmReason = thresholdConfig.getAlarmReason();
 			updateTime = dbConnection.getUpdateTime();
 			updateTimeMillis = updateTime.getTime();
 			currentTimeMillis = new Date().getTime();
 			minusTimeMillis = currentTimeMillis - updateTimeMillis;
-			if(minusTimeMillis >= 3*60*1000 && minusTimeMillis < 5*60*1000){
-				//数据超过3分钟未更新，报警
-				i++;
-				alarmTime = new Date();
-				//插入一条报警历史
-				thresholdHistory = new ThresholdHistory();
-				thresholdHistory.setServerAddr(dbConnection.getServerAddr());
-				thresholdHistory.setDbPort(dbConnection.getPort() + "");
-				thresholdHistory.setInstName(dbConnection.getInstanceName());
-				thresholdHistory.setDbType(dbConnection.getDbType());
-				thresholdHistory.setActive(dbConnection.getActive());
-				thresholdHistory.setTotal(dbConnection.getTotal());
-				thresholdHistory.setAlarmTime(alarmTime);
-				thresholdHistory.setCreateTime(dbConnection.getCreateTime());
-				thresholdHistory.setUpdateTime(dbConnection.getUpdateTime());
-				thresholdHistory.setPid(thresholdConfig.getId());
-				thresholdHistoryService.addThresholdHistory(thresholdHistory);
-				//发送邮件
-				alarmLevel = 2;
-				alarmLevelStr = "严重";
-				content = "监控组，您好！</br></br>数据：" + dbConnection.toString() + "</br></br>描述：<font color='#FF0000'>数据超出上次采样时间3分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-				sendMail(content); 
-				logger.info("报警内容：" + content);
-				System.out.println("报警内容：" + content);
+			if(minusTimeMillis >= alarmTimeout*60*1000){
+				//数据超过5分钟未更新，报警
+				//如果上次报警原因为长时间未更新，则不再报警
+				if(!(currentAlarmLevel != 0 && currentAlarmReason == 1)){
+					i++;
+					alarmTime = new Date();
+					//插入一条报警历史
+					thresholdHistory = new ThresholdHistory();
+					thresholdHistory.setServerAddr(dbConnection.getServerAddr());
+					thresholdHistory.setDbPort(dbConnection.getPort() + "");
+					thresholdHistory.setInstName(dbConnection.getInstanceName());
+					thresholdHistory.setDbType(dbConnection.getDbType());
+					thresholdHistory.setActive(dbConnection.getActive());
+					thresholdHistory.setTotal(dbConnection.getTotal());
+					thresholdHistory.setAlarmTime(alarmTime);
+					thresholdHistory.setCreateTime(dbConnection.getCreateTime());
+					thresholdHistory.setUpdateTime(dbConnection.getUpdateTime());
+					thresholdHistory.setPid(thresholdConfig.getId());
+					alarmReason = 1;
+					thresholdHistory.setAlarmReason(alarmReason);
+					thresholdHistoryService.addThresholdHistory(thresholdHistory);
+					//发送邮件
+					alarmLevel = 1;
+					alarmLevelStr = "一级";
+					content = "监控组，您好！</br></br>数据：" + dbConnection.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmTimeout + "分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel+""); 
+					logger.info("报警内容：" + content + ";pid:" + thresholdConfig.getId());
+					updateThresholdConfigByDBconn(thresholdConfig.getId(), alarmLevel, dbConnection, alarmTime, alarmReason);
+//					System.out.println("报警内容：" + content);
+				}
+				
 			} else {
 				//超出设定的阈值，报警 
 				int activeLevel1Threshold = thresholdConfig.getActiveLevel1Threshold();
@@ -180,11 +198,27 @@ public class DBConnectionAndASMAlarmBean {
 				if(activeLevel == 2 || totalLevel == 2){
 					alarmLevel = 2;
 				} else if(activeLevel == 1 || totalLevel == 1){
-					alarmLevel = 1;
+					alarmLevel = 3;
 				}
 				
-				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel == 1 && alarmLevel == 2)){
-					//上次报过警，下次就不在报警；上次报警级别为一级，下次升级为二级，也要报警
+				if(activeLevel != 0 && totalLevel != 0){
+					alarmReason = 6;
+					alarmReasonStr = "活跃连接数、总连接数均超出";
+				}
+				if(activeLevel != 0 && totalLevel == 0){
+					alarmReason = 2;
+					alarmReasonStr = "活跃连接数超出";
+				}
+				if(activeLevel == 0 && totalLevel != 0){
+					alarmReason = 3;
+					alarmReasonStr = "总连接数超出";
+				}
+				if(alarmLevel != 0 && currentAlarmLevel != 0 && alarmLevel < currentAlarmLevel){
+					alarmReason = 5;
+					alarmReasonStr = "报警级别提升";
+				}
+				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel != 0 && alarmLevel != 0 && alarmReason != currentAlarmReason)){
+					//上次即使报过警，这次跟上次的报警原因不一样，仍要报警
 					i++;
 					alarmTime = new Date();
 					//插入一条报警历史
@@ -199,34 +233,26 @@ public class DBConnectionAndASMAlarmBean {
 					thresholdHistory.setCreateTime(dbConnection.getCreateTime());
 					thresholdHistory.setUpdateTime(dbConnection.getUpdateTime());
 					thresholdHistory.setPid(thresholdConfig.getId());
+					thresholdHistory.setAlarmReason(alarmReason);
 					thresholdHistoryService.addThresholdHistory(thresholdHistory);
 					//发送邮件
-					if(alarmLevel == 1){
-						alarmLevelStr = "一般";
-					} else if(alarmLevel == 2) {
-						alarmLevelStr = "严重";
+					if(alarmLevel == 2){
+						alarmLevelStr = "二级";
+					} else if(alarmLevel == 3) {
+						alarmLevelStr = "三级";
 					}
-					content = "监控组，您好！</br></br>数据：" + dbConnection.toString() + "</br></br>描述：<font color='#FF0000'>连接数超出设定的阈值</font></br></br>设定阈值：活跃连接数(" + activeLevel1Threshold + "/" + activeLevel2Threshold 
+					content = "监控组，您好！</br></br>数据：" + dbConnection.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmReasonStr + "</font></br></br>设定阈值：活跃连接数(" + activeLevel1Threshold + "/" + activeLevel2Threshold 
 							+ ")  总连接数(" + totalLevel1Threshold + "/" + totalLevel2Threshold + ")" + "</br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-					sendMail(content); 
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel + ""); 
 					logger.info("报警内容：" + content);
-					System.out.println("报警内容：" + content);
+//					System.out.println("报警内容：" + content);
+					updateThresholdConfigByDBconn(thresholdConfig.getId(), alarmLevel, dbConnection, alarmTime, alarmReason);
 				}
 				
 			}
-			//更新对应的阈值配置
-			if(currentAlarmLevel != alarmLevel){
-				ThresholdConfig thresholdConfigNew = new ThresholdConfig();
-				thresholdConfigNew.setId(thresholdConfig.getId());
-				thresholdConfigNew.setAlarmLevel(alarmLevel);
-				thresholdConfigNew.setActive(dbConnection.getActive());
-				thresholdConfigNew.setTotal(dbConnection.getTotal());
-				thresholdConfigNew.setCreateTime(dbConnection.getCreateTime());
-				thresholdConfigNew.setUpdateTime(dbConnection.getUpdateTime());
-				if(alarmTime != null){
-					thresholdConfigNew.setAlarmTime(alarmTime);
-				}
-				thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+			//数据恢复正常，更新对应的阈值配置
+			if(alarmLevel == 0){
+				updateThresholdConfigByDBconn(thresholdConfig.getId(), alarmLevel, dbConnection, null, 0);
 			}
 		}
 
@@ -234,7 +260,7 @@ public class DBConnectionAndASMAlarmBean {
         Tbs tbsCon = new Tbs();
 		List<Tbs> tbsList = tbsService.findTbsListByCondition(tbsCon);
 		logger.info("表空间表中共查询到" + tbsList.size() + "条数据......");
-		System.out.println("表空间表中共查询到" + tbsList.size() + "条数据......");
+//		System.out.println("表空间表中共查询到" + tbsList.size() + "条数据......");
 		for (Tbs tbs : tbsList) {
 			//判断记录是否为当天新加入的，如果为新记录，并且在阈值配置表中没有对应的阈值配置，就插入一条阈值配置记录
 			createTime = tbs.getCreateTime();
@@ -254,6 +280,7 @@ public class DBConnectionAndASMAlarmBean {
 				if(thresholdConfigList == null || thresholdConfigList.size() <= 0){
 					k++;
 					thresholdConfig.setAlarmLevel(0);
+					thresholdConfig.setAlarmReason(0);
 					thresholdConfig.setLevel1Threshold(0.8f);
 					thresholdConfig.setLevel2Threshold(0.9f);
 					thresholdConfigService.addThresholdConfig(thresholdConfig);
@@ -265,49 +292,18 @@ public class DBConnectionAndASMAlarmBean {
 			}
 			//以下判断是否触发报警
 			alarmLevel = 0;
+			alarmReason = 0;
+			alarmReasonStr = "";
 			currentAlarmLevel = thresholdConfig.getAlarmLevel();
+			currentAlarmReason = thresholdConfig.getAlarmReason();
 			updateTime = tbs.getUpdateTime();
 			updateTimeMillis = updateTime.getTime();
 			currentTimeMillis = new Date().getTime();
 			minusTimeMillis = currentTimeMillis - updateTimeMillis;
-			if(minusTimeMillis >= 3*60*1000 && minusTimeMillis < 5*60*1000){
-				//数据超过3分钟未更新，报警
-				i++;
-				alarmTime = new Date();
-				//插入一条报警历史
-				thresholdHistory = new ThresholdHistory();
-				thresholdHistory.setServerAddr(tbs.getServerAddr());
-				thresholdHistory.setDbName(tbs.getDbName());
-				thresholdHistory.setTbsName(tbs.getTbsName());
-				thresholdHistory.setTotalMB(tbs.getTotalMB());
-				thresholdHistory.setUsedMB(tbs.getUsedMB());
-				thresholdHistory.setUsedPercent(tbs.getUsedPercent());
-				thresholdHistory.setAlarmTime(alarmTime);
-				thresholdHistory.setCreateTime(tbs.getCreateTime());
-				thresholdHistory.setUpdateTime(tbs.getUpdateTime());
-				thresholdHistory.setPid(thresholdConfig.getId());
-				thresholdHistoryService.addThresholdHistory(thresholdHistory);
-				//发送邮件
-				alarmLevel = 2;
-				alarmLevelStr = "严重";
-				content = "监控组，您好！</br></br>数据：" + tbs.toString() + "</br></br>描述：<font color='#FF0000'>数据超出上次采样时间3分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-				sendMail(content); 
-				logger.info("报警内容：" + content);
-				System.out.println("报警内容：" + content);
-			} else {
-				//超出设定的阈值，报警 
-				float level1Threshold = thresholdConfig.getLevel1Threshold();
-				float level2Threshold = thresholdConfig.getLevel2Threshold();
-				float usedPercent = tbs.getUsedPercent();
-				
-				if(usedPercent >= level2Threshold*100) {
-					alarmLevel = 2;
-				} else if(usedPercent >= level1Threshold*100) {
-					alarmLevel = 1;
-				}
-				
-				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel == 1 && alarmLevel == 2)){
-					//上次报过警，下次就不在报警；上次报警级别为一级，下次升级为二级，也要报警
+			if(minusTimeMillis >= alarmTimeout*60*1000){
+				//数据超过5分钟未更新，报警
+				//如果上次报警原因为长时间未更新，则不再报警
+				if(!(currentAlarmLevel != 0 && currentAlarmReason == 1)){
 					i++;
 					alarmTime = new Date();
 					//插入一条报警历史
@@ -322,35 +318,76 @@ public class DBConnectionAndASMAlarmBean {
 					thresholdHistory.setCreateTime(tbs.getCreateTime());
 					thresholdHistory.setUpdateTime(tbs.getUpdateTime());
 					thresholdHistory.setPid(thresholdConfig.getId());
+					alarmReason = 1;
+					thresholdHistory.setAlarmReason(alarmReason);
 					thresholdHistoryService.addThresholdHistory(thresholdHistory);
 					//发送邮件
-					if(alarmLevel == 1){
-						alarmLevelStr = "一般";
-					} else if(alarmLevel == 2) {
-						alarmLevelStr = "严重";
-					}
-					content = "监控组，您好！</br></br>数据：" + tbs.toString() + "</br></br>描述：<font color='#FF0000'>已使用百分比超出设定的阈值</font></br></br>设定阈值：已使用百分比(" + level1Threshold + "/" + level2Threshold 
-							+ ")" + "</br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-					sendMail(content); 
+					alarmLevel = 1;
+					alarmLevelStr = "一级";
+					content = "监控组，您好！</br></br>数据：" + tbs.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmTimeout + "分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel+""); 
 					logger.info("报警内容：" + content);
-					System.out.println("报警内容：" + content);
+//					System.out.println("报警内容：" + content);
+					updateThresholdConfigByTbs(thresholdConfig.getId(), alarmLevel, tbs, alarmTime, alarmReason);
+				}
+				
+			} else {
+				//超出设定的阈值，报警 
+				float level1Threshold = thresholdConfig.getLevel1Threshold();
+				float level2Threshold = thresholdConfig.getLevel2Threshold();
+				float usedPercent = tbs.getUsedPercent();
+				
+				if(usedPercent >= level2Threshold*100) {
+					alarmLevel = 2;
+					alarmReason = 4;
+					alarmReasonStr = "已使用百分比超出";
+				} else if(usedPercent >= level1Threshold*100) {
+					alarmLevel = 3;
+					alarmReason = 4;
+					alarmReasonStr = "已使用百分比超出";
+				}
+				
+				if(alarmLevel != 0 && currentAlarmLevel != 0 && alarmLevel < currentAlarmLevel){
+					alarmReason = 5;
+					alarmReasonStr = "报警级别提升";
+				}
+				
+				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel != 0 && alarmLevel != 0 && alarmReason != currentAlarmReason)){
+					//上次即使报过警，这次跟上次的报警原因不一样，仍要报警
+					i++;
+					alarmTime = new Date();
+					//插入一条报警历史
+					thresholdHistory = new ThresholdHistory();
+					thresholdHistory.setServerAddr(tbs.getServerAddr());
+					thresholdHistory.setDbName(tbs.getDbName());
+					thresholdHistory.setTbsName(tbs.getTbsName());
+					thresholdHistory.setTotalMB(tbs.getTotalMB());
+					thresholdHistory.setUsedMB(tbs.getUsedMB());
+					thresholdHistory.setUsedPercent(tbs.getUsedPercent());
+					thresholdHistory.setAlarmTime(alarmTime);
+					thresholdHistory.setCreateTime(tbs.getCreateTime());
+					thresholdHistory.setUpdateTime(tbs.getUpdateTime());
+					thresholdHistory.setPid(thresholdConfig.getId());
+					thresholdHistory.setAlarmReason(alarmReason);
+					thresholdHistoryService.addThresholdHistory(thresholdHistory);
+					//发送邮件
+					if(alarmLevel == 2){
+						alarmLevelStr = "二级";
+					} else if(alarmLevel == 3) {
+						alarmLevelStr = "三级";
+					}
+					content = "监控组，您好！</br></br>数据：" + tbs.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmReasonStr + "</font></br></br>设定阈值：已使用百分比(" + level1Threshold + "/" + level2Threshold 
+							+ ")" + "</br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel+""); 
+					logger.info("报警内容：" + content);
+//					System.out.println("报警内容：" + content);
+					updateThresholdConfigByTbs(thresholdConfig.getId(), alarmLevel, tbs, alarmTime, alarmReason);
 				}
 				
 			}
-			//更新对应的阈值配置
-			if(currentAlarmLevel != alarmLevel){
-				ThresholdConfig thresholdConfigNew = new ThresholdConfig();
-				thresholdConfigNew.setId(thresholdConfig.getId());
-				thresholdConfigNew.setAlarmLevel(alarmLevel);
-				thresholdConfigNew.setTotalMB(tbs.getTotalMB());
-				thresholdConfigNew.setUsedMB(tbs.getUsedMB());
-				thresholdConfigNew.setUsedPercent(tbs.getUsedPercent());
-				thresholdConfigNew.setCreateTime(tbs.getCreateTime());
-				thresholdConfigNew.setUpdateTime(tbs.getUpdateTime());
-				if(alarmTime != null){
-					thresholdConfigNew.setAlarmTime(alarmTime);
-				}
-				thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+			//数据恢复正常，更新对应的阈值配置
+			if(alarmLevel == 0){
+				updateThresholdConfigByTbs(thresholdConfig.getId(), alarmLevel, tbs, null, 0);
 			}
 		}
 		
@@ -358,7 +395,7 @@ public class DBConnectionAndASMAlarmBean {
         Asm asmCon = new Asm();
 		List<Asm> asmList = asmService.findAsmListByCondition(asmCon);
 		logger.info("ASM空间表中共查询到" + asmList.size() + "条数据......");
-		System.out.println("ASM空间表中共查询到" + asmList.size() + "条数据......");
+//		System.out.println("ASM空间表中共查询到" + asmList.size() + "条数据......");
 		for (Asm asm : asmList) {
 			//判断记录是否为当天新加入的，如果为新记录，并且在阈值配置表中没有对应的阈值配置，就插入一条阈值配置记录
 			createTime = asm.getCreateTime();
@@ -378,6 +415,7 @@ public class DBConnectionAndASMAlarmBean {
 				if(thresholdConfigList == null || thresholdConfigList.size() <= 0){
 					k++;
 					thresholdConfig.setAlarmLevel(0);
+					thresholdConfig.setAlarmReason(0);
 					thresholdConfig.setLevel1Threshold(0.8f);
 					thresholdConfig.setLevel2Threshold(0.9f);
 					thresholdConfigService.addThresholdConfig(thresholdConfig);
@@ -389,48 +427,66 @@ public class DBConnectionAndASMAlarmBean {
 			}
 			//以下判断是否触发报警
 			alarmLevel = 0;
+			alarmReason = 0;
+			alarmReasonStr = "";
 			currentAlarmLevel = thresholdConfig.getAlarmLevel();
+			currentAlarmReason = thresholdConfig.getAlarmReason();
 			updateTime = asm.getUpdateTime();
 			updateTimeMillis = updateTime.getTime();
 			currentTimeMillis = new Date().getTime();
 			minusTimeMillis = currentTimeMillis - updateTimeMillis;
-			if(minusTimeMillis >= 3*60*1000 && minusTimeMillis < 5*60*1000){
-				//数据超过3分钟未更新，报警
-				i++;
-				alarmTime = new Date();
-				//插入一条报警历史
-				thresholdHistory = new ThresholdHistory();
-				thresholdHistory.setServerAddr(asm.getServerAddr());
-				thresholdHistory.setDbName(asm.getDbName());
-				thresholdHistory.setDiskGroup(asm.getDiskGroup());
-				thresholdHistory.setTotalMB(asm.getTotalMB());
-				thresholdHistory.setUsedMB(asm.getUsedMB());
-				thresholdHistory.setUsedPercent(asm.getUsedPercent());
-				thresholdHistory.setAlarmTime(alarmTime);
-				thresholdHistory.setCreateTime(asm.getCreateTime());
-				thresholdHistory.setUpdateTime(asm.getUpdateTime());
-				thresholdHistory.setPid(thresholdConfig.getId());
-				thresholdHistoryService.addThresholdHistory(thresholdHistory);
-				//发送邮件
-				alarmLevel = 2;
-				alarmLevelStr = "严重";
-				content = "监控组，您好！</br></br>数据：" + asm.toString() + "</br></br>描述：<font color='#FF0000'>数据超出上次采样时间3分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-				sendMail(content); 
-				logger.info("报警内容：" + content);
-				System.out.println("报警内容：" + content);
+			if(minusTimeMillis >= alarmTimeout*60*1000){
+				//数据超过5分钟未更新，报警
+				//如果上次报警原因为长时间未更新，则不再报警
+				if(!(currentAlarmLevel != 0 && currentAlarmReason == 1)){
+					i++;
+					alarmTime = new Date();
+					//插入一条报警历史
+					thresholdHistory = new ThresholdHistory();
+					thresholdHistory.setServerAddr(asm.getServerAddr());
+					thresholdHistory.setDbName(asm.getDbName());
+					thresholdHistory.setDiskGroup(asm.getDiskGroup());
+					thresholdHistory.setTotalMB(asm.getTotalMB());
+					thresholdHistory.setUsedMB(asm.getUsedMB());
+					thresholdHistory.setUsedPercent(asm.getUsedPercent());
+					thresholdHistory.setAlarmTime(alarmTime);
+					thresholdHistory.setCreateTime(asm.getCreateTime());
+					thresholdHistory.setUpdateTime(asm.getUpdateTime());
+					thresholdHistory.setPid(thresholdConfig.getId());
+					alarmReason = 1;
+					thresholdHistory.setAlarmReason(alarmReason);
+					thresholdHistoryService.addThresholdHistory(thresholdHistory);
+					//发送邮件
+					alarmLevel = 1;
+					alarmLevelStr = "一级";
+					content = "监控组，您好！</br></br>数据：" + asm.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmTimeout + "分钟未更新</font></br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel+""); 
+					logger.info("报警内容：" + content);
+//					System.out.println("报警内容：" + content);
+					updateThresholdConfigByAsm(thresholdConfig.getId(), alarmLevel, asm, alarmTime, alarmReason);
+				}
+				
 			} else {
-				//超出设定的阈值，报警 
+				//上次即使报过警，这次跟上次的报警原因不一样，仍要报警
 				float level1Threshold = thresholdConfig.getLevel1Threshold();
 				float level2Threshold = thresholdConfig.getLevel2Threshold();
 				float usedPercent = asm.getUsedPercent();
 				
 				if(usedPercent >= level2Threshold*100) {
 					alarmLevel = 2;
+					alarmReason = 4;
+					alarmReasonStr = "已使用百分比超出";
 				} else if(usedPercent >= level1Threshold*100) {
-					alarmLevel = 1;
+					alarmLevel = 3;
+					alarmReason = 4;
+					alarmReasonStr = "已使用百分比超出";
+				}
+				if(alarmLevel != 0 && currentAlarmLevel != 0 && alarmLevel < currentAlarmLevel){
+					alarmReason = 5;
+					alarmReasonStr = "报警级别提升";
 				}
 				
-				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel == 1 && alarmLevel == 2)){
+				if((currentAlarmLevel == 0 && alarmLevel != 0) || (currentAlarmLevel != 0 && alarmLevel != 0 && alarmReason != currentAlarmReason)){
 					//上次报过警，下次就不在报警；上次报警级别为一级，下次升级为二级，也要报警
 					i++;
 					alarmTime = new Date();
@@ -446,58 +502,129 @@ public class DBConnectionAndASMAlarmBean {
 					thresholdHistory.setCreateTime(asm.getCreateTime());
 					thresholdHistory.setUpdateTime(asm.getUpdateTime());
 					thresholdHistory.setPid(thresholdConfig.getId());
+					thresholdHistory.setAlarmReason(alarmReason);
 					thresholdHistoryService.addThresholdHistory(thresholdHistory);
 					//发送邮件
-					if(alarmLevel == 1){
-						alarmLevelStr = "一般";
-					} else if(alarmLevel == 2) {
-						alarmLevelStr = "严重";
+					if(alarmLevel == 2){
+						alarmLevelStr = "二级";
+					} else if(alarmLevel == 3) {
+						alarmLevelStr = "三级";
 					}
-					content = "监控组，您好！</br></br>数据：" + asm.toString() + "</br></br>描述：<font color='#FF0000'>已使用百分比超出设定的阈值</font></br></br>设定阈值：已使用百分比(" + level1Threshold + "/" + level2Threshold 
+					content = "监控组，您好！</br></br>数据：" + asm.toString() + "</br></br>描述：<font color='#FF0000'>" + alarmReasonStr +"</font></br></br>设定阈值：已使用百分比(" + level1Threshold + "/" + level2Threshold 
 							+ ")" + "</br></br>报警级别：<font color='#FF0000'>" + alarmLevelStr + "</font>";
-					sendMail(content); 
+					sendMail(content,thresholdConfig.getId()+"",alarmLevel+""); 
 					logger.info("报警内容：" + content);
-					System.out.println("报警内容：" + content);
+//					System.out.println("报警内容：" + content);
+					updateThresholdConfigByAsm(thresholdConfig.getId(), alarmLevel, asm, alarmTime, alarmReason);
 				}
 				
 			}
-			//更新对应的阈值配置
-			if(currentAlarmLevel != alarmLevel){
-				ThresholdConfig thresholdConfigNew = new ThresholdConfig();
-				thresholdConfigNew.setId(thresholdConfig.getId());
-				thresholdConfigNew.setAlarmLevel(alarmLevel);
-				thresholdConfigNew.setTotalMB(asm.getTotalMB());
-				thresholdConfigNew.setUsedMB(asm.getUsedMB());
-				thresholdConfigNew.setUsedPercent(asm.getUsedPercent());
-				thresholdConfigNew.setCreateTime(asm.getCreateTime());
-				thresholdConfigNew.setUpdateTime(asm.getUpdateTime());
-				if(alarmTime != null){
-					thresholdConfigNew.setAlarmTime(alarmTime);
-				}
-				thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+			//数据恢复正常，更新对应的阈值配置
+			if(alarmLevel == 0){
+				updateThresholdConfigByAsm(thresholdConfig.getId(), alarmLevel, asm, null, 0);
 			}
 		}
 		logger.info("当天三张表中共加入了" + j + "条新记录,向阈值配置表中插入了" + k + "条记录...");
-		System.out.println("当天三张表中加入了" + j + "条新记录,向阈值配置表中插入了" + k + "条记录...");
+//		System.out.println("当天三张表中加入了" + j + "条新记录,向阈值配置表中插入了" + k + "条记录...");
 		date = new Date();
 		logger.info(df.format(date) + "-----本次定时任务执行完毕，一共触发了" + i + "次报警...");
-		System.out.println(df.format(date) + "-----本次定时任务执行完毕，一共触发了" + i + "次报警...");
+//		System.out.println(df.format(date) + "-----本次定时任务执行完毕，一共触发了" + i + "次报警...");
 		long end = date.getTime();
         logger.info("本次定时任务共耗时" + (end - begin)/1000 + "秒.");
-        System.out.println("本次定时任务共耗时" + (end - begin)/1000 + "秒.");
+//      System.out.println("本次定时任务共耗时" + (end - begin)/1000 + "秒.");
         logger.info("*************************************************************************************");
-        System.out.println("*************************************************************************************");
+//      System.out.println("*************************************************************************************");
 	}
-
-	public void sendMail(String content){
+	
+	public void updateThresholdConfigByDBconn(Long id, Integer alarmLevel, DBConnection dbConnection, Date alarmTime, Integer alarmReason){
+		ThresholdConfig thresholdConfigNew = new ThresholdConfig();
+		thresholdConfigNew.setId(id);
+		if(alarmLevel != null){
+			thresholdConfigNew.setAlarmLevel(alarmLevel);
+		}
+		
+		if(dbConnection != null){
+			thresholdConfigNew.setActive(dbConnection.getActive());
+			thresholdConfigNew.setTotal(dbConnection.getTotal());
+			thresholdConfigNew.setCreateTime(dbConnection.getCreateTime());
+			thresholdConfigNew.setUpdateTime(dbConnection.getUpdateTime());
+		}
+		
+		if(alarmTime != null){
+			thresholdConfigNew.setAlarmTime(alarmTime);
+		}
+		
+		if(alarmReason != null){
+			thresholdConfigNew.setAlarmReason(alarmReason);
+		}
+		
+		thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+	}
+	
+	public void updateThresholdConfigByTbs(Long id, Integer alarmLevel, Tbs tbs, Date alarmTime, Integer alarmReason){
+		ThresholdConfig thresholdConfigNew = new ThresholdConfig();
+		thresholdConfigNew.setId(id);
+		if(alarmLevel != null){
+			thresholdConfigNew.setAlarmLevel(alarmLevel);
+		}
+		
+		if(tbs != null){
+			thresholdConfigNew.setTotalMB(tbs.getTotalMB());
+			thresholdConfigNew.setUsedMB(tbs.getUsedMB());
+			thresholdConfigNew.setUsedPercent(tbs.getUsedPercent());
+			thresholdConfigNew.setCreateTime(tbs.getCreateTime());
+			thresholdConfigNew.setUpdateTime(tbs.getUpdateTime());
+		}
+		
+		if(alarmTime != null){
+			thresholdConfigNew.setAlarmTime(alarmTime);
+		}
+		
+		if(alarmReason != null){
+			thresholdConfigNew.setAlarmReason(alarmReason);
+		}
+		
+		thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+	}
+	
+	public void updateThresholdConfigByAsm(Long id, Integer alarmLevel, Asm asm, Date alarmTime, Integer alarmReason){
+		ThresholdConfig thresholdConfigNew = new ThresholdConfig();
+		thresholdConfigNew.setId(id);
+		if(alarmLevel != null){
+			thresholdConfigNew.setAlarmLevel(alarmLevel);
+		}
+		
+		if(asm != null){
+			thresholdConfigNew.setTotalMB(asm.getTotalMB());
+			thresholdConfigNew.setUsedMB(asm.getUsedMB());
+			thresholdConfigNew.setUsedPercent(asm.getUsedPercent());
+			thresholdConfigNew.setCreateTime(asm.getCreateTime());
+			thresholdConfigNew.setUpdateTime(asm.getUpdateTime());
+		}
+		
+		if(alarmTime != null){
+			thresholdConfigNew.setAlarmTime(alarmTime);
+		}
+		
+		if(alarmReason != null){
+			thresholdConfigNew.setAlarmReason(alarmReason);
+		}
+		
+		thresholdConfigService.editThresholdConfig(thresholdConfigNew);
+	}
+	
+	public void sendMail(String content, String id, String level){
+		String url = AppConfigUtil.getStringValue("prtg.alarm.url");
 		paramMap.put("type", "dbconn");
 		paramMap.put("mail", "caowei-ds1@yolo24.com");
 		paramMap.put("subject", "数据库连接与表空间报警");
 		paramMap.put("content", content);
+		paramMap.put("id", id);
+		paramMap.put("level", level);
 		try {
 			String result = HttpClientUtils.post(url, paramMap);
 			logger.info("调用报警接口返回：" + result);
-			System.out.println("调用报警接口返回：" + result);
+//			System.out.println("调用报警接口返回：" + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

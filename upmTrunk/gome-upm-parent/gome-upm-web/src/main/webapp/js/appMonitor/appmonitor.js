@@ -115,7 +115,26 @@ function searchAll(name, value){
 			 alert("格式不正确，请重新输入！");
 			 return;
 		}
-		window.location.href = contextPath+"/app/main?traceId="+name.trim();
+		/*
+		 * by wangxiaye  先判断有没有结果，没有的话不进行跳转
+		 */
+		$.ajax({
+			type: 'POST',
+	        url: contextPath+'/app/search',
+	        dataType: 'json',
+	        data: {traceId: name.trim()},
+	        success: function (data) {
+	        		if(typeof(data.result)=="undefined"){
+	        			$("#noDataTip").show();
+	        		}else{
+	        			$("#noDataTip").hide();
+	        			window.location.href = contextPath+"/app/main?traceId="+name.trim();
+	        		}
+	        },
+	        error: function () {
+	        	alert("操作失败");
+	        }
+		});
 	}
 	if(value == 'other'){
 		loadAll(name);
@@ -129,14 +148,34 @@ function loadAll(content){
 		 alert("格式不正确，请重新输入！");
 		 return;
 	}
-	window.location.href = contextPath+"/app/searchAll?content="+content.trim();
+	/*
+	 * by wangxiaye  先判断有没有结果，没有的话不进行跳转
+	 */
+	$.ajax({
+		type: 'POST',
+        url: contextPath+'/app/searchAll',
+        dataType: 'json',
+        data: {content: content.trim()},
+        success: function (data) {
+        		if(typeof(data.total)=="undefined"){
+        			$("#noDataTip").show();
+        		}else{
+        			$("#noDataTip").hide();
+        			window.location.href = contextPath+"/app/searchAll?content="+content.trim();
+        		}
+        },
+        error: function () {
+        	alert("操作失败");
+        }
+	});
+//	window.location.href = contextPath+"/app/searchAll?content="+content.trim();
 }
 
 // 根据traceId查询
 function searchByTraceId(){
-	var searchKey = $("#key").val();
+	var searchKey = $('#key').val();
 	if(searchKey != ''){
-		var searchKey = $("#searchKey").val();
+		var searchKey = $('#searchKey').val();
 		if(searchKey != ''){
 			var myReg = /[\u4e00-\u9fa5]+/; // 检测traceId格式是否正确
 			if(myReg.test(searchKey)){
@@ -220,7 +259,7 @@ function loadTree(traceId){
 $(".list_table").on("click",".pageNumber", function(){
 	var pageNo = $(this).attr("pageNo");
 	var pageSize = 10;
-	var businessKey = $("#key").val();
+	var businessKey = $('#searchKey').val();
 
     $.ajax({
 		url:contextPath+'/app/getTable',

@@ -3,11 +3,9 @@ package com.gome.upm.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import com.gome.upm.common.util.StringUtils;
 
 
 public class UserLoginInterceptor extends HandlerInterceptorAdapter {
@@ -30,9 +28,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
 	    	try {
 	    		//String cookieToken = cookieUtil.getCookieValues(request, "token");
 	    		String userName = (String) request.getSession().getAttribute("userName");
-
-		    	if(StringUtils.isBlank(userName)){
-
+		    	if(StringUtils.isEmpty(userName)){
 			    	response.sendRedirect(request.getContextPath()+"/login");
 		    		return false;
 		    	}

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -56,18 +56,24 @@
 	        	<div class="centerLayout">
 	        		<div class="centertoplayout">
 	        			<h2 style="font-size: 15px;">订单解析</h2>
-	        			<span style="color:#999999;display: block;text-align: center;margin-top: 10px;font-size:18px;">订单量：<span style="color:#9c8ade;" id="order_tal"></span></span>
+	        			<span style="color:#999999;display: block;text-align: center;margin-top: 10px;font-size:16px;">订单量：<span style="color:#9c8ade;" id="order_tal"></span></span>
 	        			<div style="width: 290px;height: 200px;margin: auto;" id="order_analysis"></div>
-						<p style="color:#999999">
-							充值订单：<span style="color:#9c8ade;font-weight: 600;" id="order_pay"></span>
-							<span>
-								非充值订单：<span style="color:#9c8ade;font-weight: 600;" id="order_notpay"></span>
-							</span><br>
-							支付成功订单：<span style="color:#9c8ade;font-weight: 600;" id="order_relpay"></span>
-							<span>
-								妥投成功订单：<span style="color:#9c8ade;font-weight: 600;" id="order_delivery"></span>
-							</span>
-						</p>
+						<div class="order_txt_con">
+							<p>
+							    WEB端：<span class="order-span-Strong" id="order_web"></span>
+							    APP端：<span class="order-span-Strong" id="order_app"></span>
+								WAP端：<span class="order-span-Strong" id="order_wap"></span>
+							</p>
+							<p>
+							        充值订单：<span class="order-span-Strong"  id="order_pay"></span>
+								非充值订单：<span class="order-span-Strong" id="order_notpay"></span>
+							</p>
+							<p>
+							        支付成功订单：<span class="order-span-Strong" id="order_relpay"></span>
+								妥投成功订单：<span class="order-span-Strong"id="order_delivery"></span>
+							</p>
+						</div>
+						
 	        		</div>
 	        		<div class="centertoplayout" style="margin-left: 66%;margin-top: -358px;">
 	        			<h2 style="font-size: 15px;">商品属性分类</h2>

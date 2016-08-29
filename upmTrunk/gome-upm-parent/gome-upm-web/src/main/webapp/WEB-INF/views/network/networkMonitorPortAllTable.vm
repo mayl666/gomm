@@ -20,7 +20,7 @@
 			<td><a href="javascript:void(0)" deviceId="$!sensor.deviceId" class="link_a deviceDetail">$!sensor.deviceName</a></td>
 			<td><a href="javascript:void(0)" deviceId="$!sensor.deviceId" sensorId="$!sensor.sensorId" class="link_a sensorDetail">$!sensor.sensorName</a></td>
 			#if($!sensor.state == 0)
-			<td>正常运行</td>
+			<td>正常</td>
 			#else
 			<td>故障</td>
 			#end
@@ -28,7 +28,9 @@
 		</tr>
 		
 			#end
-			#end
+			#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
+				#end
 	</tbody>
 </table>
 #parse("common/pagePlugin.vm")

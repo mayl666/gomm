@@ -5,7 +5,10 @@
 					<tr>
 						<th>序号</th>
 						<th>报警时间</th>
-						<th>最新更新时间</th>
+						#if($!status=='0')
+						#else
+							<th>最新更新时间</th>
+						#end
 						<th>服务器组</th>
 						<th>服务器名称</th>
 						<th>报警类型</th>
@@ -21,7 +24,10 @@
 					<tr>
 						<td>$!i</td>
 						<td>$!pageAlarm.alarmTime</td>
-						<td>$!pageAlarm.updateAlarmTime</td>
+						#if($!status=='0')
+						#else
+							<td>$!pageAlarm.updateAlarmTime</td>
+						#end
 						<td>$!pageAlarm.groupName</td>
 						#if($!pageAlarm.type=='2')
 							<td>$!pageAlarm.host 【$!pageAlarm.key_】</td>
@@ -51,8 +57,11 @@
 						#end
 					</tr>
 						#end
+				#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
 				#end
-				</tbody>
+				
+							</tbody>
 			</table>
 			#if($!page.data.size() > 0)
 #parse("common/pageToolbar.vm")

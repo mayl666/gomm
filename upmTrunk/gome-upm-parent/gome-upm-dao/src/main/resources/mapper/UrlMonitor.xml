@@ -117,7 +117,15 @@
     <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
       and url.alarmTime between #{conditions.startTime} and #{conditions.endTime}
     </if>
-    order by url.createTime desc
+    <if test="conditions.survival != null and conditions.survival==1" >
+      order by url.createTime desc
+    </if>
+    <if test="conditions.survival != null  and conditions.survival!=1" >
+	      order by url.alarmTime desc
+	 </if>
+	 <if test="conditions.survival == null" >
+      order by url.createTime desc
+    </if>
     <if test="start != null and pageSize != null">
     	limit #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER};
     </if>

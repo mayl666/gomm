@@ -672,11 +672,15 @@ public class MonitoBusinessController extends AbsBaseController{
 		for(MoBusiness moBusiness2:list){
 			try {
 				MapCoordinate cNow=tem.get(moBusiness2.getName());
-				map.put(moBusiness2.getName(), new String[]{cNow.getXaxis(),cNow.getYaxis()});
-				if(moBusiness2.getAmount()>max){
-					max=moBusiness2.getAmount();
+				if(cNow!=null){
+					map.put(moBusiness2.getName(), new String[]{cNow.getXaxis(),cNow.getYaxis()});
+					if(moBusiness2.getAmount()>max){
+						max=moBusiness2.getAmount();
+					}
+					relist1.add(new CityMap(moBusiness2.getName(),moBusiness2.getAmount()*xishu));
+				}else{
+					System.out.println(moBusiness2.getName()+"获取不到坐标值");
 				}
-				relist1.add(new CityMap(moBusiness2.getName(),moBusiness2.getAmount()*xishu));
 			} catch (Exception e) {
 				System.out.println(moBusiness2.getName());
 				e.printStackTrace();
@@ -827,6 +831,8 @@ public class MonitoBusinessController extends AbsBaseController{
 		AlarmRecord alarmRecord= new AlarmRecord();
 		if(type!=null&&!"".equals(type)){
 			alarmRecord.setType(type);
+		}else{
+			alarmRecord.setType("business");
 		}
 		if(startTime!=null&&!"".equals(startTime)){
 			alarmRecord.setStartTime(startTime);

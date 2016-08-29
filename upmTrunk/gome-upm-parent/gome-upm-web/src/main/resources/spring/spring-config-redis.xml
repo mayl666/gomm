@@ -12,10 +12,10 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
 	default-lazy-init="false">
 
-	<bean id="monitorGcache" class="redis.GcacheClient" destroy-method="close">
-	    <!-- zookeeperAddress -->
-	    <constructor-arg value="10.126.53.168:2181,10.126.53.169:2181,10.126.53.170:2181" />
-	    <!-- businessName -->
+	<!-- <bean id="monitorGcache" class="redis.GcacheClient" destroy-method="close">
+	    zookeeperAddress
+	    <constructor-arg value="10.58.22.191:2181,10.58.22.192:2181,10.58.22.193:2181,10.58.50.149:2181,10.58.50.150:2181" />
+	    businessName
 	    <constructor-arg value="SERVER_NETWORK_MONITOR" />
-	</bean>
+	</bean> -->
 </beans>

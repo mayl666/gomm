@@ -171,6 +171,7 @@ public class ZabbixUtils {
 	 * @throws Exception
 	 */
 	public static String getHostInterface(String hostid) throws Exception {
+		setAuth();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("output", "extend");
 		params.put("hostids", hostid);

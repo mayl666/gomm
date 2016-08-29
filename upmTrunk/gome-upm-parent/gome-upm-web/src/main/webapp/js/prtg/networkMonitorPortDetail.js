@@ -160,8 +160,10 @@ var networkMonitorPortDetail = {
 					var ariaController = $(this).attr("aria-controls");
 					$("#tabDate").val(ariaController);
 			    //	console.info("sensorType:"+sensorType+"|tabDate:"+ariaController);
-			    	networkMonitorPortDetail.service.createChart();
-			    	networkMonitorPortDetail.controller.page(sensorId,sensorType,ariaController,1,10,"tab");
+			    	
+			    	//by wangxiaye  控制加载顺序  先查chart 再查表格
+			    	networkMonitorPortDetail.service.createChart(ariaController);
+//			    	networkMonitorPortDetail.controller.page(sensorId,sensorType,ariaController,1,10,"tab");
 					});
 			},
 			btnDetailBack : function(){
@@ -170,11 +172,11 @@ var networkMonitorPortDetail = {
 //					window.location.href=contextPath+"/prtg/device/detail?deviceId="+deviceId;
 //				});
 			},
-			createChart : function(){
+			createChart : function(ariaController){
 					var sensorType = $("#sensorType").val();
 					var sensorId = $("#sensorId").val();
 					var tabDate = $("#tabDate").val();
-					networkMonitorPortDetail.controller.sensorHistoryChartAjax(sensorId, sensorType, tabDate);
+					networkMonitorPortDetail.controller.sensorHistoryChartAjax(sensorId, sensorType, tabDate,ariaController);
 			},
 			createChartsDetail : function(data){
 			//	console.info(data);
@@ -339,6 +341,12 @@ var networkMonitorPortDetail = {
 				//	console.info(tab+"|"+historyTime);
 					if(tab == "sceneData" && historyTime != ""){
 						historyTime = historyTime.substring(historyTime.indexOf(" "));
+					}else if(tab=="thirtyDay"&& historyTime != ""){//by wangxiaye  如果选择的是30天 则不显示时分秒
+						historyTime = historyTime.substring(0,historyTime.indexOf(" "));
+					}else if(tab=="oneYear"&& historyTime != ""){//by wangxiaye 如果选择365天 不显示时分秒
+						var now = new Date();
+						var nowDate = now.getDate();    
+						historyTime = historyTime.substring(0,historyTime.lastIndexOf("/"))+"/"+nowDate;
 					}
 					categories.push(historyTime);
 					tongxinlianghejiData.push(parseFloat(communication_roll));
@@ -391,7 +399,7 @@ var networkMonitorPortDetail = {
 
 		},
 		controller : {
-			sensorHistoryChartAjax : function(sensorId, sensorType, tabDate){//图表
+			sensorHistoryChartAjax : function(sensorId, sensorType, tabDate,ariaController){//图表
 				$.ajax({
 					url:contextPath+'/prtg/getSensorHistoryChart',
 					type:'POST',
@@ -407,6 +415,7 @@ var networkMonitorPortDetail = {
 								return false;
 							}
 							networkMonitorPortDetail.service.createChartsDetail2(data.attach,tabDate);
+							networkMonitorPortDetail.controller.page(sensorId,sensorType,ariaController,1,10,"tab");
 						}
 					},
 					error:function(){

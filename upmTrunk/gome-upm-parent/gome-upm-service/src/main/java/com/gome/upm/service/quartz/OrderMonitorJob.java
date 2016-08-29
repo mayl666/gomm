@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.gome.upm.common.util.AppConfigUtil;
 import com.gome.upm.common.web.httpClient.HttpClientUtils;
 import com.gome.upm.dao.MoSynDAO;
 import com.gome.upm.domain.MoSynBO;
@@ -298,7 +299,8 @@ public class OrderMonitorJob {
 			}else if(count<500){
 				jb="二级";
 			}
-			String url="http://10.58.62.204/alarmplatform/alarm";
+//			String url="http://10.58.62.204/alarmplatform/alarm";
+			String url = AppConfigUtil.getStringValue("prtg.alarm.url");
 			Map<String, String> paramMap=new HashMap<>();
 			paramMap.put("type", type);
 			paramMap.put("mail", "fangjinwei@yolo24.com");

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -95,18 +95,19 @@
 							 #end
 						</select>
 					</div>
-					<div class="form-group" >
+					<!--<div class="form-group" >
 					  	<label>处理状态:</label>
 					    <select class="form-control"  id="status"> 
 					      	<option value="">全部</option>
 					      	<option value="1">正常</option>
 					      	<option value="0">异常</option>
 					    </select>
-				  	</div>
+				  	</div>-->
 					<a href="#" class="newbtn search_btn ReactiveSMbtn" id="searchbtn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
 					<input type="hidden" id="searchConditions" value="" />
+					<input type="hidden" id="statusV" value="$!status" />
 				</form>
 			</div>
 			 <div class="list_table" style="margin-top: 10px;">

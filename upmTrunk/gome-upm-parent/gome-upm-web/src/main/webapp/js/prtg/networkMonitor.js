@@ -124,11 +124,12 @@ var cpuChart = {
 				'0.0.0.0'
             ],
             labels: {
-                rotation: -120, 
+                rotation: -45, 
                 style: { 
                      fontSize: '13px', 
-                     fontFamily: 'Verdana, sans-serif',
-                     writingMode:'tb-rl'    //文字竖排样式
+                     margin:'auto',
+                     fontFamily: 'Verdana, sans-serif'
+                     /*writingMode:'tb-rl'  */  //文字竖排样式  //by wangxiaye 样式调整，谷歌浏览器无法打开链接问题
                 }
 //                formatter: function () {
 //                    return '<a href="' + categoryCpuLinks[this.value] + '">' +
@@ -195,11 +196,11 @@ var memoryChart = {
                 '0.0.0.0'
             ],
             labels: {
-                rotation: -120, 
+                rotation: -45, 
                 style: { 
                      fontSize: '13px', 
-                     fontFamily: 'Verdana, sans-serif',
-                     writingMode:'tb-rl'    //文字竖排样式
+                     fontFamily: 'Verdana, sans-serif'
+//                     writingMode:'tb-rl'    //文字竖排样式
                 }
              }
         },
@@ -263,11 +264,11 @@ var flowChart = {
 				'0.0.0.0'
             ],
             labels: {
-                rotation: -120, 
+                rotation: -45, 
                 style: { 
                      fontSize: '13px', 
                      fontFamily: 'Verdana, sans-serif',
-                     writingMode:'tb-rl'    //文字竖排样式
+//                     writingMode:'tb-rl'    //文字竖排样式
                 }
              }
         },
@@ -340,7 +341,7 @@ var deviceHealthyChart = {
         },
         series: [{
             type: 'pie',
-            name: '健康指数',
+            name: '',
             data: [
                 {
                  	name:'全部设备',   

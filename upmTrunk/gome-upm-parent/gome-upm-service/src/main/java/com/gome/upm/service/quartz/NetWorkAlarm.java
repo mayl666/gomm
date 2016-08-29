@@ -201,11 +201,11 @@ public class NetWorkAlarm {
 		StringBuffer buffer = new StringBuffer();
 		LocalDateTime time = LocalDateTime.now();
 		buffer.append("监控组，您好！</br></br>");
-		buffer.append("设备 “<font face='arial' color='red'>"+device.getDeviceName()+"</font>”出现异常，请及时处理，谢谢。</br></br>");
+		buffer.append("设备 “<font color='red'>"+device.getDeviceName()+"</font>”出现异常，请及时处理，谢谢。</br></br>");
 		buffer.append("报警时间："+DateUtil.formatTime2Str(time, "yyyy-MM-dd HH:mm:ss")+"</br></br>");
 		buffer.append("所属IDC："+device.getGroupName()+"</br></br>");
-		buffer.append("设备：<font face='arial' color='red'>"+device.getDeviceName()+"</font></br></br>");
-		buffer.append("状态：<font face='arial' color='red'>故障</font></br></br>");
+		buffer.append("设备：<font color='red'>"+device.getDeviceName()+"</font></br></br>");
+		buffer.append("状态：<font color='red'>故障</font></br></br>");
 		return buffer.toString();
 	}
 	
@@ -218,12 +218,12 @@ public class NetWorkAlarm {
 		StringBuffer buffer = new StringBuffer();
 		LocalDateTime time = LocalDateTime.now();
 		buffer.append("监控组，您好！</br></br>");
-		buffer.append("端口 “<font face='arial' color='red'>"+sensorName+"</font>”出现异常，请及时处理，谢谢。</br></br>");
+		buffer.append("端口 “<font color='red'>"+sensorName+"</font>”出现异常，请及时处理，谢谢。</br></br>");
 		buffer.append("报警时间："+DateUtil.formatTime2Str(time, "yyyy-MM-dd HH:mm:ss")+"</br></br>");
 		buffer.append("所属IDC："+sensorThre.getGroupName()+"</br></br>");
 		buffer.append("设备："+sensorThre.getDeviceName()+"</br></br>");
-		buffer.append("端口：<font face='arial' color='red'>"+sensorName+"</font></br></br>");
-		buffer.append("状态/描述：<font face='arial' color='red'>"+content+"</font></br></br>");
+		buffer.append("端口：<font color='red'>"+sensorName+"</font></br></br>");
+		buffer.append("状态/描述：<font color='red'>"+content+"</font></br></br>");
 		return buffer.toString();
 	}
 	

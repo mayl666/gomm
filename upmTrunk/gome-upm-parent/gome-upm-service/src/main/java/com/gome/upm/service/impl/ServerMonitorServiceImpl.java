@@ -29,7 +29,7 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 	}
 
 	@Override
-	public ServerHost queryHost(String hostId) {
+	public List<ServerHost> queryHost(String hostId) {
 		// TODO Auto-generated method stub
 		DBContextHolder.setDataSource("dataSourceOne");
 		return serverMonitorMapper.queryHost(hostId);
@@ -52,17 +52,15 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 	}
 
 	@Override
-	public String[] queryHostGroup() {
+	public String[] queryHostGroup(ServerHost serverHost) {
 		DBContextHolder.setDataSource("dataSourceOne");
-		String[] groupList = serverMonitorMapper.queryHostGroup();
+		String[] groupList = serverMonitorMapper.queryHostGroup(serverHost);
 		return groupList;
 	}
 
 	@Override
-	public String[] queryHostName(String groupName) {
+	public String[] queryHostName(ServerHost serverHost) {
 		DBContextHolder.setDataSource("dataSourceOne");
-		ServerHost serverHost = new ServerHost();
-		serverHost.setGroupName(groupName);
 		String[] hostNameList = serverMonitorMapper.queryHostName(serverHost);
 		return hostNameList;
 	}
@@ -75,7 +73,7 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 	}
 
 	@Override
-	public ServerAlarmRecord queryAlarmRecord(ServerAlarmRecord alarmRecord) {
+	public List<ServerAlarmRecord> queryAlarmRecord(ServerAlarmRecord alarmRecord) {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return serverMonitorMapper.queryAlarmRecord(alarmRecord);
 	}
@@ -96,18 +94,36 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 	}
 
 	@Override
-	public String[] queryHostGroupNew() {
+	public String[] queryHostGroupNew(ServerHost serverHost) {
 		DBContextHolder.setDataSource("dataSourceOne");
-		String[] groupList = serverMonitorMapper.queryHostGroupNew();
+		String[] groupList = serverMonitorMapper.queryHostGroupNew(serverHost);
 		return groupList;
 	}
 
 	@Override
-	public String[] queryHostNameNew(String groupName) {
+	public String[] queryHostNameNew(ServerHost serverHost) {
 		DBContextHolder.setDataSource("dataSourceOne");
-		ServerHost serverHost = new ServerHost();
-		serverHost.setGroupName(groupName);
 		String[] hostNameList = serverMonitorMapper.queryHostNameNew(serverHost);
 		return hostNameList;
+	}
+
+	@Override
+	public int queryItemInvalidTotal(ServerHost serverHost) {
+		DBContextHolder.setDataSource("dataSourceOne");
+		return serverMonitorMapper.queryItemInvalidTotal(serverHost);
+	}
+
+	@Override
+	public int queryServerTotal(ServerHost serverHost) {
+		DBContextHolder.setDataSource("dataSourceOne");
+		// TODO Auto-generated method stub
+		return serverMonitorMapper.queryServerTotal(serverHost);
+	}
+
+	@Override
+	public List<ServerHost> queryHostsList() {
+		DBContextHolder.setDataSource("dataSourceOne");
+		// TODO Auto-generated method stub
+		return serverMonitorMapper.queryHostsList();
 	}
 }

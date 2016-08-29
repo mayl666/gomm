@@ -20,7 +20,7 @@
 	                               <!--<td>$!i</td>
 	                               <td><input type="checkbox" name="checkbox" value="$!url.id" /></td>-->
 	                               <td class="null_red">$!url.alarmTimeStr</td>
-	                               <td title="$!url.url"><a href="${rc.contextPath}/url/report?id=$!url.id&type=1&pageNum=$!{page.pageNo}" class="link_a">$!url.shortUrl</a></td>
+	                               <td title="$!url.url"><a href="javascript:openReport($!url.id);" class="link_a">$!url.shortUrl</a></td>
 
 	                               <td class="null_red">$!url.survivalStr</td>
 	                               <td>$!url.createTimeStr</td>
@@ -42,12 +42,15 @@
 	                                </td>-->
                             </tr>
                        		#end
-                        #end
-                        
+                        #else
+                    	<tr><td colspan='5' align='center'>没有查到任何记录</td></tr>
+                    	#end
                         
                         </tbody>
                     </table>
+						#if($!page.data.size() > 0)
                           #parse("common/pagePlugin.vm")
+						#end
                           <input type="hidden" value="$!page.conditions.startTime" id="hiddenStartTime"/>
                           <input type="hidden" value="$!page.conditions.endTime" id="hiddenEndTime"/>
                           <input type="hidden" value="$!page.conditions.survival" id="hiddenSurvival"/>

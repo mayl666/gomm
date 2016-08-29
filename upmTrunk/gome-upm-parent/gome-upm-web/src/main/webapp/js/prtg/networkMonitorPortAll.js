@@ -132,9 +132,10 @@ var networkMonitorPortAll = {
 				});
 			},
 			addRemark : function(sensorId,remark){
-				if(remark == ""){
-					return;
-				}
+				//by wangxiaye  修改成可以清空备注，
+//				if(remark == ""){
+//					return;
+//				}
 				$.ajax({
 					url:contextPath+'/prtg/addSensorRemark',
 					type:'POST',
@@ -142,7 +143,7 @@ var networkMonitorPortAll = {
 					data:{"sensorId":sensorId,"remark":remark},
 					success:function(data){
 						if(data.code == 1){
-							alert("添加成功");
+							alert("操作成功");
 						}
 						
 					},

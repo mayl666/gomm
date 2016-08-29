@@ -69,8 +69,8 @@ function changeStatus(){
 
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$(".search_btn").unbind("click");
+	$(".search_btn").bind("click", function(){
 		var startTime = $("#startTime").val();
 		var endTime = $("#endTime").val();
 		if(startTime.length != 0 && endTime.length == 0){
@@ -97,6 +97,10 @@ $(function(){
 		var type = $("#type").val();
 		if(type != "" && type != null){
 			content.type=type;
+		}
+		var level = $("#level").val();
+		if(level != "" && level != null){
+			content.level=level;
 		}
 		var status = $("#status").val();
 		if(status != "" && status != null){

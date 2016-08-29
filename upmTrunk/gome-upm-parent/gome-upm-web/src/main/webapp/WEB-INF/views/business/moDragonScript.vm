@@ -20,7 +20,7 @@ function initDragon(){
             renderTo: 'highchart_DRAGON'
         },
         title: {
-            text: 'DRAGON'
+            text: ''     //by wangxiaye  去掉标题
         },
         credits:{
             enabled:false

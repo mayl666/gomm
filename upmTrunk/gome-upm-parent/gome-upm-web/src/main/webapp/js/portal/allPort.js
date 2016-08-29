@@ -36,6 +36,11 @@ function quickSearch(evt){
 				allPort.controller.search();
 			}
 }
+function openReport(id){
+	var pageNum = $("#pagination-digg").find(".active").text();
+	var search = $("#hidden_search").val();
+	window.location.href =contextPath+"/portal/report?id="+id+"&pageNum="+pageNum+"&search="+search;
+}
 function importExcel(){
 	var excel = $("#excel").val();
 	if(isExcel(excel)){
@@ -88,7 +93,7 @@ function draw_url_health_index(normal,error){
             text: ''
         },
         tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    	    pointFormat: '<b>{point.percentage:.1f}%</b>'
         },
         plotOptions: {
             pie: {
@@ -100,6 +105,13 @@ function draw_url_health_index(normal,error){
                     color: '#000000',
                     connectorColor: '#000000',
                     format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+                },events: {
+                    'click': function (e) {
+                        console.log(e.point.name);
+                        /*if(e.point.name=='异常'){
+                        	window.location.href=contextPath+"/portal/warning";
+                        }*/
+                    }
                 }
             }
         },
@@ -108,12 +120,12 @@ function draw_url_health_index(normal,error){
             name: '健康指数',
             data: [
                 {
-                 	name:'正常',   
+                 	name:'正常率:',   
                     y:normal,
                     color:'#9c8ade'
                 },
                 {
-                    name: '异常',
+                    name: '异常率:',
                     y: error,
                     sliced: true,
                     selected: true,
@@ -257,7 +269,7 @@ var allPort = {
 						console.info(data);
 						if(data.code == 1){
 							layer.msg("操作成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
-								window.location.href=contextPath+"/portal/get";
+								refresh();
 							});
 							
 						}
@@ -305,7 +317,8 @@ var allPort = {
 	   },
 	   search : function(){
 		   
-		    	var port = $("#search_name").val();
+		    	var port = $("#search_name").val().trim();
+		    	$("#hidden_search").val(port);
 		    	$.ajax({
 						url:contextPath+'/portal/getPortTable',
 						type:'POST',
@@ -342,13 +355,11 @@ var allPort = {
 					data:{"id":urlId},
 					success:function(data){
 						if(data.code == 1){
-							console.info(data);
 							$("#hiddenUrlId").val(data.attach.id);
 							$("#address").val(data.attach.port).attr("disabled",true);
 							$("#monitorType").val(data.attach.monitorType);
 							$("#urlFrc").val(data.attach.frequency);
 							$("#time_number").val(data.attach.overtimes);
-							
 							$("input[name='alarmWay']:radio[value="+data.attach.alarmMethod+"]").prop("checked",true);
 								
 							
@@ -396,13 +407,16 @@ var allPort = {
 						'frequency':accFre,
 						'overtimes':timeOutNum,
 						'alarmMethod':alarmWay,
-						'monitorType':monitorType
+						'monitorType':monitorType,
+						'timeout':0
 					},
 					success:function(data){
 						if(data.code == 1){
 							//console.info(data.attach);
 							layer.msg("修改成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
-								window.location.href=contextPath+"/portal/get";
+								refresh();
+								$(".modal-open").css({"overflow":"auto","padding-right":0});
+								$("body").removeClass("modal-open");
 							});
 						}
 //						$(".content-wrapper").empty();
@@ -420,3 +434,48 @@ var allPort = {
 		   
 	   }
 };
+function isNum(){
+	var accTimeOut = $("#accTimeOut").val().trim();
+	var re =/^[1-9]\d*$/;
+	if(re.test(accTimeOut)){
+		if(accTimeOut>0){
+			return true;
+		}else{
+			layer.msg("请输入正整数");
+			$("#accTimeOut").focus();
+			return false;
+		}
+	}else{
+		layer.msg("请输入正整数");
+		$("#accTimeOut").focus();
+		return false;
+	}
+}
+function refresh(){
+	var pageNum = $("#pagination-digg").find(".active").text();
+	var search =$("#hidden_search").val();
+	$.ajax({
+			url:contextPath+'/portal/getPortTable',
+			type:'POST',
+			dataType : 'html',	
+			data:{"port":search,"pageNo":pageNum},
+			success:function(data){
+				console.info(data);
+				var bool = data.indexOf("sessionTimeOut");
+				if(bool < 0){
+					$(".list_table").empty();
+					$(".list_table").append(data);
+					allPort.service.checkAndNoCheck();
+				}else{
+					window.location.href=contextPath+"/home";
+				}
+				
+			},
+			error:function(){
+				layer.msg("操作失败");
+				
+			}
+			
+			
+		});
+}

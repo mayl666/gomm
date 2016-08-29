@@ -84,7 +84,7 @@ function initCps(){
             }
         },
         title: {
-            text: '半小时内CPS订单数'
+            text: ''
         },
         xAxis: {
         	type: 'datetime',
@@ -94,7 +94,7 @@ function initCps(){
         },
         yAxis: {
 	        title: {
-	            text: ''
+	            text: ''   //by wangxiaye  去掉标题
 	        }
         },
         //显示头
@@ -139,7 +139,21 @@ function searchCpsData(){
 	clearTimeout(waitCpsRun);
 	var startTimeStr=$('#startTimeCps').val();
 	var endTimeStr=$('#endTimeCps').val();
-	
+	if(startTimeStr==''){
+			//获取结束时间
+		startTimeStr=new Date();
+		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
+		startTimeStr.setTime(yesterday_milliseconds);     
+		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
+		$("#startTimeCps").val(startTimeStr);
+	}
+	var endTimeStr=$('#endTimeCps').val();
+	if(endTimeStr==''){
+			//获取结束时间
+		endTimeNow=new Date();
+		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
+		$("#endTimeCps").val(endTimeStr);
+	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);
  	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');

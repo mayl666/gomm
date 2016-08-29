@@ -19,7 +19,7 @@ public interface ServerMonitorMapper {
 
 	void addHost(ServerHost serverHost);
 
-	ServerHost queryHost(String hostId);
+	List<ServerHost> queryHost(String hostId);
 
 	List<ServerHost> queryHostList(Page<ServerHost> page);
 
@@ -27,11 +27,11 @@ public interface ServerMonitorMapper {
 
 	void updateHost(ServerHost serverHost);
 
-	String[] queryHostGroup();
+	String[] queryHostGroup(ServerHost serverHost);
 
 	String[] queryHostName(ServerHost serverHost);
 
-	ServerAlarmRecord queryAlarmRecord(ServerAlarmRecord alarmRecord);
+	List<ServerAlarmRecord> queryAlarmRecord(ServerAlarmRecord alarmRecord);
 
 	void addAlarmRecord(ServerAlarmRecord alarmRecord);
 
@@ -41,8 +41,14 @@ public interface ServerMonitorMapper {
 
 	int selectTotalResultByConditionsA(ServerAlarmRecord conditions);
 
-	String[] queryHostGroupNew();
+	String[] queryHostGroupNew(ServerHost serverHost);
 
 	String[] queryHostNameNew(ServerHost serverHost);
+
+	int queryItemInvalidTotal(ServerHost serverHost);
+
+	int queryServerTotal(ServerHost serverHost);
+
+	List<ServerHost> queryHostsList();
 
 }

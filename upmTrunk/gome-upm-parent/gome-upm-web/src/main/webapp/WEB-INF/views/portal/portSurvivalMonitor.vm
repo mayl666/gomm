@@ -49,7 +49,7 @@
         <section class="content">
         
         	<div class="topView">
-        		<h2 style="display:none" id="h2">健康指数：<span style="color: #9c8ade;">$!{exponential}</span></h2>
+        		<h2 style="display:none" id="h2">健康率：<span style="color: #9c8ade;">$!{exponential}%</span></h2>
 	        	<div id="url_health_index" style="width: 32%;margin-bottom: 40px;"></div>
 	        	<div class="health_status_count" id="div_id" style="display:none">
 	        		<span>异常：<a href="${rc.contextPath}/portal/warning" id="error_id">$!{inValidCount}</a></span>
@@ -59,7 +59,8 @@
                     <div class="toolbar" style="clear: both;">
 		                <h2 class="list_table_title" style="line-height: 140px;">端口存活监控列表 </h2>
 		                <div class="btn_con fr" style="margin-bottom: 23px;">
-		                	<input type="text" maxlength="100" onkeydown="quickSearch(event)" class="form-control allSearchInput" style="width: 240px;"  id="search_name" placeholder="请输入监控点地址"><i id="btn_search" class="fa fa-search searchIcon"></i>
+							<input type="hidden" id="hidden_search"/>
+		                	<input type="text" maxlength="100" value="$!{search}" onkeydown="quickSearch(event)" class="form-control allSearchInput" style="width: 240px;"  id="search_name" placeholder="请输入监控点地址"><i id="btn_search" class="fa fa-search searchIcon"></i>
 		                    <a class="newbtn" href="${rc.contextPath}/portal/create/step2"><i class="fa fa-plus"></i><span class="text"> 新增</span></a>
 		                  	<a class="newbtn" data-toggle="modal" data-target="#importExcel" ><i class="fa fa-plus"></i><span class="text"> 导入</span></a>
 		                    <a class="newbtn" href="javascript:void(0);" id="btn-del"><i class="fa fa-close"></i><span class="text"> 删除</span></a>

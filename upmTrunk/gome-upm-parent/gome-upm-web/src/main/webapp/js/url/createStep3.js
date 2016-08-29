@@ -54,6 +54,7 @@ var createUrl = {
 						layer.msg("请返回第二步请输入必填项");
 						return false;
 					}
+					$("#btn-submit").unbind("click");
 					$.ajax({
 						url:contextPath+'/url/save',
 						type:'POST',
@@ -63,6 +64,16 @@ var createUrl = {
 							if(data.code == 1){
 								layer.msg("保存成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 									window.location.href=contextPath+"/url/get";
+								});
+							}else if(data.code == 2){
+								layer.msg("监控地址已经存在,保存失败,请修改监控地址");
+								$("#btn-submit").click(function(){
+									createUrl.controller.submit();
+								});
+							}else{
+								layer.msg("系统异常");
+								$("#btn-submit").click(function(){
+									createUrl.controller.submit();
 								});
 							}
 //							$(".content-wrapper").empty();
@@ -103,7 +114,7 @@ var createUrl = {
 							'isContainsCon':isContainsCon,
 							'isDefaultCode':isDefaultCode,
 							'returnCode':returnCode
-						};
+					};
 					StandardPost(contextPath+'/url/create/step2',data);
 					//var url = contextPath+"/url/create/step2?postParameter="+key+"&app="+app+"&desc="+desc+"&urlAddress="+urlAddress+"&accFre="+accFre+"&accTimeOut="+accTimeOut+"&timeOutNum="+timeOutNum+"&alarmInter="+alarmInter+"&method="+method+"&resContent="+resContent+"&isContainsCon="+isContainsCon+"&isDefaultCode="+isDefaultCode+"&returnCode="+returnCode;
 					//window.location.href=url;

@@ -44,6 +44,11 @@ $(function() {
 	allUrl.service.init();
 
 });
+function openReport(id){
+	var pageNum = $("#pagination-digg").find(".active").text();
+	var search = $("#hidden_search").val();
+	window.location.href =contextPath+"/url/report?id="+id+"&pageNum="+pageNum+"&search="+search;
+}
 function regCode(){
 	var returnCode= $("#returnCode").val();
 		if(returnCode.length==0){
@@ -154,7 +159,7 @@ function draw_url_health_index(normal, error) {
 			text : ''
 		},
 		tooltip : {
-			pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+			pointFormat : '<b>{point.percentage:.1f}%</b>'
 		},
 		plotOptions : {
 			pie : {
@@ -166,18 +171,26 @@ function draw_url_health_index(normal, error) {
 					color : '#000000',
 					connectorColor : '#000000',
 					format : '<b>{point.name}</b>: {point.percentage:.1f}%'
-				}
+				},events: {
+                    'click': function (e) {
+                        console.log(e.point.name);
+                        /*if(e.point.name=='异常'){
+                        	window.location.href=contextPath+"/url/warning";
+                        }*/
+                    }
+                }
+
 			}
 		},
 		series : [ {
 			type : 'pie',
 			name : '健康指数',
 			data : [ {
-				name : '正常',
+				name : '正常率:',
 				y : normal,
 				color : '#9c8ade'
 			}, {
-				name : '异常',
+				name : '异常率:',
 				y : error,
 				sliced : true,
 				selected : true,
@@ -329,7 +342,7 @@ var allUrl = {
 						console.info(data);
 						if (data.code == 1) {
 							layer.msg('操作成功', {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
-								window.location.href=contextPath+"/url/get";
+								refresh();
 							});
 						}
 					},
@@ -381,11 +394,11 @@ var allUrl = {
 			});
 		},
 		search : function() {
-
 			var startTime = $("#startTime").val();
 			var endTime = $("#endTime").val();
 			var survival = $("#selectSurvival").val();
-			var urlAddress = $("#search_name").val();
+			var urlAddress = $("#search_name").val().trim();
+			$("#hidden_search").val(urlAddress);
 			$.ajax({
 				url : contextPath + '/url/getUrlTable',
 				type : 'POST',
@@ -445,7 +458,7 @@ var allUrl = {
 													$("#urlFrc")
 															.val(
 																	data.attach.frequency);
-													$("#timeout")
+													$("#accTimeOut")
 															.val(
 																	data.attach.timeout);
 													$("#time_number")
@@ -514,7 +527,7 @@ var allUrl = {
 								;
 								content.urlAddress = $("#address").val();
 								content.accFre = $("#urlFrc").val();
-								content.accTimeOut = $("#timeout").val();
+								content.accTimeOut = $("#accTimeOut").val();
 								content.timeOutNum = $("#time_number").val();
 								content.alarmInter = $("#warn_time").val();
 								content.postParameter=$("#postParameter").val();
@@ -563,13 +576,12 @@ var allUrl = {
 									},
 									success : function(data) {
 										if (data.code == 1) {
-											// console.info(data.attach);
-											layer.msg("修改成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
-												window.location.href=contextPath+"/url/get";
+											layer.msg("修改成功", {shade: [0.5, '#000'],scrollbar: false,time:1000},function(){
+												refresh();
+												 $(".modal-open").css({"overflow":"auto","padding-right":0});
+												 $("body").removeClass("modal-open"); 
 											});
 										}
-										// $(".content-wrapper").empty();
-										// $(".content-wrapper").append(data);
 									},
 									error : function() {
 										layer.msg("操作失败");
@@ -582,3 +594,35 @@ var allUrl = {
 		}
 	}
 };
+
+function refresh(){
+var pageNum = $("#pagination-digg").find(".active").text();
+var search =$("#hidden_search").val();
+$.ajax({
+		url : contextPath + '/url/getUrlTable',
+		type : 'POST',
+		dataType : 'html',
+		data : {
+			"urlAddress" : search,
+			"pageNo":pageNum
+		},
+		success : function(data) {
+			var bool = data.indexOf("sessionTimeOut");
+			console.log(data);
+			if (bool < 0) {
+				$(".list_table").empty();
+				$(".list_table").append(data);
+				allUrl.service.checkAndNoCheck();
+				
+			} else {
+				window.location.href = contextPath + "/home";
+			}
+
+		},
+		error : function() {
+			layer.msg("操作失败");
+
+		}
+
+	});
+}

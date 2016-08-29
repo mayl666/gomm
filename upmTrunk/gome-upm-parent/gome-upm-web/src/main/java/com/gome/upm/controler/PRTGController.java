@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.gome.upm.common.Page;
 import com.gome.upm.common.util.ResponsesDTO;
 import com.gome.upm.constants.ReturnCode;
 import com.gome.upm.dao.MoNetSensorMapper;
-import com.gome.upm.domain.UrlMonitor;
 import com.gome.upm.domain.prtg.GroupIdc;
 import com.gome.upm.domain.prtg.MoNetDevice;
 import com.gome.upm.domain.prtg.MoNetSensor;
-import com.gome.upm.domain.prtg.Sensor;
 import com.gome.upm.domain.prtg.SensorChannel;
 import com.gome.upm.domain.prtg.SensorDetail;
 import com.gome.upm.domain.prtg.SensorDevice;
@@ -40,9 +35,6 @@ import com.gome.upm.domain.prtg.SensorHistoryData;
 import com.gome.upm.service.NetWorkMonitorService;
 import com.gome.upm.service.util.DBContextHolder;
 import com.gome.upm.service.util.DateUtil;
-import com.gome.upm.service.util.PageUtil;
-
-import redis.Gcache;
 
 /**
  * 网络监控控制类
@@ -58,8 +50,8 @@ public class PRTGController {
 
 	@Resource
 	private NetWorkMonitorService netWorkMonitorService;
-	@Resource(name = "monitorGcache")
-	Gcache testGcache;
+	/*@Resource(name = "monitorGcache")
+	Gcache testGcache;*/
 	@Resource
 	private MoNetSensorMapper moNetSensorMapper;
 

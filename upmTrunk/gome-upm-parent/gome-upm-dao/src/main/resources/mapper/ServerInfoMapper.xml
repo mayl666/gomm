@@ -71,7 +71,8 @@
   	si.yyncb,pi.gsjf "pcInfo.gsjf",si.yyqdsj,si.brq,si.ymz,si.sfyx,si.bjsj,si.bjzt
     from serverinfo si
     left join pcinfo pi on pi.ipdz=si.xmip
-    where 1=1 
+    where si.ida not in (select el1.ida from eliminate el1 where lx = 'sl')
+  	and si.xmip not in (select el2.ipdz from eliminate el2 where lx = 'ip') 
       <if test="conditions.xmm != null" >
         and si.xmm = #{conditions.xmm,jdbcType=VARCHAR}
       </if>
@@ -87,16 +88,19 @@
       <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
       and si.bjsj between #{conditions.startTime} and #{conditions.endTime}
     </if>
-      <if test="start != null and pageSize != null">
+    	ORDER BY si.bjzt desc
+  	<if test="start != null and pageSize != null">
     	LIMIT #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
+    
   </select>
   
   <!--查询正常的数据-->
   <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.ServerInfo">
   	select count(*)
   	from serverinfo si
-  	where 1=1
+  	where si.ida not in (select el1.ida from eliminate el1 where lx = 'sl')
+  	and si.xmip not in (select el2.ipdz from eliminate el2 where lx = 'ip')
   		<if test="xmm != null" >
         and si.xmm = #{xmm,jdbcType=VARCHAR}
       </if>
@@ -144,7 +148,8 @@
   <select id="selectTotalResultByConditionsNotN" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.ServerInfo">
   	select count(*)
   	from serverinfo si
-  	where 1=1
+  	where si.ida not in (select el1.ida from eliminate el1 where lx = 'sl')
+  	and si.xmip not in (select el2.ipdz from eliminate el2 where lx = 'ip')
   		<if test="xmm != null" >
         and si.xmm = #{xmm,jdbcType=VARCHAR}
       </if>
@@ -166,10 +171,12 @@
   	si.yyncb,pi.gsjf "pcInfo.gsjf",si.yyqdsj,si.brq,si.ymz,si.sfyx,si.bjsj,si.bjzt
     from serverinfo si
     left join pcinfo pi on pi.ipdz=si.xmip
-    where 1=1 
+    where si.ida not in (select el1.ida from eliminate el1 where lx = 'sl')
+  	and si.xmip not in (select el2.ipdz from eliminate el2 where lx = 'ip') 
       <if test="conditions.xmm != null" >
         and si.xmm like CONCAT('%',#{conditions.xmm,jdbcType=VARCHAR},'%')
       </if>
+      	ORDER BY si.bjzt desc
       <if test="start != null and pageSize != null">
     	LIMIT #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
@@ -178,7 +185,8 @@
   <select id="selectTotalResultByConditionsLike" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.ServerInfo">
   	select count(*)
   	from serverinfo si
-  	where 1=1
+  	where si.ida not in (select el1.ida from eliminate el1 where lx = 'sl')
+  	and si.xmip not in (select el2.ipdz from eliminate el2 where lx = 'ip')
   	  <if test="xmm != null" >
         and si.xmm like CONCAT('%',#{xmm,jdbcType=VARCHAR},'%')
       </if>

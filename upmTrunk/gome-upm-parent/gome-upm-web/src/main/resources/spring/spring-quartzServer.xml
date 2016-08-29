@@ -58,7 +58,7 @@
           <!--首次启动延迟时间（单位：毫秒）  -->
           <property name="startDelay" value="8000"/>
           <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="1000000"/>
+          <property name="repeatInterval" value="800000"/>
      </bean>
      
      
@@ -137,10 +137,10 @@
           <property name="triggers">
                <list>
                     <ref bean="initServerMonitorTriggerBean"/>
-                    <ref bean="initLoadMonitorTriggerBean"/>
+                   <!--  <ref bean="initLoadMonitorTriggerBean"/> -->
                     <ref bean="initCPUMonitorTriggerBean"/>
                     <ref bean="initMemoryMonitorTriggerBean"/>
-                    <ref bean="initIndexMonitorTriggerBean"/>
+                  	<ref bean="initIndexMonitorTriggerBean"/>
                     <ref bean="initDiskMonitorTriggerBean"/>
                     <ref bean="initSWAPMonitorTriggerBean"/>
                </list>

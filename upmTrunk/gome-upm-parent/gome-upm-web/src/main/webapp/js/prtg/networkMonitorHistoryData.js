@@ -11,13 +11,14 @@ $(function(){
 var networkMonitorHistoryData = {
 		service : {
 			init : function(){
-				networkMonitorHistoryData.service.initHistoryTable();
+				// by wangxiaye  加载完chart之后 再加载表格数据。
+//				networkMonitorHistoryData.service.initHistoryTable();
 				networkMonitorHistoryData.service.page();
 				networkMonitorHistoryData.controller.sensorHistoryChartAjax();
 			},
-			initHistoryTable : function(){
-				networkMonitorHistoryData.controller.page(1);
-			},
+//			initHistoryTable : function(){
+//				networkMonitorHistoryData.controller.page(1);
+//			},
 			createChartsDetail : function(data){
 				console.info(data);
 				var sensorType=$("#sensorType").val();
@@ -292,6 +293,9 @@ var networkMonitorHistoryData = {
 								layer.msg('服务器繁忙，请稍后重试');
 								return false;
 							}
+							//add by wangxiaye  初始化完成chart后 再初始化table
+							networkMonitorHistoryData.controller.page(1);
+							
 							networkMonitorHistoryData.service.createChartsDetail2(data.attach.list);
 							networkMonitorHistoryData.service.setSensoVal(data.attach.commuAVG,data.attach.commuTotal,data.attach.cpuMemVal,data.attach.haultTime,data.attach.normalTime,data.attach.normalTimePercent,data.attach.haultTimePercent);
 						}

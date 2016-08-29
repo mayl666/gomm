@@ -48,6 +48,12 @@ public class AlarmRecord {
 	/** 状态描述 */
 	private String statusStr;
 	
+	/** 报警级别   1：一级；2：二级；3：三级*/
+	private Integer level;
+	
+	/** 报警级别描述 */
+	private String levelStr;
+	
 	/** 报警时间 */
 	private Date sendTime;
 	
@@ -161,6 +167,31 @@ public class AlarmRecord {
 
 	public void setStatusStr(String statusStr) {
 		this.statusStr = statusStr;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+		if(level == 1){
+			this.levelStr = "一级";
+		}else if(level == 2){
+			this.levelStr = "二级";
+		}else if(level == 3){
+			this.levelStr = "三级";
+		}else {
+			this.levelStr = "未知";
+		}
+	}
+
+	public String getLevelStr() {
+		return levelStr;
+	}
+
+	public void setLevelStr(String levelStr) {
+		this.levelStr = levelStr;
 	}
 
 }

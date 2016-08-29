@@ -22,7 +22,7 @@ var networkMonitor = {
 				var seriesData = [];//柱形图
 				for(var top in data){
 					var yText = {};
-					yText.y = parseInt(data[top].lastVal);
+					yText.y = parseFloat(data[top].lastVal);
 					yText.url = '../server/goToDetail?hostid='+data[top].deviceId;
 					seriesData.push(yText);
 					category.push(data[top].host);
@@ -40,7 +40,7 @@ var networkMonitor = {
 				var seriesData = [];//柱形图
 				for(var top in data){
 					var yText = {};
-					yText.y = parseInt(data[top].lastVal);
+					yText.y = parseFloat(data[top].lastVal);
 					yText.url = '../server/goToDetail?hostid='+data[top].deviceId;
 					seriesData.push(yText);
 					category.push(data[top].host);
@@ -58,7 +58,7 @@ var networkMonitor = {
 				var seriesData = [];//柱形图
 				for(var top in data){
 					var yText = {};
-					yText.y = parseInt(data[top].lastVal);
+					yText.y = parseFloat(data[top].lastVal);
 					yText.url = '../server/goToDetail?hostid='+data[top].deviceId;
 					seriesData.push(yText);
 					category.push(data[top].host);
@@ -315,7 +315,7 @@ var flowChart = {
              }
         },
         yAxis: {
-            min: 0,
+            min: 0.0,
             title: {
                 text: ''
             }

@@ -7,17 +7,18 @@
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="sendTime" property="sendTime" jdbcType="TIMESTAMP" />
     <result column="pid" property="pid" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List" >
-    id, type, content, sendTime, pid
+    id, type, content, sendTime, pid, level
   </sql>
   
   <insert id="insertAlarm" parameterType="com.gome.alarmplatform.domain.Alarm" useGeneratedKeys="true" keyProperty="id">
-    insert into gm_alarm_record (id, type, content, sendTime, pid) 
+    insert into gm_alarm_record (id, type, content, sendTime, pid, level) 
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP},
-      #{pid,jdbcType=BIGINT})
+      #{pid,jdbcType=BIGINT}, #{level,jdbcType=INTEGER})
   </insert>
   
 </mapper> 

@@ -952,12 +952,17 @@ public class NetWorkMonitorServiceImpl implements NetWorkMonitorService {
 				avg = 4*60*60;
 				break;
 			case "thirtyDay" : 
+				//by wangxiaye 当前时间加一天
+				edate = DateUtil.formatTime2Str(LocalDateTime.now().plusDays(1), "yyyy-MM-dd");
+				edate = edate+"-00-00-00";
 				sdate=DateUtil.formatTime2Str(LocalDateTime.now().plusDays(-30), "yyyy-MM-dd-HH-mm-ss"); 
 			//	count = 30;
 				avg = 24*60*60;
 				break;
 			case "oneYear" : 
-				sdate=DateUtil.formatTime2Str(LocalDateTime.now().plusDays(-365), "yyyy-MM-dd-HH-mm-ss");
+				//by wangxiaye 当前月份加一个月，才能获取到当月，开始时间也要往后推一个月
+				edate = DateUtil.formatTime2Str(LocalDateTime.now().plusMonths(1), "yyyy-MM-dd");
+				sdate=DateUtil.formatTime2Str(LocalDateTime.now().plusMonths(-11),"yyyy-MM-dd-HH-mm-ss");
 			//	count = 12;
 				avg = 30*24*60*60;
 				break;

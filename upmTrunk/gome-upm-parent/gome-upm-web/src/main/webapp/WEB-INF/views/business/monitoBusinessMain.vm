@@ -56,7 +56,7 @@
 									</a>
 								</div>
 							</div>
-								<p style="operation_infop">订单总数（含取消）：<span id="today_Pay"></span>       同比昨天：<span id="yDiffer_Pay"></span> <i id="ydc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>【<span id="yb_Pay"></span>】      环比一周前：<span id="wDiffer_Pay"></span> <i id="wdc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>    【<span id="wb_Pay"></span>】</p>
+								<p class="operation_infop">订单总数（含取消）：<span id="today_Pay"></span>       同比昨天：<span id="yDiffer_Pay"></span> <i id="ydc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>【<span id="yb_Pay"></span>】      环比一周前：<span id="wDiffer_Pay"></span> <i id="wdc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>    【<span id="wb_Pay"></span>】</p>
 							<div class="box-body">
 								<div id="container_pay"></div>
 							</div>
@@ -79,7 +79,7 @@
 									</a>
 								</div>
 							</div>
-								<p style="operation_infop">订单总数（含取消）：<span id="today_NotPay"></span>       同比昨天：<span id="yDiffer_NotPay"></span> <i id="ydc_NotPay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>【<span id="yb_NotPay"></span>】      环比一周前：<span id="wDiffer_NotPay"></span> <i id="wdc_NotPay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>    【<span id="wb_NotPay"></span>】</p>
+								<p class="operation_infop">订单总数（含取消）：<span id="today_NotPay"></span>       同比昨天：<span id="yDiffer_NotPay"></span> <i id="ydc_NotPay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>【<span id="yb_NotPay"></span>】      环比一周前：<span id="wDiffer_NotPay"></span> <i id="wdc_NotPay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>    【<span id="wb_NotPay"></span>】</p>
 							<div class="box-body">
 								<div id="container_notPay"></div>
 							</div>
@@ -156,16 +156,16 @@
 	                	<div class="box" style="border-top:none;">
 							<div class="box-header with-border">
 								<h3 class="box-title"></h3>
-								<div class="pull-right">
-									<div class="form-group" style="margin-left: 115px;">
-										<input type="text" style="margin-left: -450px;position: absolute;width: 180px;" class="form-control laydate-icon" id="startTimeCps" value="">
-										<label style="margin-left: -270px;margin-top: 5px;position: absolute;">至</label>
-										<input type="text" class="form-control laydate-icon" style="margin-left: -244px;position: absolute;width: 180px;margin-top: 1px;" id="endTimeCps" value="">
+									<div class="pull-right">
+										<div class="form-group" style="margin-left: 115px;">
+											<input type="text" style="margin-left: -450px;position: absolute;width: 180px;" class="form-control laydate-icon" id="startTimeCps" value="">
+											<label style="margin-left: -264px;margin-top: 5px;position: absolute;">至</label>
+											<input type="text" class="form-control laydate-icon" style="margin-left: -244px;position: absolute;width: 180px;margin-top: 0px;" id="endTimeCps" value="">
+										</div>
+										<a style="margin-left: 60px; width: 80px; margin-top: -20px;margin-right: 10px;"class="newbtn" onclick="searchCpsData()">
+												<i class="fa fa-search"></i> 搜索
+										</a>
 									</div>
-									<a style="margin-left: 60px; width: 80px; margin-top: -20px;margin-right: 10px;"class="newbtn" onclick="searchCpsData()">
-										<i class="fa fa-search"></i> 搜索
-									</a>
-								</div>
 							</div>
 							<div class="box-body">
 								<div id="container_cps" style="width:100%"></div>
@@ -179,8 +179,8 @@
 								<div class="pull-right">
 									<div class="form-group" style="margin-left: 115px;">
 										<input type="text" style="margin-left: -450px;position: absolute;width: 180px;" class="form-control laydate-icon" id="startTimeLoginInfo" value="">
-										<label style="margin-left: -270px;margin-top: 5px;position: absolute;">至</label>
-										<input type="text" class="form-control laydate-icon" style="margin-left: -244px;position: absolute;width: 180px;margin-top: 1px;" id="endTimeLoginInfo" value="">
+										<label style="margin-left: -264px;margin-top: 5px;position: absolute;">至</label>
+										<input type="text" class="form-control laydate-icon" style="margin-left: -244px;position: absolute;width: 180px;margin-top: 0px;" id="endTimeLoginInfo" value="">
 									</div>
 									<a style="margin-left: 60px; width: 80px; margin-top: -20px;margin-right: 10px;"class="newbtn" onclick="searchLoginInfoData()">
 										<i class="fa fa-search"></i> 搜索
@@ -273,7 +273,7 @@ $(".tablistId").find("a").click(function(e){
 		initCoData();
 	}
 	if($(this).attr("href")=="#cps"){
-		initCpsData;
+		initCpsData();
 	}
 	if($(this).attr("href")=="#fiveminutes"){
 		initLoginInfoData();

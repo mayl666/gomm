@@ -26,7 +26,7 @@ public class PortMonitor {
 	private String monitorType;
 	
 	/** 访问频率(单位：分钟) */
-	@XmlElement(name = "访问频率(5,10,15)分钟")
+	@XmlElement(name = "访问频率(3,5,10)分钟")
 	private Integer frequency;
 	
 	/** 访问超时时间(单位：秒) */

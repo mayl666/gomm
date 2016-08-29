@@ -30,7 +30,7 @@ public class ServerTimer {
 				serverHost.setName(name);
 				String hostId = (String) hostList.get(i).get("hostid");
 				serverHost.setHostId(hostId);
-				ServerHost newHost = serverMonitorService.queryHost(hostId);
+				List<ServerHost> newHost = serverMonitorService.queryHost(hostId);
 				if(newHost==null){
 					//内存使用率
 					String groupName = ZabbixUtils.getHostGroup(hostId);
@@ -43,20 +43,32 @@ public class ServerTimer {
 					BigDecimal bd3 = null;
 					if(objectMemeor!=null){
 						f = (String) objectMemeor.get("lastvalue");
-						bd = new BigDecimal(f);
-						bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f!=null){
+							bd = new BigDecimal(f);
+							bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd = new BigDecimal(0);
+						}
 					}
 					JSONObject objectLoad = ZabbixUtils.getItems(hostId,"system.cpu.load[all,avg1]");
 					if(objectLoad!=null){
 						f1 = (String) objectLoad.get("lastvalue");
-						bd1 = new BigDecimal(f1);
-						bd1 = bd1.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f1!=null){
+							bd1 = new BigDecimal(f1);
+							bd1 = bd1.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd1 = new BigDecimal(0);
+						}
 					}
 					JSONObject objectCPU = ZabbixUtils.getItems(hostId,"cpu_use_all");
 					if(objectCPU!=null){
 						f3 = (String) objectCPU.get("lastvalue");
-						bd3 = new BigDecimal(f3);
-						bd3 = bd3.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f3!=null){
+							bd3 = new BigDecimal(f3);
+							bd3 = bd3.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd3 = new BigDecimal(0);
+						}
 					}
 					if(bd!=null){
 						serverHost.setMemory(bd+"");
@@ -82,20 +94,32 @@ public class ServerTimer {
 					BigDecimal bd3 = null;
 					if(objectMemeor!=null){
 						f = (String) objectMemeor.get("lastvalue");
-						bd = new BigDecimal(f);
-						bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f!=null){
+							bd = new BigDecimal(f);
+							bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd = new BigDecimal(0);
+						}
 					}
 					JSONObject objectLoad = ZabbixUtils.getItems(hostId,"system.cpu.load[all,avg1]");
 					if(objectLoad!=null){
 						f1 = (String) objectLoad.get("lastvalue");
-						bd1 = new BigDecimal(f1);
-						bd1 = bd1.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f1!=null){
+							bd1 = new BigDecimal(f1);
+							bd1 = bd1.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd1 = new BigDecimal(0);
+						}
 					}
 					JSONObject objectCPU = ZabbixUtils.getItems(hostId,"cpu_use_all");
 					if(objectCPU!=null){
 						f3 = (String) objectCPU.get("lastvalue");
-						bd3 = new BigDecimal(f3);
-						bd3 = bd3.setScale(2,BigDecimal.ROUND_HALF_UP);
+						if(f3!=null){
+							bd3 = new BigDecimal(f3);
+							bd3 = bd3.setScale(2,BigDecimal.ROUND_HALF_UP);
+						}else{
+							bd3 = new BigDecimal(0);
+						}
 					}
 					if(bd!=null){
 						serverHost.setMemory(bd+"");

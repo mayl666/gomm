@@ -57,6 +57,7 @@
 						<label for="endTime">至</label> <input type="text"
 							class="form-control laydate-icon" id="endTime">
 					</div>
+					<!-- 
 					<div class="form-group">
 						<label for="type">类型：</label> 
 						<select id="type" class="form-control"  style="width: 180px;"> 
@@ -64,6 +65,32 @@
 					      	#foreach($alarm in $alarmList)
 					      		<option value="$!alarm.type">$!alarm.typeStr</option>
 					      	#end
+					    </select>
+					</div>
+					-->
+					<div class="form-group">
+						<label for="type">类型：</label> 
+						<select id="type" class="form-control"  style="width: 180px;"> 
+					      	<option value="">全部</option>
+					      	<option value="server">服务器监控</option>
+					      	<option value="port">端口存活监控</option>
+					      	<option value="process">系统进程存活监控</option>
+					      	<option value="method">方法监控</option>
+					      	<option value="url">URL存活监控</option>
+					      	<option value="network">网络监控</option>
+					      	<option value="dbconn">数据库连接与表空间监控</option>
+					      	<option value="dragon">DRAGON</option>
+					      	<option value="oms">OMS</option>
+					      	<option value="forward">正向单</option>
+					    </select>
+					</div>
+					<div class="form-group">
+						<label for="level">报警级别：</label> 
+						<select id="level" class="form-control"  style="width: 180px;"> 
+					      	<option value="">全部</option>
+					      	<option value="1">一级</option>
+					      	<option value="2">二级</option>
+					      	<option value="3">三级</option>
 					    </select>
 					</div>
 					<div class="form-group">

@@ -10,9 +10,11 @@ $(function(){
 			page = null;
 		}
 		var searchConditions = $("#searchConditions").val();
+		var status = $("#statusV").val();
 		if(searchConditions == ""){
 			var content = {};
 			content.search=true;
+			content.status = status;
 			searchConditions = JSON.stringify(content);
 		}
 		

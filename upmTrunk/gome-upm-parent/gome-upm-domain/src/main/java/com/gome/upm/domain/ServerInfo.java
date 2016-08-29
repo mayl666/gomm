@@ -127,6 +127,8 @@ public class ServerInfo {
 	
 	/** 结束时间 */
 	private String endTime;
+	
+	private Double yycpuDouble;
 
     public String getId() {
         return id;
@@ -286,6 +288,13 @@ public class ServerInfo {
 
     public void setYycpu(String yycpu) {
         this.yycpu = yycpu == null ? null : yycpu.trim();
+        if(this.yycpu != null && this.yycpu.length() > 0){
+			try {
+				this.yycpuDouble = Double.valueOf(this.yycpu);
+			} catch (NumberFormatException e) {
+				this.yycpuDouble = 0.00;
+			}
+		}
     }
 
     public String getXmrq() {
@@ -566,6 +575,14 @@ public class ServerInfo {
 	
 	public void setBjzt(String bjzt) {
 		this.bjzt = bjzt;
+	}
+	
+	public void setYycpuDouble(Double yycpuDouble) {
+		this.yycpuDouble = yycpuDouble;
+	}
+	
+	public Double getYycpuDouble() {
+		return yycpuDouble;
 	}
 	
 }

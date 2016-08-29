@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.gome.upm.common.util.AppConfigUtil;
 import com.gome.upm.common.web.httpClient.HttpClientUtils;
 import com.gome.upm.domain.ServerInfo;
 import com.gome.upm.service.SystemProcessService;
@@ -37,7 +38,8 @@ public class SystemProcessAlarm {
 			if(serverInfoList.size() > 0){
 				
 				//报警
-				String url="http://10.58.62.204/alarmplatform/alarm";
+//				String url="http://10.58.62.204/alarmplatform/alarm";
+				String url = AppConfigUtil.getStringValue("prtg.alarm.url");
 				Map<String, String> paramMap=new HashMap<>();
 				paramMap.put("type", "process");
 				paramMap.put("mail", "qiaowentao@yolo24.com");

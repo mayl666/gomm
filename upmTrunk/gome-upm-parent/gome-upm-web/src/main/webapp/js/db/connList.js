@@ -3,8 +3,8 @@
  */
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$(".search_btn").unbind("click");
+	$(".search_btn").bind("click", function(){
 		var content = {};
 		var dbType = $("#dbType").val();
 		if(dbType != "" && dbType != null){
@@ -48,7 +48,7 @@ $(function(){
 //	    var code = theEvent.keyCode || theEvent.which || theEvent.charCode;    
 //	    if (code == 13) {    
 //	        //回车执行查询
-//	        $(".newbtn").click();
+//	        $(".search_btn").click();
 //	     }    
 //	});
 });

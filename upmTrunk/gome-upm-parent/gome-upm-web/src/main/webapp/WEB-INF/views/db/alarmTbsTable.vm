@@ -13,6 +13,7 @@
         <th>总容量（MB）</th>
         <th>已使用容量（MB)</th>
         <th>已使用百分比</th>
+        <th>描述</th>
 		<!--
         <th>负责人</th>
         <th>操作</th>
@@ -35,6 +36,7 @@
         <td>$!alarm.totalMB</td>
         <td>$!alarm.usedMB</td>
         <td>$!alarm.usedPercent %</td>
+        <td>$!alarm.alarmReasonStr</td>
 		<!--
         <td></td>
         	<a class="operation" href="javascript:;">已处理</a>

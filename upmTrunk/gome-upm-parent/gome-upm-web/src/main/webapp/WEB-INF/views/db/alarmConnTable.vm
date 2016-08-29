@@ -13,6 +13,7 @@
         <th>实例名</th>
         <th>数据库活跃连接数</th>
         <th>数据库总连接数</th>
+        <th>描述</th>
 		<!-- 
         <th>负责人</th>
         <th>操作</th>
@@ -35,6 +36,7 @@
         <td>$!alarm.instName</td>
         <td>$!alarm.active</td>
         <td>$!alarm.total</td>
+        <td>$!alarm.alarmReasonStr</td>
 		<!-- 
         <td></td>
         <td>
@@ -45,7 +47,7 @@
     </tr>
     #end
 	#else
-	<tr><td colspan='10' align='center'>没有查到任何记录</td></tr>
+	<tr><td colspan='11' align='center'>没有查到任何记录</td></tr>
 	#end
     </tbody>
 </table>

@@ -19,7 +19,9 @@
   <td class="portDesc" sensorId="$!sensor.sensorId" title="点击修改备注" remark=""><p>$!sensor.remark</p></td>
 </tr>
 #end
-#end
+#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
+				#end
   </tbody>
  </table>
  #parse("common/pagePlugin.vm")

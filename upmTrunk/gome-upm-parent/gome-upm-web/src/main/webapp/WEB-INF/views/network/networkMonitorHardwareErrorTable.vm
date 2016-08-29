@@ -29,7 +29,9 @@
 						-->
 					    </tr>
 					#end
-					#end
+					#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
+				#end
 					
 				</tbody>
 				 

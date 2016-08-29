@@ -47,7 +47,11 @@
         <section class="content-header">
         	<a href="${rc.contextPath}/index">统一监控平台 </a>
         		<a href="${rc.contextPath}/system/get">/ 系统进程存活监控</a>
-        	<a href="javascript:history.back(-1);" class="newbtn pull-right btnBack">返回</a>
+				#if($!chance == 0)
+					<a href="${rc.contextPath}/system/warning?xmm=$!xmmSearch&ssz=$!sszSearch&pageNo=$!pageNo&startTime=$!startTime&endTime=$!endTime" class="newbtn pull-right btnBack">返回</a>
+				#else
+					<a href="${rc.contextPath}/system/get?pageNo=$pageNo&text=$!text" class="newbtn pull-right btnBack">返回</a>
+				#end
         </section>
 
         <!-- Main content -->

@@ -1,4 +1,6 @@
 /***閸忣剙鍙￠懣婊冨礋闁鑵戦悩鑸碉拷锟� #3c8dbc**/
+.hover-span{color:#666}
+.hover-span:hover{color:#666}
 
 .sidebar-menu .treeview-menu>li.currentli{
 	background:#9c8ade;
@@ -482,7 +484,9 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 
 @media (max-width: 768px) {
 .info_search .pagination .select-con .dropdown-select{width: 100%;min-width: 164px;}
+
 }
+
 @media  screen and ( min-width: 767px) and (max-width: 991px){
 	.info_search .pagination .select-con .dropdown-select{width: 100%;min-width: 120px;}
 }
@@ -682,7 +686,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 
 
 /*******閺佺増宓佹惔鎾茬瑢鐞涖劏绻涢幒銉ф磧閹猴拷******/
-.list_table table td span{cursor: pointer}
+.list_table table td span{/* cursor: pointer */}
 .color_FF9900{
 	color:#FF9900;
 	text-decoration: underline;
@@ -904,11 +908,17 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 }
 
 .centertoplayout p{
-	font-size: 16px;
-	/* font-weight: 600; */
-	/*padding: 20px 10px;
-	margin-top: -18px;*/
+	font-size: 13px;
 	text-align: center;
+	color:#999
+}
+.order_txt_con{margin-top:-6px;}
+.order-span-Strong{
+	color:#9c8ade;font-weight: 600;
+}
+.order_txt_con p span.order-span-Strong:first-child{
+	
+	margin-right:10px;
 }
 .centerbottomLayout {
 	background: #FFF;
@@ -1437,7 +1447,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	margin-left: 4px;
 }
 .tableSort i {
-	font-size: 1px;
+	font-size: 12px;
 	cursor: pointer;
 }
 .top2_img{padding: 0 12px;}
@@ -1641,6 +1651,9 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 	   margin-top:20px;
 	}
 }
+@media screen and (max-height: 768px){
+	.left-bg{height:0;}
+}
 
 .box-header{
 	padding: 10px 0;
@@ -1656,7 +1669,7 @@ legend{padding:.5em;border:0;width:auto;font-size:14px;font-weight: 600;}
 .search-a{
 	margin:14px 10px 0  20px; /*width: 80px;*/
 }
-.operation_infop{margin:20px; }
+.operation_infop{/* margin:20px; */height:50px; }
 .fr .form-group{
 	margin-top:15px;
 }

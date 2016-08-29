@@ -7,7 +7,19 @@ $(function(){
 		createPortal.controller.previousStep();
 	});
 });
-
+function StandardPost (url,args) 
+{
+    var form = $("#form1");
+    form.attr({"action":url});
+    for (arg in args)
+    {
+        var input = $("<input type='hidden'>");
+        input.attr({"name":arg});
+        input.val(args[arg]);
+        form.append(input);
+    }
+    $("#submit_id").click();
+}
 var createPortal = {
 		   service : {
 			   getCheckedAlarm : function(){
@@ -36,6 +48,7 @@ var createPortal = {
 						layer.msg("请选择报警方式");
 						return false;
 					}
+					$("#btn-submit").unbind("click");
 					$.ajax({
 						url:contextPath+'/portal/save',
 						type:'POST',
@@ -51,6 +64,16 @@ var createPortal = {
 							if(data.code == 1){
 								layer.msg("保存成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 									window.location.href=contextPath+"/portal/get";
+								});
+							}else if(data.code == 2){
+								layer.msg("监控地址已经存在,保存失败,请修改监控地址");
+								$("#btn-submit").click(function(){
+									createPortal.controller.submit();
+								});
+							}else{
+								layer.msg("系统异常");
+								$("#btn-submit").click(function(){
+									createPortal.controller.submit();
 								});
 							}
 //							$(".content-wrapper").empty();
@@ -69,8 +92,13 @@ var createPortal = {
 					var monitorType = $("#monitorType").val();
 					var overtimes = $("#overtimes").val();
 					var frequency = $("#frequency").val();
-					var url = contextPath+"/portal/create/step2?portalAddress="+portalAddress+"&monitorType="+monitorType+"&timeOutNum="+overtimes+"&accFre="+frequency;
-					window.location.href=url;
+					var data ={
+						'portalAddress':portalAddress,
+						'monitorType':monitorType,
+						'timeOutNum':overtimes,
+						'accFre':frequency
+					}
+					StandardPost(contextPath+'/portal/create/step2',data);
 			 }  
 		   }
 		};

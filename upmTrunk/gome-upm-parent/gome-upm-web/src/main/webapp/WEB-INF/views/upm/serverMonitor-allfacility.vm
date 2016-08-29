@@ -2,7 +2,7 @@
 <html>
 <head>
      <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -64,7 +64,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-        	<a href="${rc.contextPath}/index">统一监控平台 </a><a href="../server/goToHostAll">/ 服务器监控</a><a href="javascript:" style="text-decoration: none;cursor: hand;" onclick="javascript:location.reload();"> / 全部设备</a>
+        	<a href="${rc.contextPath}/index">统一监控平台 </a><a href="../server/goToHostAll">/ 服务器监控</a><a href="javascript:" style="text-decoration: none;cursor: hand;" onclick="javascript:location.reload();"> / 监控设备</a>
         	<a href="../server/goToHostAll" class="backbtn pull-right btnBack">返回</a>
         </section>
 
@@ -102,6 +102,7 @@
 						<i class="fa fa-search"></i> 搜索
 					</a>
 					<input type="hidden" id="searchConditions" value="" />
+					<input type="hidden" id="statusV" value="$!status" />
 				</form>
 			</div>
 			 <div class="list_table" style="margin-top: 10px;">

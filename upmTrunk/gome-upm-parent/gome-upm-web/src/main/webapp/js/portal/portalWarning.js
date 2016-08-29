@@ -18,7 +18,13 @@ $(function(){
 	allUrl.service.init();
 
 });
-
+function openReport(id){
+	var pageNum = $("#pagination-digg").find(".active").text();
+	var start = $("#start").val();
+	var end = $("#end").val();
+	var search = $("#search").val();
+	window.location.href =contextPath+"/portal/report?id="+id+"&type=1&pageNum="+pageNum+"&start="+start+"&end="+end+"&search="+search;
+}
 var allUrl = {
   service : {
 	   init : function(){
@@ -186,8 +192,9 @@ var allUrl = {
 	   search : function(){
 		    	var startTime = $("#startTime").val();
 		    	var endTime = $("#endTime").val();
-		    	var urlAddress = $("#urlAddress").val();
+		    	var urlAddress = $("#urlAddress").val().trim();
 		    	var survival =$("#survival").val();
+		    	
 		    	if(startTime==''&&endTime!=''){
 					layer.msg("请输入开始时间!");
 					$("#startTime").focus();
@@ -208,6 +215,9 @@ var allUrl = {
 				    }  
 					
 				}
+				$("#start").val(startTime);
+				$("#end").val(endTime);
+				$("#search").val(urlAddress);
 		    	$.ajax({
 						url:contextPath+'/portal/getPortTable',
 						type:'POST',

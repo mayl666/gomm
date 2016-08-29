@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -44,7 +44,7 @@
         <!-- search content -->
         <section class="content contentSty">
             <div class="input-group" style="width: 500px;margin-bottom: 20px;">
-              	<input type="text" class="form-control" id="searchKey" value="$!key" >
+              	<input type="text" class="form-control" id="searchKey" value='$!key' >
               	<span class="input-group-btn">
                 	<a class="btn" href="javascript:void(0);" id="searchBtn" onclick="searchByTraceId();">搜索</a>
               	</span>
@@ -185,29 +185,29 @@
 </script>
 -->
 <script>
+	var heightV = 0;
   $(function() {
 	  var searchKey = $("#searchKey").val();
 		if(searchKey != ''){
 			loadTree(searchKey);
 	  }
-		
-	 $("#dlg").dialog({
-	      autoOpen: false,
-	      left:600,
-	      top:400,
-	      width:650,
-	      height:450,
-	      //resizable:true,
-		  show: 'fade',
-		  hide: 'fade',
-		  scrollbar:"yes",
-	      //modal: true,
-	      position: "center"
-	    });
 	 $("#dlg").dialog('close');
   });
 	
    function showDialog(applicationIdStr,viewPointId,spanTypeName,cost,businessKey,applicationId,address,processNo,exceptionStack,serverExceptionStr){
+		if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)){
+				heightV= document.body.clientHeight;
+				heightV = Number(heightV)/3 + Number(document.body.scrollTop);
+		}else if (navigator.userAgent.indexOf('Firefox') >= 0){
+				heightV= document.documentElement.clientHeight;
+				heightV = Number(heightV)/3 + Number(document.documentElement.scrollTop);
+		}else if (navigator.userAgent.indexOf('Opera') >= 0){
+				heightV= document.body.clientHeight;
+				heightV = Number(heightV)/3 + Number(document.body.scrollTop);
+		}else{
+				heightV= document.body.clientHeight;
+				heightV = Number(heightV)/3 + Number(document.body.scrollTop);
+		}
  	   var divHTML = "<div style='margin:5px;height:380px;overflow-y:scroll;'>"
  	   			   +"<table style='TABLE-LAYOUT: fixed;height:100%;' width='500'>"
  	   			   +"<tr><td class='dialog-span-title'>服务/方法：</td><td style='WORD-WRAP: break-word;' width='400'>"+viewPointId+"</td></tr>"
@@ -226,6 +226,19 @@
  	   			   divHTML+"</table></div>";
 	 $("#dlg").empty();
 	 $("#dlg").append(divHTML);
+	 $("#dlg").dialog({
+	      autoOpen: false,
+	      left:600,
+	      top:heightV,
+	      width:650,
+	      height:450,
+	      //resizable:true,
+		  show: 'fade',
+		  hide: 'fade',
+		  scrollbar:"yes",
+	      //modal: true,
+	      position: "center"
+	    });
 	 $("#dlg").dialog('open');
   } 
   

@@ -105,12 +105,13 @@
 <script type="text/javascript">
 $(function(){
 	//编辑端口内容
+	//by wangxiaye  增加maxlength属性
 	$('.list_table').on('click',".portDesc",function(e){
 		e.stopPropagation();
 		if($(this).children('p').is(':visible')) {
 		    var pText = $(this).children('p').text();
 		    $(this).attr("remark",pText);
-		    var appendText = '<input type="text" class="inputEvent" value="'+pText+'"/>';
+		    var appendText = '<input type="text" maxlength="12" class="inputEvent" value="'+pText+'"/>';
 		    //alert(pText);
 			$(this).empty().append(appendText);
 			$('.inputEvent').focus();

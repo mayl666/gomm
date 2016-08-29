@@ -3,8 +3,8 @@
  */
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$(".search_btn").unbind("click");
+	$(".search_btn").bind("click", function(){
 		var startTime = $("#startTime").val();
 		var endTime = $("#endTime").val();
 		if(startTime.length != 0 && endTime == 0){
@@ -17,16 +17,19 @@ $(function(){
 			return;
 		}
 		var content = {};
-		var serverAddr = $("#serverAddr").val();
+		var serverAddr = $.trim($("#serverAddr").val());
+//		alert(serverAddr);
 		if(serverAddr.length > 0){
-			var ipRegex = /^([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])$/;
-			if(ipRegex.test(serverAddr)){
-				content.serverAddr=serverAddr;
-			} else {
-//				alert("IP地址格式有误！");
-				layer.msg('IP地址格式有误！');
-				return;
-			}
+//			var ipRegex = /^([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])$/;
+//			if(ipRegex.test(serverAddr)){
+//				content.serverAddr=serverAddr;
+//			} else {
+////				alert("IP地址格式有误！");
+//				layer.msg('IP地址格式有误！');
+//				return;
+//			}
+			
+			content.serverAddr=serverAddr;
 			
 		}
 		
@@ -82,7 +85,7 @@ $(function(){
 	    var code = theEvent.keyCode || theEvent.which || theEvent.charCode;    
 	    if (code == 13) {    
 	        //回车执行查询
-	        $(".newbtn").click();
+	        $(".search_btn").click();
 	     }    
 	});
 	

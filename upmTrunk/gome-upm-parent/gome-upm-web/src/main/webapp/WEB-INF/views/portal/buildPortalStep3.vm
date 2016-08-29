@@ -50,6 +50,7 @@
                 <input type="hidden" id="overtimes" value="$!overtimes"/>
                 <input type="hidden" id="portalAddress" value="$!portalAddress"/>
                 <input type="hidden" id="frequency" value="$!frequency"/>
+				<input type="hidden" id="accTimeOut" value="$!accTimeOut"/>
                 <input type="hidden" id="isContainsCon" value="$!isContainsCon"/>
                 <input type="hidden" id="isDefaultCode" value="$!isDefaultCode"/>
                 <input type="hidden" id="returnCode" value="$!returnCode"/>
@@ -139,6 +140,9 @@
                     </form>
                 </div>
             </div>
+			<form method='post' id="form1" style="display:none">
+                	<input id="submit_id" type="submit" name="submit" style="display:none"/>  
+                </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">确定</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>

@@ -21,7 +21,6 @@
 			<list>
 				<value>classpath:important.properties</value>
 				<value>classpath:jdbc.properties</value>
-				<value>classpath:jdbc2.properties</value>
 				<value>classpath:config.properties</value>
 				<value>classpath:smartcloud-production.properties</value>
 			</list>
@@ -33,7 +32,9 @@
 	    <property name="targetDataSources">  
 	        <map>  
 	            <entry value-ref="dataSourceOne" key="dataSourceOne"></entry>  
+	            <!-- 
 	            <entry value-ref="dataSourceTwo" key="dataSourceTwo"></entry>
+	             -->
 	            <entry value-ref="dataSourceThree" key="dataSourceThree"></entry> 
 	            <entry value-ref="dataSourceFour" key="dataSourceFour"></entry> 
 	            <entry value-ref="dataSourceFive" key="dataSourceFive"></entry> 
@@ -74,19 +75,18 @@
     
 	<import resource="classpath:spring/spring-config-datasource-dbcp.xml" />
 	<import resource="classpath:spring/spring-config-redis.xml" />
-	<!-- <import resource="classpath:spring/servlet-context-interceptor.xml" />
-	 -->
+	<!-- <import resource="classpath:spring/servlet-context-interceptor.xml" />-->
+	 
 	<import resource="classpath:spring/servlet-context-interceptor.xml" />
     <import resource="classpath:spring/spring-rpc-consumer.xml" />
  	<!-- 定时任务配置 -->
  
  	<import resource="classpath:spring/spring-quartz.xml" /> 
-	<import resource="classpath:spring/spring-quartzServer.xml" /> 
 	<import resource="classpath:spring/spring-network-quartz.xml" />
-	
-	<!-- MQ发送消息 -->
+	  
+	<!-- MQ发送消息-->
 	<import resource="classpath:spring/spring-rocketmq.xml" />
-
+ 
 	<!-- 去掉这个定时任务
 	<import resource="classpath:spring/spring-quartzSystem.xml" /> 
 	 -->

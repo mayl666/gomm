@@ -18,7 +18,7 @@
 				<td>$!device.groupName</td>
 				<td>$!device.deviceName</td>
 				#if($!device.state == 0)
-					<td>正常运行</td>
+					<td>正常</td>
 				#else
 				    <td>故障</td>
 				#end
@@ -27,7 +27,9 @@
 				</td>
 			</tr>
 			#end
-			#end
+		#else
+				<tr><td colspan='8' align='center'>没有查到任何记录</td></tr>
+				#end
 		
 		 </tbody>
 	</table>

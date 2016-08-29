@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>UMP</title>
+    <title>统一监控平台</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -56,6 +56,7 @@
 						        <div data-options="name:'other',iconCls:'icon-other'">businessKey检索</div>
 						    </div>
 				    </span>
+                    <p style="display:none;margin-left:110px;color:red" id="noDataTip">没有符合条件的内容，请返回重新输入 </p>
 		        </div>
 		    </div>
         </section><!-- /.content -->

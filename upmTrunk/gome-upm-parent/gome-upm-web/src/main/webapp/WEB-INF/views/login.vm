@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>统一监控平台</title>
-    <link rel="stylesheet" href="${rc.contextPath}/loginPage/css/base.css"  type="text/css"/>
+    <link rel="stylesheet" href="${rc.contextPath}/css/base.css"  type="text/css"/>
     <link rel="stylesheet" href="${rc.contextPath}/loginPage/css/buttons.css" type="text/css"/>
     <link rel="stylesheet" href="${rc.contextPath}/loginPage/css/login.css" type="text/css"/>
 </head>

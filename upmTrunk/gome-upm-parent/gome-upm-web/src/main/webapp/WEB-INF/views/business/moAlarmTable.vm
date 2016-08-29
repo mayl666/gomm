@@ -6,6 +6,7 @@
             <th>序号</th>
             <th>报警时间</th>
             <th>类型</th>
+            <th>报警级别</th>
             <th>报警内容</th>
         </tr>
     </thead>
@@ -18,6 +19,7 @@
         <td>$!i</td>
         <td>$!alarm.sendTimeStr</td>
         <td>$!alarm.typeStr</td>
+        <td>三级</td>
         <td><a href="javascript:void(0);" class="detail" url="${rc.contextPath}/alarm/detail?id=$!alarm.id" style="font-size:14px;color:#000;text-decoration:underline">查看详情</a></td>
     </tr>
     #end

@@ -1,3 +1,64 @@
+init();
+function init(){
+	var content = {};
+	content.orderBy = $("#orderBy").val();
+	content.orderByCpu = $("#orderByCpu").val();
+	var status = $("#statusV").val();
+	var groupName = $("#group").val();
+	var hostName = $("#host").val();
+	if(hostName != "" && hostName != null){
+		content.host=encodeURIComponent(hostName);
+	}
+	if(groupName != "" && groupName != null){
+		content.groupName=encodeURIComponent(groupName);
+		$.ajax({
+			url:'../server/getHost',
+			type:'POST',
+			dataType : 'json',	
+			data:{group:groupName,
+				status:status
+				},
+			success:function(data){
+				if(data.code == 1){
+					$("#host").empty();
+					$("#host").append("<option value=''>请选择</option>");
+					for(var i=0;i<data.attach.length;i++){
+						var optionV = decodeURIComponent(data.attach[i]);
+						if(hostName==optionV){
+							$("#host").append("<option selected='selected' value='"+optionV+"'>"+data.attach[i]+"</option>");
+						}else{
+							$("#host").append("<option value='"+optionV+"'>"+data.attach[i]+"</option>");
+						}
+						
+					}
+				}
+			},
+			error:function(){
+				layer.msg("操作失败");
+			}
+		});
+	}
+	content.search=true;
+	content.status = status;
+	$.ajax({
+		url:'../server/getHostAll',
+		type:'POST',
+		async:true,
+		dataType:'html',
+		data:{
+			content:JSON.stringify(content)
+		},
+		success:function(data){
+			$(".list_table").empty();
+			$(".list_table").append(data);
+			$("#searchConditions").val(JSON.stringify(content));
+		},
+		error:function(){
+			//pop_up("系统异常",false);
+			layer.msg("服务器异常");
+		}
+	});
+}
 $(function(){
 	//搜索
 	$("#searchbtn").unbind("click");
@@ -10,10 +71,12 @@ $(function(){
 			content.groupName=encodeURIComponent(groupName);
 		}
 		var hostName = $("#host").val();
+		var status = $("#statusV").val();
 		if(hostName != "" && hostName != null){
 			content.host=encodeURIComponent(hostName);
 		}
 		content.search=true;
+		content.status = status;
 		$.ajax({
 			url:'../server/getHostAll',
 			type:'POST',
@@ -34,14 +97,16 @@ $(function(){
 		});
 	});
 });
-
 $("#group").change(function(obj){
 	var group = $(this).children('option:selected').val();
+	var status = $("#statusV").val();
 	$.ajax({
 		url:'../server/getHost',
 		type:'POST',
 		dataType : 'json',	
-		data:{group:group},
+		data:{group:group,
+			status:status
+			},
 		success:function(data){
 			if(data.code == 1){
 				$("#host").empty();
@@ -74,9 +139,23 @@ function orderByCpuM(){
 	}else{
 		orderBy = '2';
 	}
+	var status = $("#statusV").val();
+	var content = {};
+	var groupName = $("#group").val();
+	if(groupName != "" && groupName != null){
+		content.groupName=encodeURIComponent(groupName);
+	}
+	var hostName = $("#host").val();
+	if(hostName != "" && hostName != null){
+		content.host=encodeURIComponent(hostName);
+	}
 	if(searchConditions == ""){
-		var content = {};
 		content.search=true;
+		content.orderByCpu = orderByCpu;
+		content.orderBy = orderBy;
+		content.status = status;
+		searchConditions = JSON.stringify(content);
+	}else{
 		content.orderByCpu = orderByCpu;
 		content.orderBy = orderBy;
 		searchConditions = JSON.stringify(content);
@@ -93,6 +172,7 @@ function orderByCpuM(){
 		success:function(data){
 			$(".list_table").empty();
 			$(".list_table").append(data);
+			$("#searchConditions").val(JSON.stringify(content));
 		},
 		error:function(){
 			layer.msg("服务器异常");
@@ -117,10 +197,23 @@ function orderByLoadM(){
 	}else{
 		orderBy = '6';
 	}
+	var status = $("#statusV").val();
+	var content = {};
+	var groupName = $("#group").val();
+	if(groupName != "" && groupName != null){
+		content.groupName=encodeURIComponent(groupName);
+	}
+	var hostName = $("#host").val();
+	if(hostName != "" && hostName != null){
+		content.host=encodeURIComponent(hostName);
+	}
 	if(searchConditions == ""){
-		var content = {};
 		content.search=true;
 		content.orderByCpu = orderByLoad;
+		content.orderBy = orderBy;
+		content.status = status;
+		searchConditions = JSON.stringify(content);
+	}else{
 		content.orderBy = orderBy;
 		searchConditions = JSON.stringify(content);
 	}
@@ -136,6 +229,7 @@ function orderByLoadM(){
 		success:function(data){
 			$(".list_table").empty();
 			$(".list_table").append(data);
+			$("#searchConditions").val(JSON.stringify(content));
 		},
 		error:function(){
 			layer.msg("服务器异常");
@@ -160,10 +254,23 @@ function orderByMemoryM(){
 	}else{
 		orderBy = '4';
 	}
+	var status = $("#statusV").val();
+	var content = {};
+	var groupName = $("#group").val();
+	if(groupName != "" && groupName != null){
+		content.groupName=encodeURIComponent(groupName);
+	}
+	var hostName = $("#host").val();
+	if(hostName != "" && hostName != null){
+		content.host=encodeURIComponent(hostName);
+	}
 	if(searchConditions == ""){
-		var content = {};
 		content.search=true;
 		content.orderByCpu = orderByMemory;
+		content.orderBy = orderBy;
+		content.status = status;
+		searchConditions = JSON.stringify(content);
+	}else{
 		content.orderBy = orderBy;
 		searchConditions = JSON.stringify(content);
 	}
@@ -179,6 +286,7 @@ function orderByMemoryM(){
 		success:function(data){
 			$(".list_table").empty();
 			$(".list_table").append(data);
+			$("#searchConditions").val(JSON.stringify(content));
 		},
 		error:function(){
 			layer.msg("服务器异常");

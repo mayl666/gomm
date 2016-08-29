@@ -44,12 +44,11 @@
         <section class="content-header">
 			<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/portal/get"> / 端口存活监控</a ><a title="$!port.port" href="${rc.contextPath}/portal/report?id=$!port.id"> / $!port.port</a>
         	#if($!type==1)
-        	<a href="${rc.contextPath}/portal/warning?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	<a href="${rc.contextPath}/portal/warning?pageNum=$!pageNum&start=$!start&end=$!end&search=$!search" class="newbtn pull-right btnBack">返回</a>
         	#else
-        	<a href="${rc.contextPath}/portal/get?pageNum=$!pageNum" class="newbtn pull-right btnBack">返回</a>
+        	<a href="${rc.contextPath}/portal/get?pageNum=$!pageNum&search=$!search" class="newbtn pull-right btnBack">返回</a>
         	#end
         </section>
-
         <!-- Main content -->
         <section class="content contentSty">
         	<div class="toolbar">

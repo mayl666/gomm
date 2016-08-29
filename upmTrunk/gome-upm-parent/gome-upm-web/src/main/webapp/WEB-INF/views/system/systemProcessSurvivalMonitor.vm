@@ -55,7 +55,7 @@
         <!-- Main content -->
         <section class="content">
         	<div class="topView">
-        		<h2>健康指数：<span style="color: #9c8ade;">$!heath</span></h2>
+        		<h2>健康率：<span style="color: #9c8ade;">$!heath%</span></h2>
 	        	<div id="system_health_index" style="width: 32%;margin-bottom: 40px;"></div>
 	        	<div class="health_status_count">
 	        		<span>异常：<a href="${rc.contextPath}/system/warning">$!inValidCount</a></span>
@@ -67,7 +67,7 @@
                 <h2 class="list_table_title" style="line-height: 140px;">系统进程存活监控列表</h2>
                 <div class="btn_con fr" style="margin-bottom: 23px;">
                 
-                	<input type="text" onkeydown="quickSearch(event);" 
+                	<input type="text" onkeydown="quickSearch(event);" value="$!text"
                 		class="form-control systemProcessSearchInput" id="search_name" placeholder="请输入应用名...">
                 	<i id="btn_search" class="fa fa-search systemProcessSearchIcon"></i>
                 </div>
@@ -125,7 +125,7 @@ function draw_system_health_index(){
             text: ''
         },
         tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    	    pointFormat: '<b>{point.percentage:.1f}%</b>'
         },
         plotOptions: {
             pie: {
@@ -137,20 +137,30 @@ function draw_system_health_index(){
                     color: '#000000',
                     connectorColor: '#000000',
                     format: '<b>{point.name}</b>: {point.percentage:.1f}'
+                },
+				style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+
+            },
+			events: {
+                    'click': function (e) {
+                        console.log(e.point.name);
+                    }
                 }
-            }
+
         },
         series: [{
             type: 'pie',
             name: '健康指数',
             data: [
                 {
-                 	name:'正常',   
+                 	name:'正常率：',   
                     y:$!validCount,
                     color:'#9c8ade'
                 },
                 {
-                    name: '异常',
+                    name: '异常率：',
                     y: $!inValidCount,
                     sliced: true,
                     selected: true,

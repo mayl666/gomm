@@ -146,6 +146,8 @@ public class UrlRecord {
 		if(returnCode!=null){
 			if(returnCode.equals("200")){
 				return "一切正常";
+			}else if(returnCode.equals("000")){
+				return "无法访问";
 			}else if(returnCode.equals("301")){
 				return "永久重定向";
 			}else if(returnCode.equals("302")){

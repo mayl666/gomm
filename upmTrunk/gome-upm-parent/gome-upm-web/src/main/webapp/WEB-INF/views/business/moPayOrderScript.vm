@@ -27,7 +27,7 @@ var payDate;
 var payHighChart;
 var timePayCon=false;
 function initPayData(){
-	var obj=getSearchHour(3);
+	var obj=getSearchHour(2);
     var startTimeStr=obj.startTime;
     var endTimeStr=obj.endTime;
     reloadPayData(startTimeStr,endTimeStr,false);
@@ -193,9 +193,10 @@ function reloadPayData(stPay,etPay,waitTimeReload){
 		dataType:"text",
 		cache:false,
 		success: function(data){
-			debugger;
 			var dataList=eval(data);
-			payDate=dataList[0][dataList[0].length-1][0];
+			if(dataList[0].length>0){
+				payDate=dataList[0][dataList[0].length-1][0];
+			}
 			copy(options_pay,config_pay);
 			options_pay.series[0].data=dataList[0];
 			options_pay.series[1].data=dataList[1];

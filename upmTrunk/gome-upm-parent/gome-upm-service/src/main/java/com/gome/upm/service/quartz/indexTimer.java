@@ -1,68 +1,98 @@
 package com.gome.upm.service.quartz;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.gome.loom.facade.ISendSmsFacade;
+import com.gome.loom.model.SmsModel;
+import com.gome.loom.model.TpModel;
+import com.gome.memberCore.lang.model.Result;
+import com.gome.upm.common.util.AppConfigUtil;
+import com.gome.upm.common.util.DateUtil;
+import com.gome.upm.domain.ServerAlarmRecord;
+import com.gome.upm.service.ServerMonitorService;
 import com.gome.upm.service.util.ZabbixUtils;
-
-import redis.Gcache;
 
 /**
  *
  */
 public class indexTimer {
 
-	@Resource(name = "monitorGcache")
-	Gcache monitorGcache;
-
+	@Resource(name = "serverMonitorService")
+	ServerMonitorService serverMonitorService;
+	/** loom短信接口 */
+	@Resource
+	protected ISendSmsFacade sendSmsFacade;
 	public void work() {
 		try {
-			List<Map<String,Object>> hostListValid = ZabbixUtils.getHostList("0");
-			List<Map<String,Object>> hostListinvalid = ZabbixUtils.getHostList("1");
-			List<Map<String,Object>> templateList = ZabbixUtils.getTemplateList("3");
-			List<Map<String,Object>> hostList = new ArrayList<Map<String,Object>>();
-			hostList.addAll(hostListValid);
-			hostList.addAll(hostListinvalid);
-			hostList.addAll(templateList);
-			BigDecimal bdDisk5 = new BigDecimal(Double.parseDouble(String.valueOf(hostListValid.size()+templateList.size()))*100/(Double.parseDouble((String.valueOf(hostList.size()))+"")));
-			bdDisk5 = bdDisk5.setScale(1,BigDecimal.ROUND_HALF_UP);
-			BigDecimal bdDisk6 = new BigDecimal(Double.parseDouble(String.valueOf(hostListinvalid.size()))*100/(Double.parseDouble((String.valueOf(hostList.size()))+"")));
-			bdDisk6 = bdDisk6.setScale(1,BigDecimal.ROUND_HALF_UP);
-			monitorGcache.set("totalHost", String.valueOf(hostList.size()));
-			monitorGcache.set("validPHost", bdDisk5+"");
-			monitorGcache.set("validHost", String.valueOf(hostListValid.size()+templateList.size()));
-			monitorGcache.set("invalidPHost", bdDisk6+"");
-			monitorGcache.set("invalidHost", String.valueOf(hostListinvalid.size()));
-			
-			int validItems = ZabbixUtils.getAllItems("0");
-			int invalidItems = ZabbixUtils.getAllItems("1");
-			BigDecimal bdDisk1 = new BigDecimal(Double.parseDouble(String.valueOf(validItems))*100/(Double.parseDouble((String.valueOf(validItems+invalidItems))+"")));
-			bdDisk1 = bdDisk1.setScale(1,BigDecimal.ROUND_HALF_UP);
-			BigDecimal bdDisk = new BigDecimal(Double.parseDouble(String.valueOf(invalidItems))*100/(Double.parseDouble((String.valueOf(validItems+invalidItems))+"")));
-			bdDisk = bdDisk.setScale(1,BigDecimal.ROUND_HALF_UP);
-			
-			monitorGcache.set("totalItems", String.valueOf(validItems+invalidItems));
-			monitorGcache.set("validPItems", bdDisk1+"");
-			monitorGcache.set("validItems", String.valueOf(validItems));
-			monitorGcache.set("invalidPItems", bdDisk+"");
-			monitorGcache.set("invalidItems", String.valueOf(invalidItems));
-			
-			int validTrigger = ZabbixUtils.getTrigger("0");
-			int invalidTrigger = ZabbixUtils.getTrigger("1");
-			BigDecimal bdDis3 = new BigDecimal(Double.parseDouble(String.valueOf(validTrigger))*100/(Double.parseDouble((String.valueOf(validTrigger+invalidTrigger))+"")));
-			bdDis3 = bdDis3.setScale(1,BigDecimal.ROUND_HALF_UP);
-			BigDecimal bdDisk4 = new BigDecimal(Double.parseDouble(String.valueOf(invalidTrigger))*100/(Double.parseDouble((String.valueOf(validTrigger+invalidTrigger))+"")));
-			bdDisk4 = bdDisk4.setScale(1,BigDecimal.ROUND_HALF_UP);
-			
-			monitorGcache.set("totalTrigger", String.valueOf(validTrigger+invalidTrigger));
-			monitorGcache.set("validPTrigger", bdDis3+"");
-			monitorGcache.set("validTrigger", String.valueOf(validTrigger));
-			monitorGcache.set("invalidPTrigger", bdDisk4+"");
-			monitorGcache.set("invalidTrigger", String.valueOf(invalidTrigger));
+			List<Map<String,Object>> hostList = ZabbixUtils.getHostList("0");
+			for (int i = 0; i < hostList.size(); i++) {
+				String hostid = hostList.get(i).get("hostid").toString();
+				String host = (String) hostList.get(i).get("host");
+				//agent.ping
+				Double pinglastValue = ZabbixUtils.getLastValue(hostList.get(i), "agent.ping");
+				if(pinglastValue!=null){
+					//used_swap使用率达到30%
+					if(pinglastValue==0 || pinglastValue==0.0 || pinglastValue==0.00){
+						String date = DateUtil.getDate("yyyy-MM-dd HH:mm:ss");
+						String groupName = ZabbixUtils.getHostGroup(hostid);
+						//调用产生报警记录接口
+						String contentServer = "服务器组"+groupName+"中的"+host+"服务器宕机，请关注！及时解决";
+						ServerAlarmRecord alarmRecord = new ServerAlarmRecord();
+						alarmRecord.setGroupName(groupName);
+						alarmRecord.setHost(host);
+						alarmRecord.setAlarmTime(date);
+						alarmRecord.setContent(contentServer);
+						alarmRecord.setStatus("0");
+						alarmRecord.setAlarmValue("宕机");
+						alarmRecord.setType("0");
+						serverMonitorService.addAlarmRecord(alarmRecord);
+						//判断当前是否已经发过短信，如果已经报过警，当前不报警
+						ServerAlarmRecord alarmRecordQ = new ServerAlarmRecord();
+						alarmRecordQ.setHost(host);
+						alarmRecordQ.setStatus("0");
+						alarmRecordQ.setType("0");
+						List<ServerAlarmRecord> alarmRecordList = serverMonitorService.queryAlarmRecord(alarmRecordQ);
+						if(alarmRecordList!=null && alarmRecordList.size()>0){
+							//调用短信接口
+							// TpModel的参数对应申请的BusinessName,模板Id 
+							TpModel smsModel = new TpModel("cloud_isSystem_down","2003"); 
+							String phone = AppConfigUtil.getStringValue("message.phone");
+							smsModel.setPhone(phone); //发送的手机号 
+							smsModel.setIntervalTime(0);//是否延迟发送如果延迟发送需要设置,单位:小时.（实时发送丌需要设置，默讣0）
+							smsModel.putTempParams("ipAddress", host);
+							smsModel.putTempParams("year", DateUtil.getYear());
+							smsModel.putTempParams("month", DateUtil.getMonth());
+							smsModel.putTempParams("day",DateUtil.getDay());
+							
+							smsModel.putTempParams("hour",DateUtil.get24Hour());
+							smsModel.putTempParams("minute", DateUtil.getMinute());
+							smsModel.putTempParams("seconds",DateUtil.getSecond());
+							Result<SmsModel> result = sendSmsFacade.sendSms(smsModel);
+							if(result.isSuccess()){//发送成功
+								System.out.println(result);
+							}else{//发送失败 } }
+								System.out.println(result);
+							}
+						}
+					}else{
+						String date = DateUtil.getDate("yyyy-MM-dd HH:mm:ss");
+						String groupName = ZabbixUtils.getHostGroup(hostid);
+						//调用产生报警记录接口
+						String contentServer = "服务器组"+groupName+"中的"+host+"服务器已恢复正常！";
+						ServerAlarmRecord alarmRecord = new ServerAlarmRecord();
+						alarmRecord.setHost(host);
+						alarmRecord.setAlarmTime(date);
+						alarmRecord.setContent(contentServer);
+						alarmRecord.setStatus("1");
+						alarmRecord.setAlarmValue("正常");
+						alarmRecord.setType("0");
+						serverMonitorService.updateAlarmRecord(alarmRecord);
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

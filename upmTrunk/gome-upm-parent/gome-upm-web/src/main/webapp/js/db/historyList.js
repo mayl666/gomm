@@ -3,8 +3,8 @@
  */
 $(function(){
 	//搜索
-	$(".newbtn").unbind("click");
-	$(".newbtn").bind("click", function(){
+	$(".search_btn").unbind("click");
+	$(".search_btn").bind("click", function(){
 		var startTime = $("#startTime").val();
 		var endTime = $("#endTime").val();
 		if(startTime.length != 0 && endTime == 0){
@@ -70,7 +70,7 @@ $(function(){
 //	    var code = theEvent.keyCode || theEvent.which || theEvent.charCode;    
 //	    if (code == 13) {    
 //	        //回车执行查询
-//	        $(".newbtn").click();
+//	        $(".search_btn").click();
 //	     }    
 //	});
 	

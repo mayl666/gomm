@@ -31,8 +31,12 @@ public class ElasticSearchUtils {
 
 	@Value("${elasticsearch.cluster}")
 	private String clusterName;
+	@Value("${elasticsearch.cluster}")
+	private String clusterName2;
 	@Value("${elasticsearch.hosts}")
 	private String hosts;
+	@Value("${elasticsearch.hosts}")
+	private String hosts2;
 	@Value("${elasticsearch.index}")
 	private String index;
 
@@ -45,6 +49,31 @@ public class ElasticSearchUtils {
 
 		TransportClient client = TransportClient.builder().settings(settings).build();
 		List<String> hostsList = clusterNodesList(hosts);
+		for (String host : hostsList) {
+			HostAndPort hostAndPort = HostAndPort.fromString(host);
+			try {
+				client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(hostAndPort.getHostText()), hostAndPort.getPort()));
+			} catch (UnknownHostException e) {
+				logger.error("host:" + host + " UnknownHost!", e.getMessage());
+				continue;
+			}
+		}
+		return client;
+	}
+	
+	/**
+	 * 端口和url访问记录存储的ElasticSearch
+	 * @return
+	 */
+	public Client getEsClient2() {
+		// es 2.0版本写法
+		 Settings settings = Settings.builder().put("cluster.name", clusterName2).put("lazyClient.transport.sniff", true).build();
+		
+		// es 1.6版本有效写法
+		// Settings settings = ImmutableSettings
+
+		TransportClient client = TransportClient.builder().settings(settings).build();
+		List<String> hostsList = clusterNodesList(hosts2);
 		for (String host : hostsList) {
 			HostAndPort hostAndPort = HostAndPort.fromString(host);
 			try {
