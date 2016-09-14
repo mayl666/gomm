@@ -19,11 +19,15 @@ public class ServerHost {
 	//groupName
 	private String groupName;
 	//hostId
-	private String hostId;
+	private Long hostid;
 	//host
 	private String host;
-	//graphids
-	private String graphids;
+	//itemid
+	private Long itemid;
+	//key_
+	private String key_;
+	//key1_
+	private String key1_;
 	//name
 	private String name;
 	//available
@@ -34,123 +38,20 @@ public class ServerHost {
 	private String ip;
 	//status
 	private String port;
-	//status
-	private String address;
-	
-	//valid可用的
-	private String valid;
-	//invalid不可用的
-	private String invalid;
-	//valid可用的占比
-	private String validP;
-	//invalid不可用的占比
-	private String invalidP;
-	//invalid
-	private String template;
-	//total
-	private String total;
-	private String cpu;
-	private String io;
-	private String disk;
-	private String load;
-	private String memory;
-	private String orderBy;
-	
+
+	//host
+	private long clock;
+	//host
+	private long time_from;
+
+	private long time_till;
+	//host
+	private double value;
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getCpu() {
-		return cpu;
-	}
-	public void setCpu(String cpu) {
-		this.cpu = cpu;
-	}
-	public String getIo() {
-		return io;
-	}
-	public void setIo(String io) {
-		this.io = io;
-	}
-	public String getDisk() {
-		return disk;
-	}
-	public void setDisk(String disk) {
-		this.disk = disk;
-	}
-	public String getMemory() {
-		return memory;
-	}
-	public void setMemory(String memory) {
-		this.memory = memory;
-	}
-	public String getGroupName() {
-		return groupName;
-	}
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-	public String getValidP() {
-		return validP;
-	}
-	public void setValidP(String validP) {
-		this.validP = validP;
-	}
-	public String getLoad() {
-		return load;
-	}
-	public void setLoad(String load) {
-		this.load = load;
-	}
-	public String getInvalidP() {
-		return invalidP;
-	}
-	public void setInvalidP(String invalidP) {
-		this.invalidP = invalidP;
-	}
-	public String getTemplate() {
-		return template;
-	}
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getIp() {
-		return ip;
-	}
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
-	public String getPort() {
-		return port;
-	}
-	public void setPort(String port) {
-		this.port = port;
-	}
-	public String getValid() {
-		return valid;
-	}
-	public void setValid(String valid) {
-		this.valid = valid;
-	}
-	public String getInvalid() {
-		return invalid;
-	}
-	public void setInvalid(String invalid) {
-		this.invalid = invalid;
-	}
-	public String getTotal() {
-		return total;
-	}
-	public void setTotal(String total) {
-		this.total = total;
 	}
 	public String getNum() {
 		return num;
@@ -164,11 +65,17 @@ public class ServerHost {
 	public void setGroupids(String groupids) {
 		this.groupids = groupids;
 	}
-	public String getHostId() {
-		return hostId;
+	public String getGroupName() {
+		return groupName;
 	}
-	public void setHostId(String hostId) {
-		this.hostId = hostId;
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public Long getHostid() {
+		return hostid;
+	}
+	public void setHostid(Long hostid) {
+		this.hostid = hostid;
 	}
 	public String getHost() {
 		return host;
@@ -176,11 +83,17 @@ public class ServerHost {
 	public void setHost(String host) {
 		this.host = host;
 	}
-	public String getGraphids() {
-		return graphids;
+	public Long getItemid() {
+		return itemid;
 	}
-	public void setGraphids(String graphids) {
-		this.graphids = graphids;
+	public void setItemid(Long itemid) {
+		this.itemid = itemid;
+	}
+	public String getKey_() {
+		return key_;
+	}
+	public void setKey_(String key_) {
+		this.key_ = key_;
 	}
 	public String getName() {
 		return name;
@@ -200,11 +113,46 @@ public class ServerHost {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getOrderBy() {
-		return orderBy;
+	public String getIp() {
+		return ip;
 	}
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
-	
+	public String getPort() {
+		return port;
+	}
+	public void setPort(String port) {
+		this.port = port;
+	}
+	public long getClock() {
+		return clock;
+	}
+	public void setClock(long clock) {
+		this.clock = clock;
+	}
+	public long getTime_from() {
+		return time_from;
+	}
+	public void setTime_from(long time_from) {
+		this.time_from = time_from;
+	}
+	public long getTime_till() {
+		return time_till;
+	}
+	public void setTime_till(long time_till) {
+		this.time_till = time_till;
+	}
+	public double getValue() {
+		return value;
+	}
+	public void setValue(double value) {
+		this.value = value;
+	}
+	public String getKey1_() {
+		return key1_;
+	}
+	public void setKey1_(String key1_) {
+		this.key1_ = key1_;
+	}
 }

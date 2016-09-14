@@ -1,7 +1,21 @@
 <script type="text/javascript">
 $(function () {
+//OMS
+	laydate({
+	    elem: '#startTimeOms',
+	    format: 'YYYY-MM-DD',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("startTime:" + date);
+	    }
+	});
 	initOms();
-	//initOmsData();
+	initOmsData();
 });
 
 function initOmsData(){
@@ -16,7 +30,7 @@ var config_oms={};
 function initOms(){
 	options_oms = {
         chart: {
-            type: 'column',
+            type: 'bar',
             renderTo: 'highchart_oms'
         },
         title: {
@@ -62,9 +76,15 @@ function initOms(){
 }
 function searchOmsData(){
 	var startTimeStr=$('#startTimeOms').val();
+	if(startTimeStr==''){
+		var startDate = new Date();
+ 		var startTimeStr=startDate.Format('yyyy-MM-dd');
+		$('#startTimeOms').val(startTimeStr);
+	}
  	reloadOmsData(startTimeStr);
 }
 function reloadOmsData(stOms){
+
 	var url="${rc.contextPath}/monitoBusiness/getOmsDataList.do";
 	$.ajax({
 		url: url,
@@ -76,7 +96,27 @@ function reloadOmsData(stOms){
 			var dataList=eval(data);
 			copy(options_oms,config_oms);
 			options_oms.series[0].data=dataList;
-			highChart_oms = new Highcharts.Chart(options_oms);
+			//highChart_oms = new Highcharts.Chart(options_oms);
+			$("#oms_id").html("");
+			var dataHtml ="";
+			for(var i=0;i<dataList.length;i++){
+				var data = dataList[i];
+				dataHtml +="<div class='progressType'><h3>"+data.name+"</h3><div class='progress MyProgress'>";
+				if(data.isWarning){
+					dataHtml +="<div class='progress-bar progress-bar-alarm' style='width: "+data.precent+"%'>";
+				}else{
+					dataHtml +="<div class='progress-bar progress-bar-normal' style='width: "+data.precent+"%'>";
+
+				}
+				dataHtml +="<span class='sr-only'>40 Complete (danger)</span></div>";
+				if(data.isWarning){
+					dataHtml +="<span class='progress-info alarm-info'>"+data.value+"单</span></div></div>";
+				}else{
+					dataHtml +="<span class='progress-info '>"+data.value+"单</span></div></div>";
+
+				}
+			}
+			$("#oms_id").html(dataHtml);
      	},
      	error : function(){
      	}

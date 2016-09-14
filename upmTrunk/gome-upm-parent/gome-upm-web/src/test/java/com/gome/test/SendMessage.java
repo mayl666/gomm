@@ -12,7 +12,7 @@ public class SendMessage {
 	public static void main(String[] args) {
 		String date =formatter.format(new Date());
 		System.out.println(date);
-		date="2016-08-11 17:36:07";
+		date="2016-09-13 10:21:07";
 		
 		List<UpmMessage> list = new ArrayList<UpmMessage>();
 		UpmMessage u = null;
@@ -20,91 +20,91 @@ public class SendMessage {
 		u = new UpmMessage();
 		u.setName("DRAGON 正向单停在OD的订单");
 		u.setType("DRAGON-z-OD");
-		u.setCount(100l);
+		u.setCount(45l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("DRAGON 逆向单停在OD的订单");
 		u.setType("DRAGON-n-OD");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("OMS-DRG正向订单状态差异");
 		u.setType("OMS-DRG-z");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("OMS-DRG逆向订单状态差异");
 		u.setType("OMS-DRG-n");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("OMS-POP正向订单状态差异");
 		u.setType("OMS-POP-z");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("OMS-POP逆向订单状态差异");
 		u.setType("OMS-POP-n");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--G3PP返回状态不正确");
 		u.setType("Z-CO-G3PP");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--已发送SO至DRG");
 		u.setType("Z-CO-SO-R-DRG");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--已发送SO至POP");
 		u.setType("Z-CO-SO-R-POP");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--待客服处理");
 		u.setType("Z-CO-SO-kf");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--总数");
 		u.setType("Z-CO-SO-c");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--未发SO至DRG");
 		u.setType("Z-CO-SO-N-DRG");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 
 		u = new UpmMessage();
 		u.setName("正向单停在CO的订单--未发SO至POP");
 		u.setType("Z-CO-SO-N-POP");
-		u.setCount(100l);
+		u.setCount(46l);
 		u.setDate(date);
 		list.add(u);
 

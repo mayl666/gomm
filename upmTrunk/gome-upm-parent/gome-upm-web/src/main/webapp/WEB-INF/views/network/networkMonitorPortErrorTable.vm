@@ -24,7 +24,7 @@
 			<td><a href="javascript:void(0)" deviceId="$!sensor.deviceId" sensorId="$!sensor.sensorId" class="link_a sensorDetail">$!sensor.sensorName</a></td>
 			#if($!sensor.alarmType == "shutDown")
 			<td>故障</td>
-			#elseif($!sensor.alarmType == "flowOver")
+			#elseif($!sensor.alarmType == "overflow")
 			<td>异常</td>
 			#end
 			<!--

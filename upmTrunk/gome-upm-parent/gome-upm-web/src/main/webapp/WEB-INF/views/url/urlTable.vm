@@ -23,15 +23,8 @@
 	                               $!url.shortUrl
 	                               </td>
 
-	                               #if($!url.survival == 1)
-	                                <td class="null_red">存活</td>
-	                               #else 
-	                               		#if($!url.survival == 0)
-		                               		<td class="null_red">不存活</td>
-		                               #else
-	                               		<td class="null_red">匹配失败</td>
-	                               		#end
-	                               #end
+	                                <td class="null_red">$!url.survivalStr</td>
+	                               
 	                               <td>$!url.createTimeStr</td>
 	                               
 	                               #if($!url.status == 1)

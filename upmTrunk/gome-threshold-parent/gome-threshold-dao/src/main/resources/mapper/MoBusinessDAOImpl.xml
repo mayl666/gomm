@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.threshold.dao.MoBusinessDAO">
+	<!-- 热销商品排行榜 -->
+	<sql id="oms" >
+	oms_uat
+	</sql>
+	<sql id="catb" >
+	UAT_CATB_6
+	</sql>
+	<select id="searchGoodKindSort" resultType="MoBusiness" parameterType="MoBusiness">
+		SELECT *
+	  	FROM (SELECT OS.ITEM_THREE_CATEGORY_NAME name, SUM(OI.AMOUNT) amount
+	          FROM <include refid="oms"></include>.OMS_ORDER OO
+	         INNER JOIN <include refid="oms"></include>.OMS_ITEM OI ON OI.ORDER_ID = OO.ORDER_ID
+	         INNER JOIN <include refid="oms"></include>.OMS_ITEM_CATEGORY OS ON OS.COMMERCE_ITEM_ID =
+	                                                         OI.COMMERCE_ITEM_ID
+	         WHERE 1=1
+	         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		       and OO.SUBMITTED_DATE between #{startTime} and #{endTime}
+		     </if>
+	         GROUP BY OS.ITEM_THREE_CATEGORY_NAME
+	         ORDER BY SUM(OI.AMOUNT) DESC) tab
+	 	WHERE ROWNUM &lt; 6
+	</select>
+	<!-- 品牌排行 -->
+	<select id="searchGoodBrandSort" resultType="MoBusiness" parameterType="MoBusiness">
+	SELECT *
+	FROM (SELECT gb.BRAND_NAME name,
+	               SUM(OI.AMOUNT) amount
+	         FROM <include refid="oms"></include>.OMS_ORDER OO
+	         INNER JOIN <include refid="oms"></include>.OMS_ITEM OI ON OI.ORDER_ID = OO.ORDER_ID
+	         INNER JOIN <include refid="oms"></include>.OMS_SKU OS ON OS.COMMERCE_ITEM_ID =OI.COMMERCE_ITEM_ID
+	         inner join <include refid="catb"></include>.gome_dcs_prd_brand pb on pb.product_id=os.product_id
+	         inner join <include refid="catb"></include>.gome_brand gb on gb.brand_id=pb.prd_brand
+	         WHERE OI.TYPE = 0
+	         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and OO.SUBMITTED_DATE between #{startTime} and #{endTime}
+		     </if>
+	         GROUP BY gb.BRAND_NAME, gb.BRAND_CODE
+	         ORDER BY SUM(OI.AMOUNT) DESC)
+	 WHERE ROWNUM &lt; 4
+	</select>
+	<!-- 订单量 -->
+		<!-- 充值订单量 -->
+		<select id="getOrderAmountForPay" resultType="java.lang.Integer" parameterType="MoOrderRechargeBO">
+		    select count(1)
+		    FROM order_entity t
+		    WHERE 1=1
+		    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and t.create_time between #{startTime} and #{endTime}
+		    </if>
+		</select>
+		<!-- 非充值订单量 -->
+		<select id="getOrderAmountForNotPay" resultType="Integer" parameterType="MoBusiness">
+			select count(1)
+			from <include refid="oms"></include>.oms_order t
+			WHERE t.created_by_order IS NULL AND t.state NOT IN ('INCOMPLETE','INVISIBLE')
+			and t.site_id &lt;&gt;  'chongzhiSite'
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and t.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+
+		<!-- 支付成功订单量 -->
+		<select id="getOrderAmountForAlreadyPay" resultType="Integer" parameterType="MoBusiness">
+			select count(distinct sg.shipping_group_id) amount
+			from <include refid="oms"></include>.oms_order o
+			inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+			left join <include refid="oms"></include>.oms_payment_transaction t on t.trans_order_id=o.order_id
+			left join <include refid="oms"></include>.oms_payment_transaction t1 on t1.trans_order_id=sg.shipping_group_id
+			left join <include refid="oms"></include>.oms_payment_group pg on pg.payment_group_id=nvl(t.payment_group_id,t1.payment_group_id)
+			where o.created_by_order is null and pg.state = 'SETTLED'
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and o.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+		<!-- 妥投成功订单量 -->
+		<select id="getOrderAmountForDelivery" resultType="Integer" parameterType="MoBusiness">
+			select count(1) amount
+			from <include refid="oms"></include>.oms_order o
+			inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+			where o.created_by_order is null and sg.state='NO_PENDING_ACTION'
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and o.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+		<!-- Web端 -->
+		<select id="getOrderAmountForWeb" resultType="Integer" parameterType="MoBusiness">
+			select count(1) amount
+			from <include refid="oms"></include>.oms_order o
+			inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+			where o.created_by_order is null 
+			and o.site_id not in (
+			'wapRushBuySite','wapGroupOnSite','wapSite','wapVirtualCardSite','wapEntityCardSite','wapPresellSite','wapGiftSite','gomeLotteryWapSite','discountTicketWapSite','discountTicketWap','haiwaigouWapSite',
+			'mobileSite','mobileGroupOnSite','mobileRushBuySite','mobileVirtualCardSite','mobileEntityCardSite','mobilePresellSite','mobileGiftSite','haiwaigouMobileSite'
+			)
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and o.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+		<!-- Wap端 -->
+		<select id="getOrderAmountForWap" resultType="Integer" parameterType="MoBusiness">
+			select count(1) amount
+			from <include refid="oms"></include>.oms_order o
+			inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+			where o.created_by_order is null 
+			and o.site_id in (
+			'wapRushBuySite','wapGroupOnSite','wapSite','wapVirtualCardSite','wapEntityCardSite','wapPresellSite','wapGiftSite','gomeLotteryWapSite','discountTicketWapSite','discountTicketWap','haiwaigouWapSite'
+			)
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and o.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+		<!-- App端 -->
+		<select id="getOrderAmountForApp" resultType="Integer" parameterType="MoBusiness">
+			select count(1) amount
+			from <include refid="oms"></include>.oms_order o
+			inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+			where o.created_by_order is null 
+			and o.site_id in (
+			'mobileSite','mobileGroupOnSite','mobileRushBuySite','mobileVirtualCardSite','mobileEntityCardSite','mobilePresellSite','mobileGiftSite','haiwaigouMobileSite'
+			)
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		      and o.submitted_date between #{startTime} and #{endTime}
+		    </if>
+		</select>
+	<!-- 商品属性分类 -->
+	<select id="searchGoodProperty" resultType="MoBusiness" parameterType="MoBusiness">
+	SELECT DECODE(OI.MAS_LOC_TYPE,
+			1,'SMI',
+			2,'3PP',
+			3,'G3PP',
+			6,'B3PP',
+			OI.MAS_LOC_TYPE) name,
+	       SUM(OI.QUANTITY) amount
+	 FROM <include refid="oms"></include>.OMS_ORDER OO
+	 INNER JOIN <include refid="oms"></include>.OMS_ITEM OI ON OI.ORDER_ID = OO.ORDER_ID
+	 WHERE 1=1
+	 	<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+	      and OO.SUBMITTED_DATE between #{startTime} and #{endTime}
+	     </if>
+	 GROUP BY OI.MAS_LOC_TYPE
+	 ORDER BY SUM(OI.QUANTITY) DESC
+	</select>
+	<!-- 城市坐标 -->
+	<select id="getCityCoordinateList" resultType="MapCoordinate">
+		SELECT mc.id id,mc.`name` name,mc.x_axis xaxis,mc.y_axis yaxis
+		from mo_map_coordinate mc
+	</select>
+	<!-- 热门城市 -->
+	<select id="getCityBySales" resultType="MoBusiness" parameterType="MoBusiness">
+		select * from(
+		  select ga.city_name name,count(1) amount
+		  from <include refid="oms"></include>.oms_order o
+		  inner join <include refid="oms"></include>.oms_shipping_group sg on sg.order_id=o.order_id
+		  inner join <include refid="oms"></include>.oms_shipping_group_address ga on ga.shipping_group_id=sg.shipping_group_id
+		  where o.created_by_order is null
+		  <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+	      	and o.submitted_date between #{startTime} and #{endTime}
+		  </if>
+		  group by ga.city_name
+		  order by count(1) desc
+		)tab 
+		where rownum &lt; 6
+	</select>
+	<!-- 在线支付成功率 -->
+	<!-- 查询所有订单数量 -->
+	<select id="searchAllOrderCountHistory" resultType="MoBusiness" parameterType="MoBusiness">
+		SELECT mp.start_time startTime,mp.end_time endTime,mp.mo_count amount
+		from mo_payratio mp
+		where 1=1 and mp.type='all'
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		<![CDATA[ and #{startTime} <= mp.end_time  &&  #{endTime} > mp.end_time ]]>
+		</if>
+		order by mp.start_time
+	</select>
+	<!-- 查询成功在线支付的订单数量 -->
+	<select id="searchOneLineOrderCountHistory" resultType="MoBusiness" parameterType="MoBusiness">
+		SELECT mp.start_time startTime,mp.end_time endTime,mp.mo_count amount
+		from mo_payratio mp
+		where 1=1 and mp.type='onLine'
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+		<![CDATA[ and #{startTime} <= mp.end_time  &&  #{endTime} > mp.end_time ]]>
+		</if>
+		order by mp.start_time
+	</select>
+	<!-- 查询CPS数据 -->
+	<select id="searchCpsCount" resultType="java.lang.Integer" parameterType="MoOrderRechargeBO">
+		select count(1)
+		from <include refid="oms"></include>.oms_order_info tt
+		where tt.from_cps  =1
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+	      and tt.reserve_time between #{startTime} and #{endTime}
+	    </if>
+	</select>
+</mapper>

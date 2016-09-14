@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.threshold.dao.AlarmRangeMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.threshold.domain.AlarmRange" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="businessType" property="businessType" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List" >
+    id, businessType,type, uid, level,value,createTime, updateTime
+  </sql>
+  <!-- 分页查询 -->
+  <select id="selectAlarmRangeListByPage" resultMap="BaseResultMap" parameterType="com.gome.threshold.common.Page">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from alarm_range
+  	where 1=1 
+ 	<if test="conditions.id != null" >
+      and id = #{conditions.id,jdbcType=INTEGER} 
+    </if>  
+    <if test="conditions.businessType != null and conditions.businessType != '' " >
+      and businessType = #{conditions.businessType,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.type != null and conditions.type != '' " >
+      and type like CONCAT('%',#{conditions.type,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.uid != null" >
+      and uid = #{conditions.uid,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.level != null" >
+      and level = #{conditions.level,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.value != null" >
+      and value = #{conditions.value,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.createTime != null and conditions.createTime != '' " >
+      and createTime between #{conditions.createTime} and #{conditions.createTime}
+    </if>
+    <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
+      and updateTime between #{conditions.startTime} and #{conditions.endTime}
+    </if>
+    order by updateTime desc
+    <if test="start != null and pageSize != null">
+    	LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+  <!-- 根据条件查询 -->
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.threshold.domain.AlarmRange">
+  	select count(*) from alarm_range
+ 	where 1=1 
+ 	<if test="id != null" >
+      and id = #{id,jdbcType=INTEGER} 
+    </if>  
+    <if test="businessType != null and businessType != '' " >
+      and businessType = #{businessType,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null and type != '' " >
+    	and type like CONCAT('%',#{type,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="uid != null" >
+      and uid = #{uid,jdbcType=VARCHAR} 
+    </if>
+     <if test="level != null" >
+      and level = #{level,jdbcType=INTEGER}
+    </if>
+    <if test="value != null" >
+      and value = #{value,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and updateTime between #{startTime} and #{endTime}
+    </if>
+  </select>
+  <!-- 根据id查询 -->
+  <select id="selectAlarmRangeById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from alarm_range
+ 	where id = #{id} 
+  </select>
+  <!-- 根据对象查询 -->
+  <select id="selectAlarmRangeListByAlarmRange" resultMap="BaseResultMap" parameterType="com.gome.threshold.domain.AlarmRange">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from alarm_range
+  	where 1=1 
+ 	<if test="id != null" >
+      and id = #{id,jdbcType=INTEGER} 
+    </if>  
+    <if test="businessType != null and businessType != ''" >
+      and businessType = #{businessType,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null and type != ''" >
+    	and type like CONCAT('%',#{type,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="uid != null" >
+      and uid = #{uid,jdbcType=VARCHAR} 
+    </if>
+    <if test="level != null" >
+      and level = #{level,jdbcType=INTEGER}
+    </if>
+    <if test="value != null" >
+      and value = #{value,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and updateTime between #{startTime} and #{endTime}
+    </if>
+  </select>
+  <!-- 查询所有的业务类型 -->
+  <select id="selectAllBusinessTypes" resultMap="BaseResultMap">
+  	select distinct businessType from alarm_range
+  </select>
+  <!-- 根据业务类型查询相关类型 -->
+  <select id="selectTypesByBusiness" resultMap="BaseResultMap"  parameterType="java.lang.String">
+  	select distinct type from alarm_range
+  	where 1=1
+  	<if test="_parameter != null and  _parameter !=''" >
+     and businessType = #{businessType} 
+    </if>
+  	
+  </select>
+  <update id="updateAlarmRange" parameterType="com.gome.threshold.domain.AlarmRange" >
+    update alarm_range set
+    <if test="id != null" >
+      id = #{id,jdbcType=INTEGER} 
+    </if>
+    <if test="value != null" >
+      , value = #{value,jdbcType=VARCHAR}
+    </if>
+    <if test="uid != null" >
+      , uid = #{uid,jdbcType=VARCHAR}
+    </if>
+    <if test="updateTime != null" >
+      , updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    	<!-- 新增 -->
+ 	<insert id="insertAlarmRange" parameterType="com.gome.threshold.domain.AlarmRange" useGeneratedKeys="true" keyProperty="id">
+	    insert into alarm_range (id, uid, type, level, value, createTime, updateTime, businessType)
+	    values (#{id,jdbcType=INTEGER}, 
+	     #{uid,jdbcType=VARCHAR},
+	      #{type,jdbcType=VARCHAR},
+	      #{level,jdbcType=INTEGER},
+	      #{value,jdbcType=VARCHAR}, 
+	      #{createTime,jdbcType=TIMESTAMP},
+	      #{updateTime,jdbcType=TIMESTAMP},
+	      #{businessType,jdbcType=VARCHAR})
+    </insert>
+    <!-- 根据id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer" >
+      delete from alarm_range
+      where id = #{id,jdbcType=INTEGER}
+  </delete>
+</mapper> 

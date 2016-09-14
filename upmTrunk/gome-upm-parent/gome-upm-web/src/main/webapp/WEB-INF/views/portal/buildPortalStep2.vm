@@ -45,7 +45,7 @@
         <section class="content-header">
                 <a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/portal/get"> / 端口存活监控</a><a href="javascript:location.reload();"> / 创建端口存活监控配置点Key</a>
         </section>
-
+		<input type="hidden" id="alarmWay" value="$!alarmWay"/>
         <!-- Main content -->
         <section class="content">
             <div class="box" style="margin-top:20px;border: none;">

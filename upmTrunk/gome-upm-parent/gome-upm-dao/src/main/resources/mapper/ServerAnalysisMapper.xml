@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.upm.dao.ServerAnalysisMapper">
+	<resultMap id="BaseResultMap" type="com.gome.upm.domain.HostsInfo">
+		<id column="hostid" property="hostid" jdbcType="BIGINT" />
+		<result column="host" property="host" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="available" property="available" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="osType" property="osType" jdbcType="VARCHAR" />
+		<result column="projectName" property="projectName" jdbcType="VARCHAR" />
+		<result column="projectLeader" property="projectLeader" jdbcType="VARCHAR" />
+		<result column="applicationName" property="applicationName"
+			jdbcType="VARCHAR" />
+		<result column="applicationLeader" property="applicationLeader"
+			jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		hostid, host,available ,name,osType,projectName,projectLeader
+		,applicationName,applicationLeader,ip
+	</sql>
+	<select id="queryHostsList" resultMap="BaseResultMap"
+		parameterType="com.gome.upm.common.Page">
+		select
+		<include refid="Base_Column_List" />
+		from gm_hosts
+		where vType = #{conditions.vType,jdbcType=VARCHAR}
+		<if test="conditions.name != null">
+			AND name like CONCAT('%',#{conditions.name,jdbcType=VARCHAR},'%')
+		</if>
+		order by id desc,name asc,osType asc
+		<if test="start != null and pageSize != null">
+			LIMIT #{start},#{pageSize}
+		</if>
+	</select>
+	<!-- 查询总数量 -->
+	<select id="selectTotalResultByConditions" resultType="java.lang.Integer"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		select count(*) from gm_hosts
+		where vType = #{vType,jdbcType=VARCHAR}
+		<if test="name != null">
+			and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+	<select id="queryHostsInfoList" resultMap="BaseResultMap"
+		parameterType="com.gome.upm.common.Page">
+		select
+		<include refid="Base_Column_List" />
+		from gm_hosts
+		where vType = #{vType,jdbcType=VARCHAR}
+	</select>
+	<select id="queryHostDetail" resultType="com.gome.upm.domain.HostsInfo"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM gm_hosts
+		where hostid = #{hostid,jdbcType=BIGINT}
+		and vType =
+		#{vType,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryHostName" resultType="java.lang.String">
+		SELECT name FROM gm_hosts
+		where vType = #{vType,jdbcType=VARCHAR}
+	</select>
+	<select id="queryItemValueList" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		SELECT giv.`clock`,giv.`value_max` FROM
+		gm_items gi,gm_items_value giv
+		WHERE gi.`itemid` = giv.`itemid`
+		AND gi.`hostid` = #{hostid,jdbcType=BIGINT}
+		AND gi.`key_` = #{key_,jdbcType=VARCHAR}
+		AND vType = #{vType,jdbcType=VARCHAR}
+		order by giv.`clock` asc
+	</select>
+	<select id="queryItemValueListNew" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		SELECT giv.`clock`,giv.`value_avg` FROM
+		gm_items gi,gm_items_cpu_me_value giv
+		WHERE gi.`itemid` = giv.`itemid`
+		AND
+		gi.`hostid` = #{hostid,jdbcType=BIGINT}
+		AND gi.`key_` = #{key_,jdbcType=VARCHAR}
+		AND vType = #{vType,jdbcType=VARCHAR}
+		order by giv.`clock` asc
+	</select>
+	<select id="queryItemValueListPro" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		SELECT giv.`clock`,giv.`value_avg` FROM
+		gm_items gi,gm_items_pro_value giv
+		WHERE gi.`itemid` = giv.`itemid`
+		AND
+		gi.`hostid` = #{hostid,jdbcType=BIGINT}
+		AND gi.`key_` = #{key_,jdbcType=VARCHAR}
+		AND vType = #{vType,jdbcType=VARCHAR}
+		order by giv.`clock` asc
+	</select>
+
+	<select id="queryHost" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT h.hostid,h.host, h.status,h.available,h.name ,b.`ip`
+		FROM
+		`hosts` h ,interface b
+		WHERE h.`hostid` = b.`hostid`
+		and h.hostid =
+		#{hostid,jdbcType=BIGINT}
+	</select>
+	<select id="queryHostPro" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		SELECT h.hostid,h.host, h.status,h.available,h.name ,b.`ip`
+		FROM
+		`hosts` h ,interface b
+		WHERE h.`hostid` = b.`hostid`
+		and h.hostid =
+		#{hostid,jdbcType=BIGINT}
+	</select>
+	<select id="queryHostsInfo" resultType="com.gome.upm.domain.HostsInfo"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		SELECT hostid,host, status,available,name,ip
+		FROM
+		gm_hosts
+		WHERE ip = #{ip,jdbcType=VARCHAR}
+		and vType = #{vType,jdbcType=VARCHAR}
+	</select>
+	<insert id="addHostsInfo" parameterType="com.gome.upm.domain.HostsInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_hosts (hostid,
+		host,available ,name,osType,projectName,status
+		,applicationName,applicationLeader,ip,vType)
+		values
+		(#{hostid,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR},
+		#{available,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{osType,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{applicationName,jdbcType=VARCHAR},
+		#{applicationLeader,jdbcType=VARCHAR},
+		#{ip,jdbcType=VARCHAR},#{vType,jdbcType=VARCHAR})
+	</insert>
+	<insert id="addItemValue" parameterType="com.gome.upm.domain.ServerItemDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_items_value
+		(itemid, clock,value_min ,value_avg,value_max)
+		values
+		(#{itemid,jdbcType=BIGINT}, #{clock,jdbcType=BIGINT},
+		#{value_min,jdbcType=BIGINT}, #{value_avg,jdbcType=BIGINT},
+		#{value_max,jdbcType=BIGINT})
+	</insert>
+	<insert id="addItemValueNew" parameterType="com.gome.upm.domain.ServerItemDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_items_cpu_me_value
+		(itemid, clock,value_min ,value_avg,value_max)
+		values
+		(#{itemid,jdbcType=BIGINT}, #{clock,jdbcType=BIGINT},
+		#{value_min,jdbcType=BIGINT}, #{value_avg,jdbcType=BIGINT},
+		#{value_max,jdbcType=BIGINT})
+	</insert>
+	<insert id="addItemValuePro" parameterType="com.gome.upm.domain.ServerItemDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_items_pro_value
+		(itemid, clock,value_min ,value_avg,value_max)
+		values
+		(#{itemid,jdbcType=BIGINT}, #{clock,jdbcType=BIGINT},
+		#{value_min,jdbcType=BIGINT}, #{value_avg,jdbcType=BIGINT},
+		#{value_max,jdbcType=BIGINT})
+	</insert>
+	<insert id="addItem" parameterType="com.gome.upm.domain.ServerItemDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_items (itemid,
+		hostid,key_,vType)
+		values (#{itemid,jdbcType=BIGINT},
+		#{hostid,jdbcType=BIGINT},
+		#{key_,jdbcType=VARCHAR},#{vType,jdbcType=VARCHAR})
+	</insert>
+	<select id="queryItems" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		SELECT itemid, hostid,key_
+		FROM gm_items
+		WHERE itemid = #{itemid,jdbcType=BIGINT}
+		and hostid = #{hostid,jdbcType=BIGINT}
+		and key_ = #{key_,jdbcType=VARCHAR}
+		and vType = #{vType,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateHostsInfo" parameterType="com.gome.upm.domain.HostsInfo">
+		update gm_hosts set
+		<if test="hostid != null">
+			hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+		<if test="host != null">
+			, host = #{host,jdbcType=VARCHAR}
+		</if>
+		<if test="available != null">
+			, available = #{available,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			, status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			, name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="osType != null">
+			, osType = #{osType,jdbcType=VARCHAR}
+		</if>
+		<if test="projectName != null">
+			, projectName = #{projectName,jdbcType=VARCHAR}
+		</if>
+		<if test="projectLeader != null">
+			, projectLeader = #{projectLeader,jdbcType=VARCHAR}
+		</if>
+		<if test="applicationName != null">
+			, applicationName = #{applicationName,jdbcType=VARCHAR}
+		</if>
+		<if test="applicationLeader != null">
+			, applicationLeader =
+			#{applicationLeader,jdbcType=VARCHAR}
+		</if>
+		<if test="ip != null">
+			, ip = #{ip,jdbcType=VARCHAR}
+		</if>
+		where hostid = #{hostid,jdbcType=BIGINT}
+	</update>
+
+	<select id="queryValue" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		 <![CDATA[SELECT h.hostid,i.`itemid`,i.`key_`,t.`clock`,t.`value_max`,t.`value_avg`,t.`value_min`
+		FROM `hosts` h,items i,trends_uint t
+		WHERE h.`hostid` = i.`hostid`
+		AND i.`itemid` = t.`itemid`
+		AND i.`key_` = #{key_,jdbcType=VARCHAR}
+		AND t.`clock` = #{clock,jdbcType=BIGINT}
+		and h.hostid = #{hostid,jdbcType=BIGINT}]]>
+	</select>
+	<!-- -->
+	<select id="queryValueList" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		 <![CDATA[SELECT h.hostid,i.`itemid`,i.`key_`,t.`clock`,t.`value_max`,t.`value_avg`,t.`value_min`
+		FROM `hosts` h,items i,trends t
+		WHERE h.`hostid` = i.`hostid`
+		AND i.`itemid` = t.`itemid`
+		AND i.`key_` = #{key_,jdbcType=VARCHAR}
+		AND t.`value_max` < #{value,jdbcType=BIGINT} 
+		AND t.`clock` = #{clock,jdbcType=BIGINT}
+		]]>
+		<if test="hostid != null">
+			and h.hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+	</select>
+	<!--zabbix测试服务器 -->
+	<select id="queryCpuValueList" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		 <![CDATA[
+		 SELECT h.hostid,i.`itemid`,i.`key_`,t.`clock`,t.`value_max`,t.`value_avg`,t.`value_min`
+		FROM `hosts` h,items i,trends t
+		WHERE h.`hostid` = i.`hostid`
+		AND i.`itemid` = t.`itemid`
+		AND i.`key_` = #{key_,jdbcType=VARCHAR}
+		AND t.`value_avg` > #{value,jdbcType=BIGINT} 
+		AND t.`clock` = #{clock,jdbcType=BIGINT}
+		]]>
+		<if test="hostid != null">
+			and h.hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+	</select>
+	<!--zabbix生产服务器 -->
+	<select id="queryProCpuValueList" resultType="com.gome.upm.domain.ServerItemDetail"
+		parameterType="com.gome.upm.domain.ServerItemDetail">
+		 <![CDATA[
+		 SELECT h.hostid,i.`itemid`,i.`key_`,t.`clock`,t.`value_max`,t.`value_avg`,t.`value_min`
+		FROM `hosts` h,items i,trends t
+		WHERE h.`hostid` = i.`hostid`
+		AND i.`itemid` = t.`itemid`
+		AND i.`key_` = #{key_,jdbcType=VARCHAR}
+		AND t.`value_avg` > #{value,jdbcType=BIGINT} 
+		AND t.`clock` = #{clock,jdbcType=BIGINT}
+		]]>
+		<if test="hostid != null">
+			and h.hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+	</select>
+	<select id="queryMaxCpuValue" resultType="java.lang.String"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		<![CDATA[SELECT  MAX(giv.`value_max`) as value_max
+			FROM  gm_hosts gh ,gm_items gi ,gm_items_value giv
+			 WHERE gh.`hostid` = gi.`hostid`
+			 AND gi.`itemid` = giv.`itemid`
+			 AND  gi.`key_` = #{key_,jdbcType=VARCHAR}
+			 and gh.hostid = #{hostid,jdbcType=BIGINT}
+			 and gh.vType = #{vType,jdbcType=VARCHAR}
+			AND gi.`vType` = #{vType,jdbcType=VARCHAR}
+		]]>
+		<if test="time_from != null and time_from != 0">
+			<![CDATA[ AND clock > #{time_from,jdbcType=BIGINT}]]>
+		</if>
+		<if test="time_till != null and time_till != 0">
+			 <![CDATA[AND clock < #{time_till,jdbcType=BIGINT}]]>
+		</if>
+	</select>
+	<select id="querySumCpuValue" resultType="java.lang.String"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		<![CDATA[
+		SELECT  COUNT(giv.`value_avg`) as value_max
+			FROM  gm_hosts gh ,gm_items gi ,gm_items_cpu_me_value giv
+			 WHERE gh.`hostid` = gi.`hostid`
+			 AND gi.`itemid` = giv.`itemid`
+		    AND giv.`value_avg` > #{value,jdbcType=BIGINT} 
+			 AND  gi.`key_` = #{key_,jdbcType=VARCHAR}
+			 and gh.hostid = #{hostid,jdbcType=BIGINT}
+			 and gh.vType = #{vType,jdbcType=VARCHAR}
+			 AND gi.`vType` = #{vType,jdbcType=VARCHAR}
+		]]>
+		<if test="time_from != null and time_from != 0">
+			<![CDATA[ AND clock > #{time_from,jdbcType=BIGINT}]]>
+		</if>
+		<if test="time_till != null and time_till != 0">
+			 <![CDATA[AND clock < #{time_till,jdbcType=BIGINT}]]>
+		</if>
+	</select>
+	<select id="queryProSumCpuValue" resultType="java.lang.String"
+		parameterType="com.gome.upm.domain.HostsInfo">
+		<![CDATA[
+		SELECT  COUNT(giv.`value_avg`) as value_max
+			FROM  gm_hosts gh ,gm_items gi ,gm_items_pro_value giv
+			 WHERE gh.`hostid` = gi.`hostid`
+			 AND gi.`itemid` = giv.`itemid`
+		    AND giv.`value_avg` > #{value,jdbcType=BIGINT} 
+			 AND  gi.`key_` = #{key_,jdbcType=VARCHAR}
+			 and gh.hostid = #{hostid,jdbcType=BIGINT}
+			 and gh.vType = #{vType,jdbcType=VARCHAR}
+			 AND gi.`vType` = #{vType,jdbcType=VARCHAR}
+		]]>
+		<if test="time_from != null and time_from != 0">
+			<![CDATA[ AND clock > #{time_from,jdbcType=BIGINT}]]>
+		</if>
+		<if test="time_till != null and time_till != 0">
+			 <![CDATA[AND clock < #{time_till,jdbcType=BIGINT}]]>
+		</if>
+	</select>
+	
+	<select id="queryForExportExcel" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.HostsInfo">
+		select
+		<include refid="Base_Column_List" />
+		from gm_hosts
+		where vType = #{vType,jdbcType=VARCHAR}
+		<if test="name != null">
+			AND name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+		order by id desc,name asc,available desc
+	</select>
+</mapper>

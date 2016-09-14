@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.upm.dao.OracleDelayRemoteMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.upm.domain.OracleDelayRemote" >
+    <result column="DBID" property="dbID" jdbcType="INTEGER" />
+    <result column="DB_NAME" property="dbName" jdbcType="VARCHAR" />
+    <result column="STD_ADDR" property="slaveAddr" jdbcType="VARCHAR" />
+    <result column="STD_TNS" property="slaveTbs" jdbcType="VARCHAR" />
+    <result column="DELAY" property="delayStr" jdbcType="VARCHAR" />
+    <result column="PRI_ADDR" property="masterAddr" jdbcType="VARCHAR" />
+    <result column="PRI_TNS" property="masterTbs" jdbcType="VARCHAR" />
+    <!-- 
+    <result column="INSERT_TIME" property="createTime" jdbcType="TIMESTAMP" />
+     -->
+    <result column="SAMPLE_DATE" property="updateTimeStr" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    DBID, DB_NAME, STD_ADDR,
+    STD_TNS, DELAY, PRI_ADDR, PRI_TNS, SAMPLE_DATE
+  </sql>
+  <select id="selectOracleDelayRemoteListByPage" resultMap="BaseResultMap" parameterType="com.gome.upm.common.Page">
+  	select ttt.* from 
+  	(select tt.*, ROWNUM rowno from 
+  	(select t.* from GAMP.DG_LAST_DELAY t
+  	where 1=1 
+  	<if test="conditions.dbID != null and conditions.dbID != ''" >
+      and t.DBID = #{conditions.dbID,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.dbName != null and conditions.dbName != ''" >
+      and t.DB_NAME like '%'||#{conditions.dbName,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+	<if test="conditions.slaveAddr != null and conditions.slaveAddr != ''" >
+      and t.STD_ADDR like '%'||#{conditions.slaveAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="conditions.slaveTbs != null and conditions.slaveTbs != ''" >
+      and t.STD_TNS like '%'||#{conditions.slaveTbs,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="conditions.masterAddr != null and conditions.masterAddr != ''" >
+      and t.PRI_ADDR like '%'||#{conditions.masterAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="conditions.masterTbs != null and conditions.masterTbs != ''" >
+      and t.PRI_TNS like '%'||#{conditions.masterTbs,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
+      and t.SAMPLE_DATE between #{conditions.startTime} and #{conditions.endTime}
+    </if>
+    order by t.SAMPLE_DATE desc) tt 
+    where ROWNUM &lt;= #{endIndex}) ttt 
+    where ttt.rowno &gt;= #{startIndex}
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.OracleDelayRemote">
+  	select count(*) from GAMP.DG_LAST_DELAY t
+ 	where 1=1 
+ 	<if test="dbID != null and dbID != ''" >
+      and t.DBID = #{dbID,jdbcType=INTEGER}
+    </if>
+    <if test="dbName != null and dbName != ''" >
+      and t.DB_NAME like '%'||#{dbName,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+	<if test="slaveAddr != null and slaveAddr != ''" >
+      and t.STD_ADDR like '%'||#{slaveAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="slaveTbs != null and slaveTbs != ''" >
+      and t.STD_TNS like '%'||#{slaveTbs,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and t.PRI_ADDR like '%'||#{masterAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="masterTbs != null and masterTbs != ''" >
+      and t.PRI_TNS like '%'||#{masterTbs,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and t.SAMPLE_DATE between #{startTime} and #{endTime}
+    </if>
+  </select>
+  <select id="selectOracleDelayRemoteListByOracleDelayRemote" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.OracleDelayRemote">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from GAMP.DG_LAST_DELAY t 
+  	where 1=1 
+ 	<if test="dbID != null and dbID != ''" >
+      and t.DBID = #{dbID,jdbcType=INTEGER}
+    </if>
+    <if test="dbName != null and dbName != ''" >
+      and t.DB_NAME = #{dbName,jdbcType=VARCHAR}
+    </if>
+	<if test="slaveAddr != null and slaveAddr != ''" >
+      and t.STD_ADDR = #{slaveAddr,jdbcType=VARCHAR}
+    </if>
+    <if test="slaveTbs != null and slaveTbs != ''" >
+      and t.STD_TNS = #{slaveTbs,jdbcType=VARCHAR}
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and t.PRI_ADDR = #{masterAddr,jdbcType=VARCHAR}
+    </if>
+    <if test="masterTbs != null and masterTbs != ''" >
+      and t.PRI_TNS = #{masterTbs,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and t.SAMPLE_DATE between #{startTime} and #{endTime}
+    </if>
+  </select>
+</mapper> 

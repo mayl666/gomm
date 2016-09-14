@@ -15,9 +15,9 @@ import java.util.Properties;
 public class AlarmRecord {
 	private DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	private Properties props = new Properties();
+	private static Properties props = new Properties();
 	
-	{
+	static {
 		try {
 //			System.out.println("path:" + AlarmRecord.class.getClassLoader().getResource("alarm.properties").getPath());
 			InputStream in = AlarmRecord.class.getClassLoader().getResourceAsStream("alarm.properties");
@@ -26,6 +26,9 @@ public class AlarmRecord {
 			e.printStackTrace();
 		}
 	}
+	
+	/**编号（导出时用到） */
+	private Integer num;
 	
 	/** 主键ID */
 	private Long id;
@@ -192,6 +195,14 @@ public class AlarmRecord {
 
 	public void setLevelStr(String levelStr) {
 		this.levelStr = levelStr;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
 	}
 
 }

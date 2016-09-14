@@ -1,0 +1,82 @@
+<script type="text/javascript">
+$(function () {
+	initoneWeek();
+	initoneWeekData();
+});
+
+function initoneWeekData(){
+	//开始时间
+	var startDate = new Date();
+ 	var startTimeStr=startDate.Format('yyyy-MM-dd');
+ 	reloadoneWeekData(startTimeStr);
+}
+var highChart_oneWeek;
+var options_oneWeek;
+var config_oneWeek={};
+function initoneWeek(){
+	options_oneWeek = {
+        chart: {
+            type: 'column',
+            renderTo: 'highchart_oneWeek'
+        },
+        title: {
+            text: ''    //by wangxiaye  去掉标题
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: [
+                '所有类型订单，状态大量停留在OD'
+            ]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '订单',
+            data: []
+        }]
+	}
+	copy(config_oneWeek,options_oneWeek);
+}
+function searchoneWeekData(){
+	var startTimeStr=$('#startTimeoneWeek').val();
+ 	reloadoneWeekData(startTimeStr);
+}
+function reloadoneWeekData(stoneWeek){
+	var url="${rc.contextPath}/monitoDragon/getOneWeekList.do";
+	$.ajax({
+		url: url,
+		type:"POST",
+		data:{'startTime':stoneWeek},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+			var dataList=eval(data);
+			copy(options_oneWeek,config_oneWeek);
+			options_oneWeek.series[0].data=dataList;
+			highChart_oneWeek = new Highcharts.Chart(options_oneWeek);
+     	},
+     	error : function(){
+     	}
+	});
+}
+</script>

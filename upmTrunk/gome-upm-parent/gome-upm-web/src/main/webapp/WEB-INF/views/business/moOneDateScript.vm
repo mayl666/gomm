@@ -1,0 +1,85 @@
+<script type="text/javascript">
+$(function () {
+	initone();
+	initoneData();
+});
+
+function initoneData(){
+	//开始时间
+	var startDate = new Date();
+ 	var startTimeStr=startDate.Format('yyyy-MM-dd');
+ 	reloadoneData(startTimeStr);
+}
+var highChart_one;
+var options_one;
+var config_one={};
+function initone(){
+	options_one = {
+        chart: {
+            type: 'column',
+            renderTo: 'highchart_one'
+        },
+        title: {
+            text: ''    //by wangxiaye  去掉标题
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: [
+                'G3PP订单状态大量停在PR',
+                'G3PP订单状态停在DH',
+                'G3PP订单状态停在CCO',
+                '订单状态大量停在PR'
+            ]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '订单',
+            data: []
+        }]
+	}
+	copy(config_one,options_one);
+}
+function searchoneData(){
+	var startTimeStr=$('#startTimeone').val();
+ 	reloadoneData(startTimeStr);
+}
+function reloadoneData(stone){
+	var url="${rc.contextPath}/monitoDragon/getOneDateList.do";
+	$.ajax({
+		url: url,
+		type:"POST",
+		data:{'startTime':stone},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+			var dataList=eval(data);
+			copy(options_one,config_one);
+			options_one.series[0].data=dataList;
+			highChart_one = new Highcharts.Chart(options_one);
+     	},
+     	error : function(){
+     	}
+	});
+}
+</script>

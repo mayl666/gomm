@@ -191,7 +191,7 @@ var createUrl = {
 			//var isDefaultCode = $("input[name='isDefaultCode']:checked").val();
 			var isDefaultCode = "1";
 			var returnCode = $("#returnCode").val();
-			
+			var alarmWay = $("#alarmWay").val();
 			
 			//var url = contextPath+"/url/create/step3?postParameter="+postParameter+"&urlAddress="+urlAddress+"&accFre="+accFre+"&accTimeOut="+accTimeOut+"&timeOutNum="+timeOutNum+"&alarmInter="+alarmInter+"&method="+method+"&resContent="+resContent+"&isContainsCon="+isContainsCon+"&isDefaultCode="+isDefaultCode+"&returnCode="+returnCode;
 			var data ={
@@ -205,7 +205,8 @@ var createUrl = {
 				'resContent':resContent,
 				'isContainsCon':isContainsCon,
 				'isDefaultCode':isDefaultCode,
-				'returnCode':returnCode
+				'returnCode':returnCode,
+				'alarmWay':alarmWay
 			};
 			
 //			if(urlAddress == "" ){
@@ -297,7 +298,7 @@ var createUrl = {
 											
 											return flag;
 										}else{
-											$("#urlAddress").siblings(".info_span").show().text("监控地址地址已存在");
+											$("#urlAddress").siblings(".info_span").show().text("监控地址已存在");
 											$("#urlAddress").focus();
 											return false;
 										}

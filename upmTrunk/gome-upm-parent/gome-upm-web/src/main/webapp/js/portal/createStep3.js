@@ -6,6 +6,14 @@ $(function(){
 	$("#previous-step").click(function(){
 		createPortal.controller.previousStep();
 	});
+	$("input[name='alarmWay']:radio").change(function(){
+		var alarmWay =$("input[name='alarmWay']:checked").val();
+		if(alarmWay=='no'){
+			$("#inlineCheckbox1").removeAttr("checked");
+		}else{
+			$("#inlineCheckbox1").prop("checked",true);
+		}
+	});
 });
 function StandardPost (url,args) 
 {
@@ -92,11 +100,13 @@ var createPortal = {
 					var monitorType = $("#monitorType").val();
 					var overtimes = $("#overtimes").val();
 					var frequency = $("#frequency").val();
+					var alarmWay =$("input[name='alarmWay']:checked").val();
 					var data ={
 						'portalAddress':portalAddress,
 						'monitorType':monitorType,
 						'timeOutNum':overtimes,
-						'accFre':frequency
+						'accFre':frequency,
+						'alarmWay':alarmWay
 					}
 					StandardPost(contextPath+'/portal/create/step2',data);
 			 }  

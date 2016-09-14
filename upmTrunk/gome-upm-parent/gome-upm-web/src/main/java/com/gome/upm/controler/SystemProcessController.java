@@ -79,13 +79,13 @@ public class SystemProcessController {
 				
 			}
 			model.setViewName("/system/systemProcessSurvivalMonitor");
-			float heath = 0.0f;
-			String result = "0.0";
+			int heath = (validCount*100)/(validCount+inValidCount);
+			/*String result = "0.0";
 			DecimalFormat df=new DecimalFormat("0.0");
 			if(validCount > 0){
 				heath = (float)(validCount*100)/(validCount+inValidCount);
 				result = df.format(heath);
-			}
+			}*/
 			
 			model.addObject("leftMenu", "systemMenu");
 			model.addObject("page", page);
@@ -93,7 +93,7 @@ public class SystemProcessController {
 			model.addObject("text", text);
 			model.addObject("validCount", validCount);
 			model.addObject("inValidCount", inValidCount);
-			model.addObject("heath",result);
+			model.addObject("heath",heath);
 		}catch(Exception e){
 			logger.error("error", e);
 			model.setViewName("/error");

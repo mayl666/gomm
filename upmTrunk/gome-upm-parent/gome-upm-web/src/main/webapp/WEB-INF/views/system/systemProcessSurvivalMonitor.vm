@@ -55,13 +55,22 @@
         <!-- Main content -->
         <section class="content">
         	<div class="topView">
-        		<h2>健康率：<span style="color: #9c8ade;">$!heath%</span></h2>
-	        	<div id="system_health_index" style="width: 32%;margin-bottom: 40px;"></div>
-	        	<div class="health_status_count">
-	        		<span>异常：<a href="${rc.contextPath}/system/warning">$!inValidCount</a></span>
-	        		<span style="margin-left: 30px;">正常：<a style="text-decoration: none;">$!validCount</a></span>
-	        		
-	        	</div>
+        		<div class="health_panl fl">
+        			<div><p class="health_txt fl">健康指数</p><p class="health_numP fl">$!heath</p></div>
+        		</div><!--health_panl end-->
+        		<div class="health_progress fl">
+	        		<div class="progress" style="width: 100%;">
+						<div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="78" style="width: $!heath%">
+						  <span class="sr-only">35% Complete (success)</span>
+					    </div>
+				    </div><!--progress end-->	
+					<p class="progress_txt">
+						<span class="unusual">异常:<a href="${rc.contextPath}/system/warning"><strong>$!inValidCount</strong></a></span>
+						<span class="usual">正常:<strong>$!validCount</strong></span> 
+					</p>
+        		
+	        	
+           </div>
         	</div>
         	<div class="toolbar" style="clear: both;">
                 <h2 class="list_table_title" style="line-height: 140px;">系统进程存活监控列表</h2>
@@ -106,7 +115,7 @@
 <script src="${rc.contextPath}/js/system/allSystem.js" type="text/javascript"></script>
 <script src="${rc.contextPath}/js/highcharts.js" type="text/javascript"></script>
 <script>
-system_health_index
+<!--system_health_index-->
 $(function(){
 	//健康指数
 	draw_system_health_index();

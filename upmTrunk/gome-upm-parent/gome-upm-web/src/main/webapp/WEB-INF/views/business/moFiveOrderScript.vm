@@ -1,0 +1,222 @@
+<script type="text/javascript">
+//5分钟订单
+var waitFiveOrderRun;
+var timeFiveOrderflg = false; //启动及关闭按钮  
+function timeFiveOrderRun(){
+	if(timeFiveOrderflg){return ;}
+	addFiveOrderData();
+	waitFiveOrderRun=setTimeout(timeFiveOrderRun,1000*60*5); //time是指本身,延时递归调用自己,100为间隔调用时间,单位毫秒
+}
+//等待时间----时间价格为intervalTime分钟
+function waitTimeFiveOrder(){
+	//获取结束时间
+	var endTimeNow=new Date();
+	var endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
+	var wwww=new Date(endTimeStr);
+	//下个触发查询时间--5分钟后
+	wwww=wwww.DateAdd('n',5);
+	//layer.msg(wwww.Format('yyyy-MM-dd HH:mm:ss'));
+	//计算当前时间和下个查询时间的时间差
+	var waitTime=wwww-new Date();
+	//等待时间差
+	setTimeout(function(){
+		timeFiveOrderRun();
+	},waitTime);
+}
+var FiveOrderDate;
+var FiveOrderHighChart;
+var timeFiveOrderCon=false;
+$(function () {
+	initFiveOrder();
+	initFiveOrderData();
+});
+var options_FiveOrder;
+var config_FiveOrder={};
+function initFiveOrderData(){
+	var obj=getSearchHour(1);
+    var startTimeStr=obj.startTime;
+    var endTimeStr=obj.endTime;
+    reloadFiveOrderData(startTimeStr,endTimeStr,false);
+}
+function initFiveOrder(){
+	Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+	options_FiveOrder = {
+		chart: {
+            type: 'line',
+            backgroundColor:"#FFF",
+            renderTo: 'container_FiveOrder',  //图表放置的容器，一般在html中放置一个DIV，获取DIV的id属性值
+            animation: Highcharts.svg, // don't animate in old IE
+            marginRight: 0, //对容器的右内边距
+            animation:true,
+            events: {
+                load: function () {
+                	waitTimeFiveOrder();
+                }
+            }
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+        	type: 'datetime',
+            tickPixelInterval: 5,
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            },
+            title: {
+    			style: {
+    				color: '#AAA',
+    				font: 'bolder 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            title: {
+	                     text: ''
+	                 }
+        },
+        //显示头
+        tooltip: {
+            formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+                    Highcharts.numberFormat(this.y, 0);
+            },
+            backgroundColor: {
+    			linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+    			stops: [
+    				[0, 'rgba(96, 96, 96, .8)'],
+    				[1, 'rgba(16, 16, 16, .8)']
+    			]
+    		},
+    		borderWidth: 0,
+    		style: {
+    			color: '#FFF'
+    		}
+        },
+        credits:{ //右下角超链接设置
+            enabled: false
+        },
+        series:[{
+        	name: '订单',
+        	color:'#9c8ade',
+        	data:[]
+        }]
+	}
+	copy(config_FiveOrder,options_FiveOrder);
+}
+function searchFiveOrderData(){
+	timeFiveOrderflg=true;
+	//停止5分钟查询
+	clearTimeout(waitFiveOrderRun);
+	var startTimeStr=$('#startTimeFiveOrder').val();
+	var endTimeStr=$('#endTimeFiveOrder').val();
+	
+ 	if(startTimeStr==''){
+		//获取结束时间
+		startTimeStr=new Date();
+		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60;  
+		startTimeStr.setTime(yesterday_milliseconds);     
+		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
+		$("#startTimeFiveOrder").val(startTimeStr);
+	}
+	var endTimeStr=$('#endTimeFiveOrder').val();
+	if(endTimeStr==''){
+		//获取结束时间
+		endTimeNow=new Date();
+		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
+		$("#endTimeFiveOrder").val(endTimeStr);
+	}
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeFiveOrder").focus();
+			return ; 
+	    }  
+		
+	}
+	/**if(urlStartTime==''&&endTime==''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeFiveOrder").focus();
+		return ;
+	}
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeFiveOrder").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeFiveOrder").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeFiveOrder").focus();
+			return ; 
+	    }  
+		
+	}**/
+	startTimeStr=startTimeStr.replace(/-/g,"/");
+ 	var oDate1 = new Date(startTimeStr);
+ 	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
+ 	
+ 	endTimeStr=endTimeStr.replace(/-/g,"/");
+ 	var oDate2 = new Date(endTimeStr);
+ 	endTimeStr=oDate2.Format('yyyy-MM-dd HH:m5:s0');
+ 	reloadFiveOrderData(startTimeStr,endTimeStr,true);
+}
+function addFiveOrderData(){
+	var url="${rc.contextPath}/monitoBusiness/getFiveOrderForTime.do";
+	var data='';
+	$.ajax({ 
+		url: url,
+		type:"POST",
+		data:{startTime:FiveOrderDate},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+			var obj=eval(data);
+			FiveOrderDate=obj[0];
+			FiveOrderHighChart.series[0].addPoint([obj[0], obj[1]], false, true);
+			FiveOrderHighChart.redraw();
+     	},
+     	error : function(){
+     	}
+	});
+}
+function reloadFiveOrderData(stLogin,etLogin,waitTimeReload){
+	var payUrl="${rc.contextPath}/monitoBusiness/getFiveOrderForTime.do";
+	$.ajax({
+		url: payUrl,
+		type:"POST",
+		data:{'startTime':stLogin,'endTime':etLogin},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+		debugger;
+			var dataList=eval(data);
+			FiveOrderDate=dataList[dataList.length-1][0];
+			copy(options_FiveOrder,config_FiveOrder);
+			options_FiveOrder.series[0].data=dataList;
+			if(waitTimeReload){
+				options_FiveOrder.chart.events.load=function(){};
+			}
+			FiveOrderHighChart = new Highcharts.Chart(options_FiveOrder);
+     	},
+     	error : function(){
+     	}
+	});
+}
+</script>

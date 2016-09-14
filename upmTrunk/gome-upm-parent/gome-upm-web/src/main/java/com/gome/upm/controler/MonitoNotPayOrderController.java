@@ -32,6 +32,8 @@ public class MonitoNotPayOrderController extends AbsBaseController{
 	private MoOrderNotRechargeDAO moOrderNotRechargeDAO;
 	@Autowired
 	private MoNotPayDAO moNotPayDAO;
+	//和MonitoBusiness的系数一样
+	final  int xishu=13;
 	public void setMoOrderNotRechargeDAO(MoOrderNotRechargeDAO moOrderNotRechargeDAO) {
 		this.moOrderNotRechargeDAO = moOrderNotRechargeDAO;
 	}
@@ -122,7 +124,7 @@ public class MonitoNotPayOrderController extends AbsBaseController{
 		searchbo.setEndTime(endTime);
 		List<MoOrderNotRechargeBO> li=moOrderNotRechargeDAO.searchMoOrderNotRechargeList(searchbo);
 		for(MoOrderNotRechargeBO bo:li){
-			map.put(bo.getStartTime().getTime(), bo.getCount());
+			map.put(bo.getStartTime().getTime(), bo.getCount()*xishu);
 		}
 	}
 	/**
@@ -158,9 +160,9 @@ public class MonitoNotPayOrderController extends AbsBaseController{
 		
 		Integer v3=moNotPayDAO.searchMoNotPayCountByTime(notPayVO);
 		
-		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1});
-		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2});
-		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3});
+		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1*xishu});
+		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2*xishu});
+		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3*xishu});
 		renderData(response, JsonUtils.Object2Json(reList));
 	}
 }

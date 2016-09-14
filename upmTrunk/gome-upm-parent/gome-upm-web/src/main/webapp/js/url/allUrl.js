@@ -1,7 +1,7 @@
 $(function() {
 	var normal = $("#normal_id").text();
 	var error = $("#error_id").text();
-	draw_url_health_index(parseInt(normal), parseInt(error));
+	//draw_url_health_index(parseInt(normal), parseInt(error));
 	// 删除url
 	$("#btn-del").click(function() {
 		allUrl.controller.delUrl();
@@ -9,10 +9,7 @@ $(function() {
 	$("#btn_search").click(function() {
 		allUrl.controller.search();
 	});
-	$("#import_submit").click(function(){
 	
-		importExcel();
-	})
 
 	$("#defaultReturnCode").on("click", function() {
 		allUrl.service.defaultReturnCode();
@@ -21,26 +18,7 @@ $(function() {
 	$("#customReturnCode").on("click", function() {
 		allUrl.service.customReturnCode();
 	});
-	$("#inputContent").blur(function(){
-		   var inputContent =$("#inputContent").val();
-		   if(inputContent.length>0){
-			   $("#incloude_id").show();
-			   return ;
-		   }
-		   $("#incloude_id").hide();
-	   });
-	$("#inputContent").mouseout(function(){
-		   var inputContent =$("#inputContent").val();
-		   if(inputContent.length>0){
-			   $("#incloude_id").show();
-			   return ;
-		   }
-		   $("#incloude_id").hide();
-	   });
-
-	$("#returnCode").change(function(){
-		regCode();
-	});
+	
 	allUrl.service.init();
 
 });
@@ -211,6 +189,7 @@ var allUrl = {
 			allUrl.controller.page();
 			allUrl.controller.editUrl();
 			allUrl.controller.editUrlSubmit();
+			loadBind();
 		},
 		getCheckedUrl : function() {
 			var ids = "";
@@ -251,13 +230,7 @@ var allUrl = {
 							});
 		},
 		getCheckedAlarm : function() {
-			var ids = "";
-			$("input[name='alarmWay']:radio").each(function() {
-				if ($(this).is(":checked")) {
-					ids += $(this).val() + ",";
-				}
-			});
-			return ids.substring(0, ids.length - 1);
+			return $("input[name='alarmWay']:checked").val();
 		},
 		alarmCheckedVari : function() {
 			$(".list_table").on("click", "#inlineCheckbox1", function() {
@@ -278,7 +251,6 @@ var allUrl = {
 				dataType : 'html',
 				data : {},
 				success : function(data) {
-					console.info(data);
 					$(".content-wrapper").empty();
 					$(".content-wrapper").append(data);
 				},
@@ -308,7 +280,6 @@ var allUrl = {
 						"id" : ids
 					},
 					success : function(data) {
-						console.info(data);
 						if (data.code == 1) {
 							layer.msg("删除成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 								window.location.href=contextPath+"/url/get";
@@ -339,7 +310,6 @@ var allUrl = {
 						"status" : status
 					},
 					success : function(data) {
-						console.info(data);
 						if (data.code == 1) {
 							layer.msg('操作成功', {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 								refresh();
@@ -374,12 +344,12 @@ var allUrl = {
 						"pageNo" : pageNo
 					},
 					success : function(data) {
-						console.info(data);
 						var bool = data.indexOf("sessionTimeOut");
 						if (bool < 0) {
 							$(".list_table").empty();
 							$(".list_table").append(data);
 							allUrl.service.checkAndNoCheck();
+							loadBind();
 						} else {
 							window.location.href = contextPath + "/home";
 						}
@@ -410,12 +380,12 @@ var allUrl = {
 					"urlAddress" : urlAddress
 				},
 				success : function(data) {
-					console.info(data);
 					var bool = data.indexOf("sessionTimeOut");
 					if (bool < 0) {
 						$(".list_table").empty();
 						$(".list_table").append(data);
 						allUrl.service.checkAndNoCheck();
+						loadBind();
 						
 					} else {
 						window.location.href = contextPath + "/home";
@@ -502,7 +472,11 @@ var allUrl = {
 																false);
 													}*/
 													$("input[name='alarmWay']:radio[value="+ data.attach.alarmMethod+ "]").prop("checked",true);
-
+													if(data.attach.alarmMethod=='no'){
+														$("#warnContact").removeAttr("checked");
+													}else{
+														$("#warnContact").prop("checked",true);
+													}
 
 												}
 
@@ -608,12 +582,11 @@ $.ajax({
 		},
 		success : function(data) {
 			var bool = data.indexOf("sessionTimeOut");
-			console.log(data);
 			if (bool < 0) {
 				$(".list_table").empty();
 				$(".list_table").append(data);
 				allUrl.service.checkAndNoCheck();
-				
+				loadBind();
 			} else {
 				window.location.href = contextPath + "/home";
 			}
@@ -625,4 +598,39 @@ $.ajax({
 		}
 
 	});
+}
+function loadBind(){
+	$("#inputContent").blur(function(){
+		   var inputContent =$("#inputContent").val();
+		   if(inputContent.length>0){
+			   $("#incloude_id").show();
+			   return ;
+		   }
+		   $("#incloude_id").hide();
+	   });
+	$("#inputContent").mouseout(function(){
+		   var inputContent =$("#inputContent").val();
+		   if(inputContent.length>0){
+			   $("#incloude_id").show();
+			   return ;
+		   }
+		   $("#incloude_id").hide();
+	   });
+
+	$("#returnCode").change(function(){
+		regCode();
+	});
+	$("#import_submit").click(function(){
+	
+		importExcel();
+	});
+	$("input[name='alarmWay']:radio").change(function(){
+		var alarmWay =$("input[name='alarmWay']:checked").val();
+		if(alarmWay=='no'){
+			$("#warnContact").removeAttr("checked");
+		}else{
+			$("#warnContact").prop("checked",true);
+		}
+	});
+	
 }

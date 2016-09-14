@@ -100,7 +100,7 @@
       order by  alarmTime desc
     </if>
     <if test="conditions.survival == null" >
-      order by  createTime desc
+      order by  createTime desc,status desc
     </if>
     <if test="start != null and pageSize != null">
     	LIMIT #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}

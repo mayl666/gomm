@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.upm.dao.MoMonitorMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.upm.domain.MoMonitorAtp" >
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BaseResultMap1" type="com.gome.upm.domain.MoMonitorDragon" >
+    <result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="mas_loc" property="masLoc" jdbcType="VARCHAR" />
+    <result column="current_status" property="currentStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="atp_ops" >
+	${atp_ops}
+	</sql>
+	<sql id="drag_core" >
+	${drag_core}
+	</sql>
+  <select id="g3pp_realy_na" resultMap="BaseResultMap" >
+    SELECT 
+    t.create_date,t.modify_date,t.* FROM <include refid="atp_ops"></include>.resv_order_mapping t where 
+     trunc(t.create_date) = trunc(sysdate) and t.request_flag='Y' and t.reply_code='NA' 
+     and t.create_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_realy_dh" resultMap="BaseResultMap" >
+    SELECT 
+    t.create_date,t.modify_date,t.* FROM <include refid="atp_ops"></include>.resv_order_mapping t where 
+     trunc(t.create_date) = trunc(sysdate) and t.request_flag='Y' and t.reply_code='DH' 
+     and t.create_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_order_pr" resultMap="BaseResultMap1" >
+    select t.order_num,t.current_status,t.mas_loc,t.order_date from  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='PR' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_order_dh" resultMap="BaseResultMap1" >
+    select t.order_num,t.current_status,t.mas_loc,t.order_date from  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='DH' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+	<select id="g3pp_order_cco" resultMap="BaseResultMap1" >
+    select t.order_num,t.current_status,t.mas_loc,t.order_date from  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='DH' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="smi_order_pr" resultMap="BaseResultMap1" >
+    select t.order_num,t.current_status,t.mas_loc,t.order_date from  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where 
+    t.mas_loc=a.mas_loc and a.manageable_flag='S' and t.current_status='PR' and trunc(t.order_date) = 
+    trunc(sysdate) and t.order_date &lt; sysdate - 10/(60*24)
+  </select>
+  <select id="order_od" resultMap="BaseResultMap1" >
+    select t.order_num,t.current_status,t.mas_loc,t.order_date from  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where 
+    t.mas_loc=a.mas_loc and a.manageable_flag='S' and t.current_status='OD' and trunc(t.order_date) = 
+    trunc(sysdate) and t.order_date &lt; sysdate - 10/(60*24)
+  </select>
+  
+  
+  <select id="g3pp_realy_na_count" resultType="java.lang.Integer" >
+    SELECT 
+    count(1)  FROM  <include refid="atp_ops"></include>.resv_order_mapping t where 
+     trunc(t.create_date) = trunc(sysdate) and t.request_flag='Y' and t.reply_code='NA' 
+     and t.create_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_realy_dh_count" resultType="java.lang.Integer"  >
+    SELECT 
+    count(1)  FROM  <include refid="atp_ops"></include>.resv_order_mapping t where 
+     trunc(t.create_date) = trunc(sysdate) and t.request_flag='Y' and t.reply_code='DH' 
+     and t.create_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_order_pr_count" resultType="java.lang.Integer"  >
+    SELECT count(1)  FROM  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='PR' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="g3pp_order_dh_count" resultType="java.lang.Integer" >
+    SELECT count(1)  FROM  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='DH' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+	<select id="g3pp_order_cco_count" resultType="java.lang.Integer"  >
+    SELECT count(1)  FROM  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where
+     t.mas_loc=a.mas_loc and a.manageable_flag='G' and t.current_status='DH' and trunc(t.order_date) = 
+     trunc(sysdate) and t.order_date &lt;sysdate - 10/(60*24)
+  </select>
+  <select id="smi_order_pr_count" resultType="java.lang.Integer" >
+    SELECT count(1)  FROM  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where 
+    t.mas_loc=a.mas_loc and a.manageable_flag='S' and t.current_status='PR' and trunc(t.order_date) = 
+    trunc(sysdate) and t.order_date &lt; sysdate - 10/(60*24)
+  </select>
+  <select id="order_od_count" resultType="java.lang.Integer"  >
+    SELECT count(1)  FROM  <include refid="drag_core"></include>.ord_header t,<include refid="drag_core"></include>.mst_mas_loc a where 
+    t.mas_loc=a.mas_loc and a.manageable_flag='S' and t.current_status='OD' and trunc(t.order_date) = 
+    trunc(sysdate) and t.order_date &lt; sysdate - 10/(60*24)
+  </select>
+</mapper>

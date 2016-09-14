@@ -1,5 +1,19 @@
 <script type="text/javascript">
 $(function () {
+//正向单
+	laydate({
+	    elem: '#startTimeCo',
+	    format: 'YYYY-MM-DD',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("startTime:" + date);
+	    }
+	});
 	initCo();
 	initCoData();
 });
@@ -15,7 +29,7 @@ var config_co={};
 function initCo(){
 	options_co = {
         chart: {
-            type: 'column',
+            type: 'bar',
             renderTo: 'highchart_Co'
         },
         title: {
@@ -63,6 +77,11 @@ function initCo(){
 }
 function searchCoData(){
 	var startTimeStr=$('#startTimeCo').val();
+	if(startTimeStr==''){
+		var startDate = new Date();
+ 		var startTimeStr=startDate.Format('yyyy-MM-dd');
+		$('#startTimeCo').val(startTimeStr);
+	}
  	reloadCoData(startTimeStr);
 }
 function reloadCoData(stCo){
@@ -84,7 +103,27 @@ function reloadCoData(stCo){
 			}
 			copy(options_co,config_co);
 			options_co.series[0].data=wwww;
-			highChart_co = new Highcharts.Chart(options_co);
+			//highChart_co = new Highcharts.Chart(options_co);
+			$("#co_id").html("");
+			var dataHtml ="";
+			for(var i=0;i<dataList.length;i++){
+				var data = dataList[i];
+				dataHtml +="<div class='progressType'><h3>"+data.name+"</h3><div class='progress MyProgress'>";
+				if(data.isWarning){
+					dataHtml +="<div class='progress-bar progress-bar-alarm' style='width: "+data.precent+"%'>";
+				}else{
+					dataHtml +="<div class='progress-bar progress-bar-normal' style='width: "+data.precent+"%'>";
+
+				}
+				dataHtml +="<span class='sr-only'>40 Complete (danger)</span></div>";
+				if(data.isWarning){
+					dataHtml +="<span class='progress-info alarm-info'>"+data.value+"单</span></div></div>";
+				}else{
+					dataHtml +="<span class='progress-info '>"+data.value+"单</span></div></div>";
+
+				}
+			}
+			$("#co_id").html(dataHtml);
      	},
      	error : function(){
      	}

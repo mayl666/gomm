@@ -16,4 +16,33 @@
 	      and t.type = #{type}
 	    </if>
 	</select>
+	<update id="updateMoSyn" parameterType="MoSynBO">
+		update mo_syn set 
+		<if test="id != null">
+			
+			id = #{id,jdbcType=BIGINT} 
+		</if>
+		<if test="type != null">
+			
+			,type = #{type,jdbcType=VARCHAR} 
+		</if>
+		<if test="name != null">
+			
+			,name = #{name,jdbcType=VARCHAR} 
+		</if>
+		<if test="count != null">
+			
+			,mo_count = #{count,jdbcType=BIGINT} 
+		</if>
+		<if test="synTime != null">
+			
+			,syn_time = #{synTime,jdbcType=BIGINT} 
+		</if>
+		<if test="reTime != null">
+			
+			,re_time = #{reTime,jdbcType=TIMESTAMP} 
+		</if>
+		
+		where id = #{id,jdbcType=BIGINT}
+	</update>
 </mapper>

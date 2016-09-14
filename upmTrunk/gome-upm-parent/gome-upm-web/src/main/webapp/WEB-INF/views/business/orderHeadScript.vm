@@ -229,6 +229,27 @@ function searchHotCity(){
 	var startLogTimeDate = new Date(Date.parse(startTime.replace(/-/g, "/")));  
 	var ddddd=endLogTimeDate.getTime()-startLogTimeDate.getTime();
 	var time = parseInt(ddddd / (1000 * 60 * 60 * 24));
+	var urlStartTime = startTime;
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTime_HotCity").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTime_HotCity").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTime_HotCity").focus();
+			return ; 
+	    }  
+		
+	}
 	if(time>30){
 		layer.msg('查询时间不能大于1个月');
 		return ;
@@ -632,8 +653,8 @@ $(function(){
 	searchOrderCount();
 	getCityBySales();
 	//5分钟订单
-	initHeadLoginInfo();
-	initHeadLoginInfoData();
+	//initHeadLoginInfo();
+	//initHeadLoginInfoData();
 	//商品属性分类
 	searttt();
 }) 

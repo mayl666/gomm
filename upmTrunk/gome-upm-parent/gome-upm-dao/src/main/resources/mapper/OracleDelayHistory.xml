@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.upm.dao.OracleDelayHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.upm.domain.OracleDelayHistory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dbid" property="dbID" jdbcType="VARCHAR" />
+    <result column="db_name" property="dbName" jdbcType="VARCHAR" />
+    <result column="master_addr" property="masterAddr" jdbcType="VARCHAR" />
+    <result column="master_tbs" property="masterTbs" jdbcType="VARCHAR" />
+    <result column="delay" property="delay" jdbcType="INTEGER" />
+    <result column="slave_addr" property="slaveAddr" jdbcType="VARCHAR" />
+    <result column="slave_tbs" property="slaveTbs" jdbcType="VARCHAR" />
+    <result column="alarm_level" property="alarmLevel" jdbcType="INTEGER" />
+    <result column="alarm_time" property="alarmTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="alarm_reason" property="alarmReason" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, dbid, db_name, master_addr,
+    master_tbs, delay, slave_addr, slave_tbs,
+    alarm_level, alarm_time, create_time, update_time, alarm_reason, pid  
+  </sql>
+  
+  <insert id="insertOracleDelayHistory" parameterType="com.gome.upm.domain.OracleDelayHistory" useGeneratedKeys="true" keyProperty="id">
+    insert into gm_oracle_delay_history (<include refid="Base_Column_List"></include>)
+    values (#{id,jdbcType=BIGINT}, #{dbID,jdbcType=VARCHAR}, #{dbName,jdbcType=VARCHAR},
+      #{masterAddr,jdbcType=VARCHAR}, #{masterTbs,jdbcType=VARCHAR},
+      #{delay,jdbcType=INTEGER}, #{slaveAddr,jdbcType=VARCHAR},
+      #{slaveTbs,jdbcType=VARCHAR}, #{alarmLevel,jdbcType=INTEGER},
+      #{alarmTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+       #{updateTime,jdbcType=TIMESTAMP}, #{alarmReason,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT})
+  </insert>
+  <select id="selectOracleDelayHistoryListByPage" resultMap="BaseResultMap" parameterType="com.gome.upm.common.Page">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from gm_oracle_delay_history
+  	where 1=1 
+ 	<if test="conditions.id != null" >
+      and id = #{conditions.id,jdbcType=BIGINT} 
+    </if>
+    <if test="conditions.masterAddr != null and conditions.masterAddr != ''" >
+      and master_addr like CONCAT('%',#{conditions.masterAddr,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="conditions.masterTbs != null and conditions.masterTbs != ''" >
+      and master_tbs like CONCAT('%',#{conditions.masterTbs,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.slaveAddr != null and conditions.slaveAddr != ''" >
+      and slave_addr like CONCAT('%',#{conditions.slaveAddr,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.slaveTbs != null and conditions.slaveTbs != ''" >
+      and slave_tbs like CONCAT('%',#{conditions.slaveTbs,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="conditions.dbID != null and conditions.dbID != ''" >
+      and dbid = #{conditions.dbID,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.dbName != null and conditions.dbName != ''" >
+      and db_name = #{conditions.dbName,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.alarmLevel != null" >
+      and alarm_level = #{conditions.alarmLevel,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
+      and alarm_time between #{conditions.startTime} and #{conditions.endTime}
+    </if>
+    <if test="conditions.alarmReason != null" >
+      and alarm_reason = #{conditions.alarmReason,jdbcType=INTEGER}
+    </if>
+    <if test="conditions.pid != null" >
+      and pid = #{conditions.pid,jdbcType=BIGINT}
+    </if>
+    order by alarm_time desc
+    <if test="start != null and pageSize != null">
+    	LIMIT #{start},#{pageSize}
+    </if>
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.OracleDelayHistory">
+  	select count(*) from gm_oracle_delay_history
+ 	where 1=1 
+ 	<if test="id != null" >
+      and id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and master_addr like CONCAT('%',#{masterAddr,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="masterTbs != null and masterTbs != ''" >
+      and master_tbs like CONCAT('%',#{masterTbs,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="slaveAddr != null and slaveAddr != ''" >
+      and slave_addr like CONCAT('%',#{slaveAddr,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="slaveTbs != null and slaveTbs != ''" >
+      and slave_tbs like CONCAT('%',#{slaveTbs,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="dbID != null and dbID != ''" >
+      and dbid = #{dbID,jdbcType=VARCHAR}
+    </if>
+    <if test="dbName != null and dbName != ''" >
+      and db_name = #{dbName,jdbcType=VARCHAR}
+    </if>
+    <if test="alarmLevel != null" >
+      and alarm_level = #{alarmLevel,jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and alarm_time between #{startTime} and #{endTime}
+    </if>
+    <if test="alarmReason != null" >
+      and alarm_reason = #{alarmReason,jdbcType=INTEGER}
+    </if>
+    <if test="pid != null" >
+      and pid = #{pid,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectOracleDelayHistoryById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from gm_oracle_delay_history 
+ 	where id = #{id} 
+  </select>
+  <select id="selectOracleDelayHistoryListByOracleDelayHistory" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.OracleDelayHistory">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from gm_oracle_delay_history 
+  	where 1=1 
+ 	<if test="id != null" >
+      and id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and master_addr = #{masterAddr,jdbcType=VARCHAR}
+    </if>
+	<if test="masterTbs != null and masterTbs != ''" >
+      and master_tbs = #{masterTbs,jdbcType=VARCHAR}
+    </if>
+    <if test="slaveAddr != null and slaveAddr != ''" >
+      and slave_addr = #{slaveAddr,jdbcType=VARCHAR}
+    </if>
+    <if test="slaveTbs != null and slaveTbs != ''" >
+      and slave_tbs = #{slaveTbs,jdbcType=VARCHAR}
+    </if>
+    <if test="dbID != null and dbID != ''" >
+      and dbid = #{dbID,jdbcType=VARCHAR}
+    </if>
+    <if test="dbName != null and dbName != ''" >
+      and db_name = #{dbName,jdbcType=VARCHAR}
+    </if>
+    <if test="alarmLevel != null" >
+      and alarm_level = #{alarmLevel,jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and alarm_time between #{startTime} and #{endTime}
+    </if>
+    <if test="alarmReason != null" >
+      and alarm_reason = #{alarmReason,jdbcType=INTEGER}
+    </if>
+    <if test="pid != null" >
+      and pid = #{pid,jdbcType=BIGINT}
+    </if>
+    order by alarm_time desc
+  </select>
+  <update id="updateOracleDelayHistory" parameterType="com.gome.upm.domain.OracleDelayHistory" >
+    update gm_oracle_delay_history set
+    <if test="id != null" >
+      id = #{id,jdbcType=BIGINT} 
+    </if>
+    <if test="slaveAddr != null" >
+      , slave_addr = #{slaveAddr,jdbcType=VARCHAR}
+    </if>
+	<if test="slaveTbs != null" >
+      , slave_tbs = #{slaveTbs,jdbcType=VARCHAR}  
+    </if>
+    <if test="masterAddr != null" >
+      , master_addr = #{masterAddr,jdbcType=VARCHAR} 
+    </if>
+    <if test="masterTbs != null" >
+      , master_tbs = #{masterTbs,jdbcType=VARCHAR}
+    </if>
+    <if test="delay != null" >
+      , delay = #{delay,jdbcType=INTEGER}
+    </if>
+    <if test="dbID != null" >
+      , dbid = #{dbID,jdbcType=VARCHAR} 
+    </if>
+    <if test="dbName != null" >
+      , db_name = #{dbName,jdbcType=VARCHAR}
+    </if>
+    <if test="alarmLevel != null" >
+      , alarm_level = #{alarmLevel,jdbcType=INTEGER}
+    </if>
+    <if test="alarmTime != null" >
+      , alarm_time = #{alarmTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createTime != null" >
+      , create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null" >
+      , update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="alarmReason != null" >
+      , alarm_reason = #{alarmReason,jdbcType=INTEGER}
+    </if>
+    <if test="pid != null" >
+      , pid = #{pid,jdbcType=BIGINT}
+    </if>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <delete id="deleteOracleDelayHistoryById" parameterType="java.lang.Long" >
+    delete from gm_oracle_delay_history
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="batchDeleteOracleDelayHistoryByIds" parameterType="java.lang.reflect.Array" >
+    delete from gm_oracle_delay_history
+    where id in
+    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+            #{item} 
+    </foreach>  
+  </delete>
+</mapper> 

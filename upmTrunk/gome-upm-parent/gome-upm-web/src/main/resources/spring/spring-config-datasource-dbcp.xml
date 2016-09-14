@@ -25,7 +25,6 @@
 		<property name="timeBetweenEvictionRunsMillis" value="30000" />
 		<property name="minEvictableIdleTimeMillis" value="1800000" />
 	</bean>
-	<!-- 
 	<bean id="dataSourceTwo" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${driver2}" />
 		<property name="url" value="${url2}" />
@@ -46,7 +45,6 @@
 		<property name="timeBetweenEvictionRunsMillis" value="30000" />
 		<property name="minEvictableIdleTimeMillis" value="1800000" />
 	</bean>
-	 -->
 	<bean id="dataSourceThree" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${driver3}" />
 		<property name="url" value="${url3}" />
@@ -101,6 +99,67 @@
 		<property name="maxWait" value="10000" />
 		<property name="testWhileIdle" value="true" />
 		<property name="validationQuery" value="select 1" />
+		<property name="testOnBorrow" value="false" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="180" />
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+	</bean>
+	<bean id="dataSourceSix" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver6}" />
+		<property name="url" value="${url6}" />
+		<property name="username" value="${username6}" />
+		<property name="password" value="${password6}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="initialSize" value="4" />
+		<property name="maxActive" value="80" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="4" />
+		<property name="maxWait" value="10000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery" value="select 1" />
+		<property name="testOnBorrow" value="false" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="180" />
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+	</bean>
+	<bean id="dataSourceSeven" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver7}" />
+		<property name="url" value="${url7}" />
+		<property name="username" value="${username7}" />
+		<property name="password" value="${password7}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="initialSize" value="4" />
+		<property name="maxActive" value="80" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="4" />
+		<property name="maxWait" value="10000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery" value="select 1" />
+		<property name="testOnBorrow" value="false" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="180" />
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+	</bean>
+	
+	<bean id="dataSourceEight" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver8}" />
+		<property name="url" value="${url8}" />
+		<property name="username" value="${username8}" />
+		<property name="password" value="${password8}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="initialSize" value="4" />
+		<property name="maxActive" value="80" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="4" />
+		<property name="maxWait" value="10000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery" value="select * from dual" />
 		<property name="testOnBorrow" value="false" />
 		<property name="numTestsPerEvictionRun" value="3" />
 		<property name="removeAbandoned" value="true" />

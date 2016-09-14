@@ -27,7 +27,7 @@
       and type = #{conditions.type,jdbcType=VARCHAR}
     </if>
     <if test="conditions.type == 'business'.toString()">
-      and (type = 'dragon' or  type = 'oms' or  type = 'forward')
+      and type in('dragon','oms','forward')
     </if>
     <if test="conditions.pid != null" >
       and pid = #{conditions.pid,jdbcType=BIGINT}
@@ -59,7 +59,7 @@
       and type = #{type,jdbcType=VARCHAR}
     </if>
     <if test="type == 'business'.toString()">
-      and (type = 'dragon' or  type = 'oms' or  type = 'forward')
+      and type in('dragon','oms','forward')
     </if>
     <if test="pid != null" >
       and pid = #{pid,jdbcType=BIGINT} 
@@ -83,6 +83,8 @@
   	from gm_alarm_record 
  	where id = #{id} 
   </select>
+  
+  
   <select id="selectAlarmRecordListByAlarmRecord" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.AlarmRecord">
   	select 
   	<include refid="Base_Column_List"></include>  
@@ -91,8 +93,11 @@
  	<if test="id != null" >
       and id = #{id,jdbcType=BIGINT} 
     </if>  
-    <if test="type != null and type != ''" >
+    <if test="type != null and type != '' and type != 'business'.toString()" >
       and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="type == 'business'.toString()">
+      and type in('dragon','oms','forward')
     </if>
     <if test="pid != null" >
       and pid = #{pid,jdbcType=BIGINT} 
@@ -109,12 +114,37 @@
     <if test="level != null" >
       and level = #{level,jdbcType=INTEGER} 
     </if>
+    order by sendTime desc
   </select>
   
   <select id="selectAllTypes" resultMap="BaseResultMap">
-  	select distinct type from gm_alarm_record
+  	select distinct type from gm_alarm_record 
+  </select>
+  <select id="selectAllBusinessTypes" resultMap="BaseResultMap">
+  	select distinct type from gm_alarm_record where type in('dragon','oms','forward','g3pp','smi','allorder')
+  </select>
+  <select id="selectAlarmRecordListByConditions" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.AlarmRecord">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from gm_alarm_record
+  	where 1 = 1
+  	<if test="type != null">
+  		and type = #{type,jdbcType=VARCHAR}
+  	</if>
+  	<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and sendTime between #{startTime} and #{endTime}
+    </if>
+  	<if test="content != null and content != ''">
+      and content like CONCAT('%',#{content,jdbcType=VARCHAR},'%')
+    </if>
   </select>
   
+  <insert id="insertAlarmRecord"  parameterType="com.gome.upm.domain.AlarmRecord">
+  	 insert into gm_alarm_record 
+  	 	(type, sendTime, level,content)
+    	values ( #{type,jdbcType=VARCHAR}, #{sendTime}, 
+      			 #{level,jdbcType=INTEGER},#{content,jdbcType=VARCHAR})
+  </insert>
   <update id="updateAlarmRecord" parameterType="com.gome.upm.domain.AlarmRecord" >
     update gm_alarm_record set
     <if test="id != null" >

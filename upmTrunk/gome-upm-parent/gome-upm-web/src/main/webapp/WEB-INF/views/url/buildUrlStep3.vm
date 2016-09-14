@@ -59,6 +59,7 @@
                 <input type="hidden" id="isContainsCon" value="$!isContainsCon"/>
                 <input type="hidden" id="isDefaultCode" value="$!isDefaultCode"/>
                 <input type="hidden" id="returnCode" value="$!returnCode"/>
+				<input type="hidden" id="alarmWay" value="$!alarmWay"/>
         <!-- Main content -->
         <section class="content">
             <div class="box" style="margin-top:20px;border: none;">
@@ -77,8 +78,13 @@
                             <td class="title_td"><span><strong>*</strong>报警方式</span></td>
                             <td>
                                 <div style="padding-top: 7px;">
-                                    <label class="radio-inline"><input type="radio" name="alarmWay" value="no" >不报警</label>
-                                    <label class="radio-inline"><input type="radio" name="alarmWay" value="email" checked >邮件报警</label>
+									#if($!alarmWay=='no')
+										<label class="radio-inline"><input type="radio" name="alarmWay" id="no_id" value="no" checked>不报警</label>
+                                    <label class="radio-inline"><input type="radio" name="alarmWay" id="email_id" value="email"  >邮件报警</label>
+										#else
+                                    <label class="radio-inline"><input type="radio" name="alarmWay" id="no_id" value="no" >不报警</label>
+                                    <label class="radio-inline"><input type="radio" name="alarmWay" id="email_id" value="email" checked >邮件报警</label>
+										#end
                                     <!--<span class="inline_span" style="display:none"><input type="checkbox"/>短信</span>-->
                                 </div>
                             </td>
@@ -92,7 +98,11 @@
                                 </div>-->
                                 <div style="padding-top: 7px;">
                                 	<label class="checkbox-inline">
+										#if($!alarmWay=='no')
+											<input type="checkbox" id="inlineCheckbox1"  disabled> 监控组
+											#else
 									  <input type="checkbox" id="inlineCheckbox1" checked disabled> 监控组
+										#end
 									</label>
                                 </div>
                             </td>

@@ -172,9 +172,36 @@ function searchNotPayData(){
 	clearTimeout(waitNotPayRun);
 	var startTimeStr=$('#startTimeNotPay').val();
 	var endTimeStr=$('#endTimeNotPay').val();
-	if(startTimeStr=='' || startTimeStr==null || endTimeStr=='' || endTimeStr==null){
-		layer.msg("请输入查询时间段");
-		return;
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime==''&&endTime==''){
+		var obj=getSearchHour(2);
+		urlStartTime=obj.startTime;
+        endTime=obj.endTime;
+        var startTimeStr=obj.startTime;
+        var endTimeStr=obj.endTime;
+		$("#startTimeNotPay").val(startTimeStr);
+		$("#endTimeNotPay").val(endTimeStr);
+	}
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeNotPay").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeNotPay").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeNotPay").focus();
+			return ; 
+	    }  
+		
 	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);

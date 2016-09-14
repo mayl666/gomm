@@ -7,6 +7,14 @@ $(function(){
 	$("#btn-submit").click(function(){
 		createUrl.controller.submit();
 	});
+	$("input[name='alarmWay']:radio").change(function(){
+		var alarmWay =$("input[name='alarmWay']:checked").val();
+		if(alarmWay=='no'){
+			$("#inlineCheckbox1").removeAttr("checked");
+		}else{
+			$("#inlineCheckbox1").prop("checked",true);
+		}
+	});
 });
 
 var createUrl = {
@@ -102,6 +110,7 @@ var createUrl = {
 					var isContainsCon = $("#isContainsCon").val();
 					var isDefaultCode = $("#isDefaultCode").val();
 					var returnCode = $("#returnCode").val();
+					var alarmWay =$("input[name='alarmWay']:checked").val();
 					var data ={
 							'postParameter':postParameter,
 							'urlAddress':urlAddress,
@@ -113,7 +122,8 @@ var createUrl = {
 							'resContent':resContent,
 							'isContainsCon':isContainsCon,
 							'isDefaultCode':isDefaultCode,
-							'returnCode':returnCode
+							'returnCode':returnCode,
+							'alarmWay':alarmWay
 					};
 					StandardPost(contextPath+'/url/create/step2',data);
 					//var url = contextPath+"/url/create/step2?postParameter="+key+"&app="+app+"&desc="+desc+"&urlAddress="+urlAddress+"&accFre="+accFre+"&accTimeOut="+accTimeOut+"&timeOutNum="+timeOutNum+"&alarmInter="+alarmInter+"&method="+method+"&resContent="+resContent+"&isContainsCon="+isContainsCon+"&isDefaultCode="+isDefaultCode+"&returnCode="+returnCode;

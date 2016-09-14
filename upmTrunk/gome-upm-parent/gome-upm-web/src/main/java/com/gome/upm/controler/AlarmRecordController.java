@@ -1,7 +1,9 @@
 package com.gome.upm.controler;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.gome.upm.common.Constant;
 import com.gome.upm.common.Page;
+import com.gome.upm.common.util.ExcelUtil;
 import com.gome.upm.common.util.ResponsesDTO;
 import com.gome.upm.constants.ReturnCode;
 import com.gome.upm.controler.base.BaseController;
@@ -30,6 +34,7 @@ import com.gome.upm.domain.DBConnection;
 import com.gome.upm.domain.UrlMonitor;
 import com.gome.upm.service.AlarmRecordService;
 import com.gome.upm.service.quartz.DBConnectionAndASMAlarmBean;
+import com.google.gson.Gson;
 
 /**
  * 报警记录控制器.
@@ -103,6 +108,47 @@ public class AlarmRecordController extends BaseController {
 		return model;
 	}
 	
+	@RequestMapping(value="/businessList", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toBusinessListView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		if(StringUtils.isEmpty(content)){
+			model.setViewName("/alarm/alarmBusinessList");
+			
+			//下拉列表
+			List<AlarmRecord> alarmList = alarmRecordService.findAllBusinessTypes();
+			model.addObject("alarmList", alarmList);
+		} else {
+			model.setViewName("/alarm/alarmBusinessTable");
+		}
+		
+		model.addObject("leftMenu", "business.alarmBusinessMenu");
+		
+		int pageNo = 1;
+		if(StringUtils.isNotEmpty(page)){
+			pageNo = Integer.parseInt(page);
+		}
+		
+		int pageSize = Constant.PAGE_SIZE;
+		if(StringUtils.isNotEmpty(size)){
+			pageSize = Integer.parseInt(size);
+		}
+		Page<AlarmRecord> p = new Page<AlarmRecord>(pageNo, pageSize);
+		
+		AlarmRecord condition = null;
+		//通过数据库类型查找
+		if(StringUtils.isNotEmpty(content)){
+			condition = JSON.parseObject(content, AlarmRecord.class);
+		} else {
+			condition = new AlarmRecord();
+		}
+		if(StringUtils.isEmpty(condition.getType())){
+			condition.setType("business");
+		}
+		p.setConditions(condition);
+		Page<AlarmRecord> pageAlarm = alarmRecordService.findAlarmRecordListByPage(p);
+		model.addObject("page", pageAlarm);
+		return model;
+	}
+	
 	/**
 	 * 
 	 * 跳转到报警详情页.
@@ -126,6 +172,25 @@ public class AlarmRecordController extends BaseController {
 		model.setViewName("/alarm/detail");
 		
 		model.addObject("leftMenu", "alarmMenu");
+		
+		long id2 = 0;
+		if(StringUtils.isNotEmpty(id)){
+			id2 = Long.parseLong(id);
+		} else {
+			return model;
+		}
+		
+		AlarmRecord alarm = alarmRecordService.findAlarmRecordById(id2);
+		model.addObject("alarm", alarm);
+		return model;
+	}
+	
+	
+	@RequestMapping(value="/detailBusiness", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toAlarmBusinessDetailView(@Param(value="id")String id, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		model.setViewName("/alarm/detail");
+		
+		model.addObject("leftMenu", "business.alarmBusinessMenu");
 		
 		long id2 = 0;
 		if(StringUtils.isNotEmpty(id)){
@@ -163,6 +228,100 @@ public class AlarmRecordController extends BaseController {
 
 		return res;
 
+	}
+	
+	/**
+	 * 
+	 * 记录导出.
+	 *
+	 * @param conditions
+	 * 			搜索条件
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年08月30日    caowei    新建
+	 * </pre>
+	 */
+	@RequestMapping(value="/exportExcel", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView exportExcel(@Param(value="conditions")String conditions, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		AlarmRecord alarmRecord = null;
+		if(StringUtils.isNotEmpty(conditions)){
+			alarmRecord = JSON.parseObject(conditions, AlarmRecord.class);
+		}else{
+			alarmRecord = new AlarmRecord();
+		}
+		List<AlarmRecord> alarmList = alarmRecordService.findAlarmRecordListByConditions(alarmRecord);
+		int num = 0;
+		if(alarmList != null && alarmList.size() > 0){
+			for (AlarmRecord record : alarmList) {
+				num++;
+				record.setNum(num);
+			}
+		}
+		String[] title ={"序号","报警时间","类型","报警内容","报警级别","当前状态"};
+        String[] header = {"num","sendTimeStr","typeStr","content","levelStr","statusStr"};
+		String fileName = "报警记录.xls";
+		JSONArray array = (JSONArray) JSONArray.toJSON(alarmList);
+		ExcelUtil.exportExcel(response, array, title, header, fileName);
+		return null;
+	}
+	
+	@RequestMapping(value="/toList", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView formIndexToAlarmListView( HttpServletRequest request, HttpServletResponse response, ModelAndView model,
+								@RequestParam(value="level",required=true) Integer level){
+		model.setViewName("/alarm/alarmList");
+		
+		//下拉列表
+		List<AlarmRecord> alarmList = alarmRecordService.findAllTypes();
+		model.addObject("alarmList", alarmList);
+		
+		model.addObject("leftMenu", "alarmMenu");
+		int pageNo = 1;
+		Page<AlarmRecord> p = new Page<AlarmRecord>(pageNo, Constant.PAGE_SIZE);
+		
+		AlarmRecord condition = new AlarmRecord();
+		Gson gson = new Gson();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("search", true);
+		//通过数据库类型查找
+		if(level == 1){
+			condition.setLevel(1);
+			model.addObject("select","<select id='level' class='form-control'  style='width: 180px;'> "
+    					      	+"<option value=''>全部</option>"
+    					      	+"<option value='1' selected='selected'>一级</option>"
+    					      	+"<option value='2'>二级</option>"
+    					      	+"<option value='3'>三级</option>"
+    					      	+"</select>'");
+			map.put("level", 1);
+		}else if(level == 2){
+			condition.setLevel(2);
+			model.addObject("select","<select id='level' class='form-control'  style='width: 180px;'> "
+			      	+"<option value=''>全部</option>"
+			      	+"<option value='1'>一级</option>"
+			      	+"<option value='2' selected='selected'>二级</option>"
+			      	+"<option value='3'>三级</option>"
+			      	+"</select>'");
+			map.put("level", 2);
+		}else if(level == 3){
+			condition.setLevel(3);
+			model.addObject("select","<select id='level' class='form-control'  style='width: 180px;'> "
+			      	+"<option value=''>全部</option>"
+			      	+"<option value='1'>一级</option>"
+			      	+"<option value='2'>二级</option>"
+			      	+"<option value='3' selected='selected'>三级</option>"
+			      	+"</select>'");
+			map.put("level", 3);
+		}
+		p.setConditions(condition);
+		Page<AlarmRecord> pageAlarm = alarmRecordService.findAlarmRecordListByPage(p);
+		model.addObject("page", pageAlarm);
+		model.addObject("chance",1);
+		model.addObject("search",gson.toJson(map));
+		return model;
 	}
 	
 }

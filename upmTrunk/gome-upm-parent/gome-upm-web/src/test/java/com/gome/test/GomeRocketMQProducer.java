@@ -68,7 +68,7 @@ public enum GomeRocketMQProducer {
 //		this.namesrvAddr = ConfigUtil.getInstance("rocketmq.properties").getValue("appraise.namesrvAddr");
 //		this.env = ConfigUtil.getInstance("rocketmq.properties").getValue("appraise.env");
 		
-		this.namesrvAddr = "10.58.50.204:9876;10.58.50.205:9876";
+		this.namesrvAddr = "10.58.57.47:9876;10.58.57.51:9876";
 		this.env = "_uat";
 		init();
 	}

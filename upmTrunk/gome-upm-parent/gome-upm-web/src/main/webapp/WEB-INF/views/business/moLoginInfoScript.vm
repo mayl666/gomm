@@ -35,6 +35,33 @@ function initLoginInfoData(){
     reloadLoginInfoData(startTimeStr,endTimeStr,false);
 }
 $(function () {
+//Login
+	laydate({
+	    elem: '#startTimeLoginInfo',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("startTime:" + date);
+	    }
+	});
+	laydate({
+	    elem: '#endTimeLoginInfo',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("endTime:" + date);
+	    }
+	});
 	initLoginInfo();
 	initLoginInfoData();
 });
@@ -134,21 +161,54 @@ function searchLoginInfoData(){
 	clearTimeout(waitLoginInfoRun);
 	var startTimeStr=$('#startTimeLoginInfo').val();
 	var endTimeStr=$('#endTimeLoginInfo').val();
-	
- 	if(startTimeStr==''){
-		//获取结束时间
+	if(startTimeStr==''&&endTimeStr==''){
+	//获取结束时间
 		startTimeStr=new Date();
-		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
+		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60;  
 		startTimeStr.setTime(yesterday_milliseconds);     
 		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
 		$("#startTimeLoginInfo").val(startTimeStr);
-	}
-	var endTimeStr=$('#endTimeLoginInfo').val();
-	if(endTimeStr==''){
 		//获取结束时间
 		endTimeNow=new Date();
 		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
 		$("#endTimeLoginInfo").val(endTimeStr);
+	}
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeLoginInfo").focus();
+			return ; 
+	    }  
+		
+	}
+	/**if(urlStartTime==''&&endTime==''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeLoginInfo").focus();
+		return ;
+	}**/
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeLoginInfo").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeLoginInfo").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeLoginInfo").focus();
+			return ; 
+	    }  
+		
 	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);

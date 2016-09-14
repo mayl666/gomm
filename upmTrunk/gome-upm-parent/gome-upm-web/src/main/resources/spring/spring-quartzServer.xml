@@ -18,6 +18,16 @@
 	<!-- 初始化服务器监控MemoryTimer -->
 	<bean id="initMemoryMonitor" class="com.gome.upm.service.quartz.MemoryTimer" />
 	
+	<!-- 初始化服务器监控CPUTimer -->
+	<bean id="initCpuMonitor" class="com.gome.upm.service.quartz.CPUTimer" />
+	
+	<!-- 初始化服务器监控DiskTimer -->
+	<bean id="initDiskMonitor" class="com.gome.upm.service.quartz.DiskTimer" />
+	<!-- 初始化服务器监控SwapTimer -->
+	<bean id="initSwapMonitor" class="com.gome.upm.service.quartz.SWAPTimer" />
+	<!-- 初始化服务器监控PingTimer -->
+	<bean id="initPingMonitor" class="com.gome.upm.service.quartz.PingTimer" />
+	
 	<!-- job的配置开始 -->
 	<bean id="initMemoryMonitorJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -28,155 +38,16 @@
 			<value>work</value>
 		</property>
 	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initMemoryMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initMemoryMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="6000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="600000"/>
-     </bean>
-     
-	<!-- 初始化服务器监控MemoryTimer -->
-	<bean id="initServerMonitor" class="com.gome.upm.service.quartz.ServerTimer" />
-	
 	<!-- job的配置开始 -->
-	<bean id="initServerMonitorJobDetail"
+	<bean id="initCpuMonitorJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
-			<ref bean="initServerMonitor" />
+			<ref bean="initCpuMonitor" />
 		</property>
 		<property name="targetMethod">
 			<value>work</value>
 		</property>
 	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initServerMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initServerMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="8000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="800000"/>
-     </bean>
-     
-     
-     <!-- 初始化服务器监控CPUTimer -->
-	<bean id="initCPUMonitor" class="com.gome.upm.service.quartz.CPUTimer" />
-	
-	<!-- job的配置开始 -->
-	<bean id="initCPUMonitorJobDetail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject">
-			<ref bean="initCPUMonitor" />
-		</property>
-		<property name="targetMethod">
-			<value>work</value>
-		</property>
-	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initCPUMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initCPUMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="6000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="600000"/>
-     </bean>
-     
-     
-      <!-- 初始化服务器监控LoadTimer -->
-	<bean id="initLoadMonitor" class="com.gome.upm.service.quartz.LoadTimer" />
-	
-	<!-- job的配置开始 -->
-	<bean id="initLoadMonitorJobDetail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject">
-			<ref bean="initLoadMonitor" />
-		</property>
-		<property name="targetMethod">
-			<value>work</value>
-		</property>
-	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initLoadMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initLoadMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="10000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="600000"/>
-     </bean>
-     
-       <!-- 初始化服务器监控LoadTimer -->
-	<bean id="initIndexMonitor" class="com.gome.upm.service.quartz.indexTimer" />
-	
-	<!-- job的配置开始 -->
-	<bean id="initIndexMonitorJobDetail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject">
-			<ref bean="initIndexMonitor" />
-		</property>
-		<property name="targetMethod">
-			<value>work</value>
-		</property>
-	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initIndexMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initIndexMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="1000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="600000"/>
-     </bean>
-     
-      <!-- 调度工厂bean,启动触发器 -->
-     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-          <property name="triggers">
-               <list>
-                    <ref bean="initServerMonitorTriggerBean"/>
-                   <!--  <ref bean="initLoadMonitorTriggerBean"/> -->
-                    <ref bean="initCPUMonitorTriggerBean"/>
-                    <ref bean="initMemoryMonitorTriggerBean"/>
-                  	<ref bean="initIndexMonitorTriggerBean"/>
-                    <ref bean="initDiskMonitorTriggerBean"/>
-                    <ref bean="initSWAPMonitorTriggerBean"/>
-               </list>
-          </property>
-     </bean>
-     
-     
-     
-      
-     <!-- 初始化服务器监控SWAPTimer -->
-	<bean id="initSWAPMonitor" class="com.gome.upm.service.quartz.SWAPTimer" />
-	
-	<!-- job的配置开始 -->
-	<bean id="initSWAPMonitorJobDetail"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject">
-			<ref bean="initSWAPMonitor" />
-		</property>
-		<property name="targetMethod">
-			<value>work</value>
-		</property>
-	</bean>
-	<!-- job的配置结束 -->
-	
-     <bean id="initSWAPMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initSWAPMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="6000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="600000"/>
-     </bean>
-     
-      
-     <!-- 初始化服务器监控DiskTimer -->
-	<bean id="initDiskMonitor" class="com.gome.upm.service.quartz.DiskTimer" />
-	
 	<!-- job的配置开始 -->
 	<bean id="initDiskMonitorJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -187,13 +58,77 @@
 			<value>work</value>
 		</property>
 	</bean>
-	<!-- job的配置结束 -->
+	<!-- job的配置开始 -->
+	<bean id="initSWAPMonitorJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="initSwapMonitor" />
+		</property>
+		<property name="targetMethod">
+			<value>work</value>
+		</property>
+	</bean>
+	<!-- job的配置开始 -->
+	<bean id="iniPingMonitorJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="initPingMonitor" />
+		</property>
+		<property name="targetMethod">
+			<value>work</value>
+		</property>
+	</bean>
+	<bean id="doTime_memory" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="initMemoryMonitorJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/6 * * * ?</value>
+		</property>
+	</bean>
+	<bean id="doTime_cpu" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="initCpuMonitorJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/6 * * * ?</value>
+		</property>
+	</bean>
+	<bean id="doTime_disk" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="initDiskMonitorJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/10 * * * ?</value>
+		</property>
+	</bean>
+	<bean id="doTime_swap" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="initSWAPMonitorJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/6 * * * ?</value>
+		</property>
+	</bean>
+	<bean id="doTime_ping" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="iniPingMonitorJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0/6 * * * ?</value>
+		</property>
+	</bean>
+	<!-- 调度工厂bean,启动触发器 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="doTime_memory"/> 
+				<ref bean="doTime_cpu"/> 
+				<ref bean="doTime_disk"/> 
+				<ref bean="doTime_swap"/> 
+				<ref bean="doTime_ping"/> 
+			</list>
+		</property>
+	</bean>
 	
-     <bean id="initDiskMonitorTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-          <property name="jobDetail" ref="initDiskMonitorJobDetail"/>
-          <!--首次启动延迟时间（单位：毫秒）  -->
-          <property name="startDelay" value="6000"/>
-          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
-          <property name="repeatInterval" value="1000000"/>
-     </bean>
 </beans>

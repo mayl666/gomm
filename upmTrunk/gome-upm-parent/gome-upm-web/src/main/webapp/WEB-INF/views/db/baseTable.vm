@@ -41,7 +41,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <a href="${rc.contextPath}/index">统一监控平台 / </a>
-            <a href="${rc.contextPath}/db/index">数据库连接与表空间监控</a>
+            <a href="${rc.contextPath}/db/index">数据库监控</a>
         </section>
 
         <!-- Main content -->
@@ -152,7 +152,7 @@
 							<td>$!tbs.tbsName</td>
 	                        <td>$!tbs.totalMB</td>
 	                        <td>$!tbs.usedMB</td>
-	                        <td>$!tbs.usedPercent</td>
+	                        <td>$!tbs.usedPercent %</td>
 	                    </tr>
 						#end
     					#else

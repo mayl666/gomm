@@ -38,11 +38,16 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return alarmRecordMapper.selectAlarmRecordListByAlarmRecord(alarmRecord);
 	}
-
 	@Override
 	public List<AlarmRecord> findAllTypes() {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return alarmRecordMapper.selectAllTypes();
+	}
+	
+	@Override
+	public List<AlarmRecord> findAllBusinessTypes() {
+		DBContextHolder.setDataSource("dataSourceOne");
+		return alarmRecordMapper.selectAllBusinessTypes();
 	}
 
 	@Override
@@ -54,6 +59,18 @@ public class AlarmRecordServiceImpl implements AlarmRecordService {
 	public int editAlarmRecord(AlarmRecord alarmRecord) {
 		DBContextHolder.setDataSource("dataSourceOne");
 		return alarmRecordMapper.updateAlarmRecord(alarmRecord);
+	}
+
+	@Override
+	public List<AlarmRecord> selectAlarmRecordListByConditions(AlarmRecord alarmRecord) {
+		DBContextHolder.setDataSource("dataSourceOne");
+		return alarmRecordMapper.selectAlarmRecordListByConditions(alarmRecord);
+	}
+
+	@Override
+	public int insertAlarmRecord(AlarmRecord alarmRecord) {
+		DBContextHolder.setDataSource("dataSourceOne");
+		return alarmRecordMapper.insertAlarmRecord(alarmRecord);
 	}
 
 }

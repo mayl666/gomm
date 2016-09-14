@@ -61,7 +61,7 @@ public class AppMonitorController {
 				
 			}
 		}catch(Exception e){
-			logger.info("execute search fail...");
+			logger.info("execute search fail..."+e);
 			model.setViewName("error");
 		}
 

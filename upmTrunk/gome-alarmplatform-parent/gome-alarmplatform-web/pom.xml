@@ -71,6 +71,37 @@
 				<driver1>com.mysql.jdbc.Driver</driver1>
 				<username1>root</username1>
 				<password1>root</password1>
+				
+				<!-- zookeeper sms address -->
+				<sms.zookeeper.address>
+					10.58.57.58:2181,10.58.57.54:2181,10.58.57.48:2181
+				</sms.zookeeper.address>
+				
+				<!-- mail config -->
+				<mail.url>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.url>
+				<mail.port>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.port>
+				<mail.method>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.method>
+				<mail.server>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.server>
+				<mail.business>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.business>
+				<mail.process>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.process>
+				<mail.dbconn>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.dbconn>
+				<mail.network>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.network>
+				<mail.dragon>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.dragon>
+				<mail.oms>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.oms>
+				<mail.forward>wangxiaoyu-ds@yolo24.com;caoaiai@yolo24.com;yangguiran@yolo24.com;wuyuanyuan-ds1@yolo24.com</mail.forward>
+				
+				<!-- phone config -->
+				<phone.url>18612943050</phone.url>
+				<phone.port>18612943050</phone.port>
+				<phone.method>18612943050</phone.method>
+				<phone.server>18612943050</phone.server>
+				<phone.business>18612943050</phone.business>
+				<phone.process>18612943050</phone.process>
+				<phone.dbconn>18612943050</phone.dbconn>
+				<phone.network>18612943050</phone.network>
+				<phone.dragon>18612943050</phone.dragon>
+				<phone.oms>18612943050</phone.oms>
+				<phone.forward>18612943050</phone.forward>
 			</properties>
 		</profile>
 		<profile>
@@ -85,6 +116,50 @@
 				<driver1>com.mysql.jdbc.Driver</driver1>
 				<username1>monitorplat_rw</username1>
 				<password1>Inj(9^VLkm56BLcD</password1>
+				
+				<!-- zookeeper sms address -->
+				<sms.zookeeper.address>
+					10.58.22.191:2181,10.58.22.192:2181,10.58.22.193:2181,10.58.50.149:2181,10.58.50.150:2181
+				</sms.zookeeper.address>
+				
+				<!-- mail config 
+				<mail.url>urljk@yolo24.com</mail.url>
+				<mail.port>duankoujk@yolo24.com</mail.port>
+				<mail.method>caowei-ds1@yolo24.com</mail.method>
+				<mail.server>serverjk@yolo24.com</mail.server>
+				<mail.business>yewujk@yolo24.com</mail.business>
+				<mail.process>systemprocessjk@yolo24.com</mail.process>
+				<mail.dbconn>databasejk@yolo24.com</mail.dbconn>
+				<mail.network>networkjk@yolo24.com</mail.network>
+				<mail.dragon>yewujk@yolo24.com</mail.dragon>
+				<mail.oms>yewujk@yolo24.com</mail.oms>
+				<mail.forward>yewujk@yolo24.com</mail.forward>
+				-->
+				
+				<mail.url>itserver3@yolo24.com</mail.url>
+				<mail.port>itserver3@yolo24.com</mail.port>
+				<mail.method>itserver3@yolo24.com</mail.method>
+				<mail.server>itserver3@yolo24.com</mail.server>
+				<mail.business>itserver3@yolo24.com</mail.business>
+				<mail.process>itserver3@yolo24.com</mail.process>
+				<mail.dbconn>itserver3@yolo24.com</mail.dbconn>
+				<mail.network>itserver3@yolo24.com</mail.network>
+				<mail.dragon>itserver3@yolo24.com</mail.dragon>
+				<mail.oms>itserver3@yolo24.com</mail.oms>
+				<mail.forward>itserver3@yolo24.com</mail.forward>
+				
+				<!-- phone config -->
+				<phone.url>18612943050;13699167012</phone.url>
+				<phone.port>18612943050;13699167012</phone.port>
+				<phone.method>18612943050;13699167012</phone.method>
+				<phone.server>18612943050;13699167012</phone.server>
+				<phone.business>18612943050;13699167012</phone.business>
+				<phone.process>18612943050;13699167012</phone.process>
+				<phone.dbconn>18612943050;13699167012</phone.dbconn>
+				<phone.network>18612943050;13699167012</phone.network>
+				<phone.dragon>18612943050;13699167012</phone.dragon>
+				<phone.oms>18612943050;13699167012</phone.oms>
+				<phone.forward>18612943050;13699167012</phone.forward>
 			</properties>
 		</profile>
 	</profiles>

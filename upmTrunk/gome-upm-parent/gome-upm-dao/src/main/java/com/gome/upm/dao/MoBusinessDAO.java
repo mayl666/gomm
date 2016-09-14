@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.gome.upm.domain.MapCoordinate;
 import com.gome.upm.domain.MoBusiness;
+import com.gome.upm.domain.MoOrderRechargeBO;
 @Repository("moBusinessDAO")
 public interface MoBusinessDAO {
 	/**

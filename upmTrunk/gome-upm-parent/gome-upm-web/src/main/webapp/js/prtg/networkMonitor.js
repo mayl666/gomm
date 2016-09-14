@@ -4,6 +4,8 @@ $(function(){
 //	$('#port_flow').highcharts(flowChart);
 //	$('#network_health_index').highcharts(healthyChart);
 //	$('#port_health_index').highcharts(portHealthyChart);
+    // 去掉这里的注释就是类似 Apple Watch 上的效果了
+	//highChartInit();
 	networkMonitor.controller.index();
 	
 });
@@ -20,8 +22,8 @@ var networkMonitor = {
 				$("#totalDeviceCount").text(totalDeviceCount);
 				$("#errorSensorCount").text(errorSensorCount);
 				$("#totalSensorCount").text(totalSensorCount);
-				$("#healthyDeviceIndex").text(((totalDeviceCount-errorDeviceCount)/totalDeviceCount).toPrecision(3)*100);
-				$("#healthySensorIndex").text(((totalSensorCount-errorSensorCount)/totalSensorCount).toPrecision(3)*100);
+				$("#healthyDeviceIndex").text(((totalDeviceCount-errorDeviceCount)/totalDeviceCount).toPrecision(2)*100);
+				$("#healthySensorIndex").text(((totalSensorCount-errorSensorCount)/totalSensorCount).toPrecision(2)*100);
 				$("#alarmPortCount").text(alarmPortCount);
 				//$(".health_status_count span:first-child a").text(error);
 			   // $(".health_status_count span:last-child a").text(total);
@@ -42,7 +44,7 @@ var networkMonitor = {
 				} 
 				chart.series[0].data=seriesData;
 				chart.xAxis.categories=category;
-				console.info(JSON.stringify(chart));
+				//console.info(JSON.stringify(chart));
 				return chart;
 			},
 			dealCpuChart : function(data, chart){
@@ -66,6 +68,16 @@ var networkMonitor = {
 				portHealthyChart.series[0].data[0].y=total;
 				portHealthyChart.series[0].data[1].y=error;
 				$('#port_health_index').highcharts(portHealthyChart);
+			},
+			dealHealthyDeviceChart2 : function(total,error){
+				var healthyIndex = ((total-error)/total).toPrecision(3)*100+"";
+				deviceHealthyChart2.series[0].data[0].y=parseInt(healthyIndex);
+				$('#network_health_index').highcharts(deviceHealthyChart2);
+			},
+			dealHealthySensorChart2 : function(total,error){
+				var healthyIndex = ((total-error)/total).toPrecision(3)*100+"";
+				portHealthyChart2.series[0].data[0].y=parseInt(healthyIndex);
+				$('#port_health_index').highcharts(portHealthyChart2);
 			}
 		},
 		controller : {
@@ -78,7 +90,7 @@ var networkMonitor = {
 					success:function(data){
 						if(data.code == 1){
 							//请求成功
-							console.info(data.attach);
+							//console.info(data.attach);
 							var attach = data.attach;
 							//var attach = JSON.parse(data.attach);
 							//var attach = eval("(" + data.attach + ")");
@@ -86,8 +98,8 @@ var networkMonitor = {
 							networkMonitor.service.dealCpuChart(attach.cpu,cpuChart);
 							networkMonitor.service.dealMemoryChart(attach.memory,memoryChart);
 							networkMonitor.service.dealFlowChart(attach.flow,flowChart);
-							networkMonitor.service.dealHealthyDeviceChart(attach.totalDeviceCount,attach.errorDeviceCount);
-							networkMonitor.service.dealHealthySensorChart(attach.totalSensorCount,attach.errorSensorCount);
+							networkMonitor.service.dealHealthyDeviceChart2(attach.totalDeviceCount,attach.errorDeviceCount);
+							networkMonitor.service.dealHealthySensorChart2(attach.totalSensorCount,attach.errorSensorCount);
 						}
 					},
 					error:function(){
@@ -275,7 +287,7 @@ var flowChart = {
         yAxis: {
             min: 0,
             title: {
-                text: 'KB/秒'
+                text: ''
             }
         },
         tooltip: {
@@ -324,7 +336,7 @@ var deviceHealthyChart = {
             text: ''
         },
         tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f} %</b>'
+    	    pointFormat: ' <b>{point.percentage:.1f} %</b>'
         },
         plotOptions: {
             pie: {
@@ -344,12 +356,12 @@ var deviceHealthyChart = {
             name: '',
             data: [
                 {
-                 	name:'全部设备',   
+                 	name:'正常率',   
                     y:100,
                     color:'#9c8ade'
                 },
                 {
-                    name: '错误',
+                    name: '错误率',
                     y: 0,
                     sliced: true,
                     selected: true,
@@ -373,7 +385,7 @@ var portHealthyChart = {
             text: ''
         },
         tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f} %</b>'
+    	    pointFormat: '<b>{point.percentage:.1f} %</b>'
         },
         plotOptions: {
             pie: {
@@ -393,12 +405,12 @@ var portHealthyChart = {
             name: '健康指数',
             data: [
                 {
-                 	name:'全部端口',   
+                 	name:'正常率',   
                     y:100,
                     color:'#9c8ade'
                 },
                 {
-                    name: '错误',
+                    name: '错误率',
                     y: 0,
                     sliced: true,
                     selected: true,
@@ -407,3 +419,183 @@ var portHealthyChart = {
             ]
         }]
     };
+
+
+
+var portHealthyChart2 = {
+        chart: {
+            type: 'solidgauge',
+            marginTop: 50
+        },
+        credits: {
+            text: '',
+            //href: 'http://www.hcharts.cn'
+        },
+        title: {
+            text: '',
+            style: {
+                fontSize: '24px'
+            }
+        },
+        tooltip: {
+            enabled: false
+            /*borderWidth: 0,
+            backgroundColor: 'none',
+            shadow: false,
+            style: {
+                fontSize: '16px'
+            },
+            pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
+            positioner: function (labelWidth, labelHeight) {
+                return {
+                    x: 200 - labelWidth / 2,
+                    y: 180
+                };
+            }*/
+        },
+        pane: {
+            startAngle: 0,
+            endAngle: 360,
+            background: [{ // Track for Move
+                outerRadius: '112%',
+                innerRadius: '88%',
+                backgroundColor:"#fff",
+                //backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+                borderWidth: 0
+            }]
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            lineWidth: 0,
+            tickPositions: []
+        },
+        plotOptions: {
+            solidgauge: {
+                borderWidth: '18px',
+                dataLabels: {
+                    enabled: true,
+                    borderRadius:'none',
+                    borderWidth:'0',
+                    //verticalAlign:'center',
+                    rotation: -360,
+                    x: 2,
+                    y: -10,
+                    style:{
+                        fontSize:'14px',
+                        color:"#999",
+                        textShadow:'',
+                        textAlign:'center',
+                        fontWeight: "0",
+                        fontFamily:"Microsoft Yahei"
+                    },
+                    // y:'15',
+                    formatter:function(){
+                        return '<div>'+'<p style="color:#672795;font-size:28px;font-weight: 600;">'+this.y+'</p>'+'<br>'+'<p>'+'健康指数'+'</p>'+'</div>'
+                    }
+                },
+                linecap: 'round',
+                stickyTracking: false
+            }
+        },
+        series: [{
+            name: 'Move',
+            borderColor: "#9c8ade",
+            data: [{
+                color: "#9c8ade",
+                radius: '100%',
+                innerRadius: '100%',
+                y: 59
+            }]
+        }]
+    }
+
+var deviceHealthyChart2 = {
+        chart: {
+            type: 'solidgauge',
+            marginTop: 50
+        },
+        credits: {
+            text: '',
+            //href: 'http://www.hcharts.cn'
+        },
+        title: {
+            text: '',
+            style: {
+                fontSize: '24px'
+            }
+        },
+        tooltip: {
+            enabled: false
+            /*borderWidth: 0,
+            backgroundColor: 'none',
+            shadow: false,
+            style: {
+                fontSize: '16px'
+            },
+            pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
+            positioner: function (labelWidth, labelHeight) {
+                return {
+                    x: 200 - labelWidth / 2,
+                    y: 180
+                };
+            }*/
+        },
+        pane: {
+            startAngle: 0,
+            endAngle: 360,
+            background: [{ // Track for Move
+                outerRadius: '112%',
+                innerRadius: '88%',
+                backgroundColor:"#fff",
+                //backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+                borderWidth: 0
+            }]
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            lineWidth: 0,
+            tickPositions: []
+        },
+        plotOptions: {
+            solidgauge: {
+                borderWidth: '18px',
+                dataLabels: {
+                    enabled: true,
+                    borderRadius:'none',
+                    borderWidth:'0',
+                    //verticalAlign:'center',
+                    rotation: -360,
+                    x: 2,
+                    y: -10,
+                    style:{
+                        fontSize:'14px',
+                        color:"#999",
+                        textShadow:'',
+                        textAlign:'center',
+                        fontWeight: "0",
+                        fontFamily:"Microsoft Yahei"
+                    },
+
+                    // y:'15',
+                    formatter:function(){
+                        return '<div>'+'<p style="color:#672795;font-size:28px;font-weight: 600;">'+this.y+'</p>'+'<br>'+'<p>'+'健康指数'+'</p>'+'</div>'
+                    }
+                },
+                linecap: 'round',
+                stickyTracking: false
+            }
+        },
+        series: [{
+            name: 'Move',
+            borderColor: "#9c8ade",
+            data: [{
+                color: "#9c8ade",
+                radius: '100%',
+                innerRadius: '100%',
+                y: 59
+            }]
+        }]
+    }
+

@@ -1,0 +1,137 @@
+$(function(){
+	
+	$("#previous-step1").click(function(){
+		createUrl.controller.previousStep();
+	});
+	
+	$("#btn-submit").click(function(){
+		createUrl.controller.submit();
+	});
+});
+
+var createUrl = {
+		   service : {
+			   getCheckedAlarm : function(){
+				   var ids = "";
+				   $("input[name='alarmWay']:radio").each(function(){
+					   if($(this).is(":checked")){
+						   ids += $(this).val()+",";
+					   }
+				   });
+				   if(ids.length==0){
+					   layer.msg("请选择报警方式");
+					   return "";
+				   }
+				  return ids.substring(0, ids.length-1);
+			   }
+		   },
+		   controller : {
+			   submit : function(){
+					var content = {};
+					content.key = $("#urlKey").val();
+					content.desc = $("#urlDesc").val();
+					content.postParameter = $("#postParameter").val();
+					content.urlAddress = $("#urlAddress").val();
+					content.accFre = $("#accFre").val();
+					content.accTimeOut = $("#accTimeOut").val();
+					content.timeOutNum = $("#timeOutNum").val();
+					content.alarmInter = $("#alarmInter").val();
+					content.method = $("#method").val();
+					content.resContent = $("#resContent").val();
+					content.isContainsCon = $("#isContainsCon").val();
+					content.isDefaultCode = $("#isDefaultCode").val();
+					content.returnCode = $("#returnCode").val();
+					content.alarmWay = createUrl.service.getCheckedAlarm();
+//					if(content.key == ""){
+//						layer.msg("请返回第一步填写必选项");
+//						return false;
+//					}
+					if(content.alarmWay.length==0){
+						   layer.msg("请选择报警方式");
+						   return "";
+					   }
+					if(content.urlAddress == "" || content.accTimeOut == "" || content.timeOutNum == "" || content.alarmInter == ""){
+						layer.msg("请返回第二步请输入必填项");
+						return false;
+					}
+					$("#btn-submit").unbind("click");
+					$.ajax({
+						url:contextPath+'/url/save',
+						type:'POST',
+						dataType : 'json',	
+						data:{'content':JSON.stringify(content)},
+						success:function(data){
+							if(data.code == 1){
+								layer.msg("保存成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
+									window.location.href=contextPath+"/url/get";
+								});
+							}else if(data.code == 2){
+								layer.msg("监控地址已经存在,保存失败,请修改监控地址");
+								$("#btn-submit").click(function(){
+									createUrl.controller.submit();
+								});
+							}else{
+								layer.msg("系统异常");
+								$("#btn-submit").click(function(){
+									createUrl.controller.submit();
+								});
+							}
+//							$(".content-wrapper").empty();
+//							$(".content-wrapper").append(data);
+						},
+						error:function(){
+							layer.msg("操作失败");
+							
+						}
+						
+						
+					});
+			   },
+			 previousStep : function(){
+					var key = $("#urlKey").val();
+					var desc = $("#urlDesc").val();
+					var app = $("#urlApp").val();
+					var urlAddress = $("#urlAddress").val();
+					var accFre = $("#accFre").val();
+					var postParameter = $("#postParameter").val();
+					var accTimeOut = $("#accTimeOut").val();
+					var timeOutNum = $("#timeOutNum").val();
+					var alarmInter = $("#alarmInter").val();
+					var method = $("#method").val();
+					var resContent = $("#resContent").val();
+					var isContainsCon = $("#isContainsCon").val();
+					var isDefaultCode = $("#isDefaultCode").val();
+					var returnCode = $("#returnCode").val();
+					var data ={
+							'postParameter':postParameter,
+							'urlAddress':urlAddress,
+							'accFre':accFre,
+							'accTimeOut':accTimeOut,
+							'timeOutNum':timeOutNum,
+							'alarmInter':alarmInter,
+							'method':method,
+							'resContent':resContent,
+							'isContainsCon':isContainsCon,
+							'isDefaultCode':isDefaultCode,
+							'returnCode':returnCode
+					};
+					StandardPost(contextPath+'/url/create/step2',data);
+					//var url = contextPath+"/url/create/step2?postParameter="+key+"&app="+app+"&desc="+desc+"&urlAddress="+urlAddress+"&accFre="+accFre+"&accTimeOut="+accTimeOut+"&timeOutNum="+timeOutNum+"&alarmInter="+alarmInter+"&method="+method+"&resContent="+resContent+"&isContainsCon="+isContainsCon+"&isDefaultCode="+isDefaultCode+"&returnCode="+returnCode;
+					//window.location.href=url;
+			 }  
+		   }
+		};
+
+function StandardPost (url,args) 
+{
+    var form = $("#form1");
+    form.attr({"action":url});
+    for (arg in args)
+    {
+        var input = $("<input type='hidden'>");
+        input.attr({"name":arg});
+        input.val(args[arg]);
+        form.append(input);
+    }
+    $("#submit_id").click();
+}

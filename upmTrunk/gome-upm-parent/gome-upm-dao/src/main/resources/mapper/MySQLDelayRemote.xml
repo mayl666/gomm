@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gome.upm.dao.MySQLDelayRemoteMapper" >
+  <resultMap id="BaseResultMap" type="com.gome.upm.domain.MySQLDelayRemote" >
+    <result column="SERVER_ADDR" property="slaveAddr" jdbcType="VARCHAR" />
+    <result column="DB_PORT" property="slavePort" jdbcType="INTEGER" />
+    <result column="MASTER_ADDR" property="masterAddr" jdbcType="VARCHAR" />
+    <result column="MASTER_PORT" property="masterPort" jdbcType="INTEGER" />
+    <result column="SECONDS_BEHIND_MASTER" property="delay" jdbcType="INTEGER" />
+    <result column="SLAVE_IO_RUNNING" property="ioRunning" jdbcType="VARCHAR" />
+    <result column="SLAVE_SQL_RUNNING" property="sqlRunning" jdbcType="VARCHAR" />
+    <result column="INSERT_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    SERVER_ADDR, DB_PORT, MASTER_ADDR,
+    MASTER_PORT, SECONDS_BEHIND_MASTER, SLAVE_IO_RUNNING, SLAVE_SQL_RUNNING, INSERT_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectMySQLDelayRemoteListByPage" resultMap="BaseResultMap" parameterType="com.gome.upm.common.Page">
+  	select ttt.* from 
+  	(select tt.*, ROWNUM rowno from 
+  	(select t.* from GAMP.GET_GAP t
+  	where 1=1 
+    <if test="conditions.slaveAddr != null and conditions.slaveAddr != ''" >
+      and t.SERVER_ADDR like '%'||#{conditions.slaveAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+	<if test="conditions.slavePort != null and conditions.slavePort != ''" >
+      and t.DB_PORT like '%'||#{conditions.slavePort,jdbcType=INTEGER}||'%' escape '\'
+    </if>
+    <if test="conditions.masterAddr != null and conditions.masterAddr != ''" >
+      and t.MASTER_ADDR like '%'||#{conditions.masterAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="conditions.masterPort != null and conditions.masterPort != ''" >
+      and t.MASTER_PORT like '%'||#{conditions.masterPort,jdbcType=INTEGER}||'%' escape '\'
+    </if>
+    <if test="conditions.ioRunning != null and conditions.ioRunning != ''" >
+      and t.SLAVE_IO_RUNNING = #{conditions.ioRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.sqlRunning != null and conditions.sqlRunning != ''" >
+      and t.SLAVE_SQL_RUNNING = #{conditions.sqlRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="conditions.startTime != null and conditions.startTime != '' and conditions.endTime != null and conditions.endTime != ''" >
+      and t.INSERT_TIME between #{conditions.startTime} and #{conditions.endTime}
+    </if>
+    order by t.INSERT_TIME desc) tt 
+    where ROWNUM &lt;= #{endIndex}) ttt 
+    where ttt.rowno &gt;= #{startIndex}
+  </select>
+  <select id="selectTotalResultByConditions" resultType="java.lang.Integer" parameterType="com.gome.upm.domain.MySQLDelayRemote">
+  	select count(*) from GAMP.GET_GAP t
+ 	where 1=1 
+ 	<if test="slaveAddr != null and slaveAddr != ''" >
+      and t.SERVER_ADDR like '%'||#{slaveAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+	<if test="slavePort != null and slavePort != ''" >
+      and t.DB_PORT like '%'||#{slavePort,jdbcType=INTEGER}||'%' escape '\'
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and t.MASTER_ADDR like '%'||#{masterAddr,jdbcType=VARCHAR}||'%' escape '\'
+    </if>
+    <if test="masterPort != null and masterPort != ''" >
+      and t.MASTER_PORT like '%'||#{masterPort,jdbcType=INTEGER}||'%' escape '\'
+    </if>
+    <if test="ioRunning != null and ioRunning != ''" >
+      and t.SLAVE_IO_RUNNING = #{ioRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="sqlRunning != null and sqlRunning != ''" >
+      and t.SLAVE_SQL_RUNNING = #{sqlRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and t.INSERT_TIME between #{startTime} and #{endTime}
+    </if>
+  </select>
+  <select id="selectMySQLDelayRemoteListByMySQLDelayRemote" resultMap="BaseResultMap" parameterType="com.gome.upm.domain.MySQLDelayRemote">
+  	select 
+  	<include refid="Base_Column_List"></include>  
+    from GAMP.GET_GAP t 
+  	where 1=1 
+ 	<if test="slaveAddr != null and slaveAddr != ''" >
+      and t.SERVER_ADDR = #{slaveAddr,jdbcType=VARCHAR}
+    </if>
+	<if test="slavePort != null and slavePort != ''" >
+      and t.DB_PORT = #{slavePort,jdbcType=INTEGER}
+    </if>
+    <if test="masterAddr != null and masterAddr != ''" >
+      and t.MASTER_ADDR = #{masterAddr,jdbcType=VARCHAR}
+    </if>
+    <if test="masterPort != null and masterPort != ''" >
+      and t.MASTER_PORT = #{masterPort,jdbcType=INTEGER}
+    </if>
+    <if test="ioRunning != null and ioRunning != ''" >
+      and t.SLAVE_IO_RUNNING = #{ioRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="sqlRunning != null and sqlRunning != ''" >
+      and t.SLAVE_SQL_RUNNING = #{sqlRunning,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
+      and t.INSERT_TIME between #{startTime} and #{endTime}
+    </if>
+  </select>
+</mapper> 

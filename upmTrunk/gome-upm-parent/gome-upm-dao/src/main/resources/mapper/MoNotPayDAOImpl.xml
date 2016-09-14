@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.gome.upm.dao.MoNotPayDAO">
 	<sql id="oms" >
-	oms_uat
+	${oms}
 	</sql>
 	<select id="searchMoNotPayCountByTime" resultType="java.lang.Integer" parameterType="MoOrderNotRechargeBO">
 	    select count(1)

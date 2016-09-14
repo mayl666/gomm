@@ -1,7 +1,6 @@
 package com.gome.upm.controler;
 
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,12 +74,9 @@ public class PortalController {
 		query.setSurvival(1);
 		int validCount  =portMonitorService.findTotalResultByConditions(query);
 		int inValidCount = total-validCount;
-		float heath = 0.0f;
-		String exponential = "0.0";
-		DecimalFormat df=new DecimalFormat("0.0");
+		int exponential = 0;
 		if(page.getTotalResult()>0){
-			heath = (float)(validCount*100)/(total);
-			exponential = df.format(heath);
+			exponential = (validCount*100)/(total);
 		}
 		model.setViewName("/portal/portSurvivalMonitor");
 		model.addObject("leftMenu", "portMenu");
@@ -260,7 +256,7 @@ public class PortalController {
         	if(addList.size()>0){
         		count=portMonitorService.batchAddPortMonitor(addList);
         	}
-            response.getWriter().write("端口存活监控数据导入成功:"+count+"条,端口监控地址格式错误:"+pcount+"条,重复数据:"+doubleCount+"条");
+            response.getWriter().write("端口存活监控数据导入成功:"+count+"条<br>端口监控地址格式错误:"+pcount+"条<br>重复数据:"+doubleCount+"条");
         } catch (Exception e) {
         	logger.info("eror",e);
             response.getWriter().write(e.getMessage());
@@ -331,13 +327,15 @@ public class PortalController {
 			@RequestParam(value = "accFre", required = false) String accFre, 
 			@RequestParam(value = "accTimeOut", required = false) String accTimeOut, 
 			@RequestParam(value = "timeOutNum", required = false) String timeOutNum,
-			@RequestParam(value = "alarmInter", required = false) String alarmInter){
+			@RequestParam(value = "alarmInter", required = false) String alarmInter,
+			@RequestParam(value = "alarmWay", required = false) String alarmWay){
 		model.addObject("monitorType", monitorType);
 		model.addObject("accFre", accFre);
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("portalAddress", portalAddress);
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("alarmInter", alarmInter);
+		model.addObject("alarmWay", alarmWay);
 		model.addObject("leftMenu", "portMenu");
 		model.setViewName("/portal/buildPortalStep2");
 		return model;
@@ -363,7 +361,8 @@ public class PortalController {
 			@RequestParam(value = "portalAddress", required = true) String portalAddress, 
 			@RequestParam(value = "monitorType", required = true) String monitorType, 
 			@RequestParam(value = "overtimes", required = true) Integer overtimes,
-			@RequestParam(value = "frequency", required = true) Integer frequency){
+			@RequestParam(value = "frequency", required = true) Integer frequency,
+			@RequestParam(value = "alarmWay", required = false) String alarmWay){
 		logger.info("进入第三步参数@key："+"|portalAddress:"+portalAddress+"|monitorType:"+monitorType+"|overtimes:"+overtimes+"|timeOutNum:"+frequency+"|alarmInter:"+frequency);
 		model.setViewName("/portal/buildPortalStep3");
 		model.addObject("monitorType", monitorType);
@@ -371,6 +370,7 @@ public class PortalController {
 		model.addObject("portalAddress", portalAddress);
 		model.addObject("frequency", frequency);
 		model.addObject("leftMenu", "portMenu");
+		model.addObject("alarmWay", alarmWay);
 		return model;
 
 	}

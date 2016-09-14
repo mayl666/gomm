@@ -17,10 +17,18 @@ import com.alibaba.fastjson.JSON;
 import com.gome.upm.common.Constant;
 import com.gome.upm.common.Page;
 import com.gome.upm.controler.base.BaseController;
+import com.gome.upm.domain.Asm;
 import com.gome.upm.domain.DBConnection;
+import com.gome.upm.domain.MySQLDelayRemote;
+import com.gome.upm.domain.OracleDelayRemote;
+import com.gome.upm.domain.Tbs;
 import com.gome.upm.domain.ThresholdConfig;
 import com.gome.upm.domain.ThresholdHistory;
+import com.gome.upm.service.AsmService;
 import com.gome.upm.service.DBConnectionService;
+import com.gome.upm.service.MySQLDelayRemoteService;
+import com.gome.upm.service.OracleDelayRemoteService;
+import com.gome.upm.service.TbsService;
 import com.gome.upm.service.ThresholdConfigService;
 import com.gome.upm.service.ThresholdHistoryService;
 
@@ -43,6 +51,18 @@ public class DbController extends BaseController {
 
 	@Resource
 	private DBConnectionService dBConnectionService;
+	
+	@Resource
+	private TbsService tbsService;
+	
+	@Resource
+	private AsmService asmService;
+	
+	@Resource
+	private MySQLDelayRemoteService mysqlDelayRemoteService;
+	
+	@Resource
+	private OracleDelayRemoteService oracleDelayRemoteService;
 	
 	/**
 	 * 
@@ -333,6 +353,198 @@ public class DbController extends BaseController {
 		p.setConditions(conn);
 		Page<DBConnection> pageConn = dBConnectionService.findDBConnectionListByPage(p);
 		model.addObject("page", pageConn);
+		return model;
+	}
+	
+	/**
+	 * 
+	 * 跳转到所有表空间记录页.
+	 *
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年08月26日    caowei    新建
+	 * </pre>
+	 */
+	@RequestMapping(value="/allTbs", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toAllTbsView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		if(StringUtils.isEmpty(content)){
+			model.setViewName("/db/tbsList");
+		} else {
+			model.setViewName("/db/tbsTable");
+		}
+		
+		model.addObject("leftMenu", "dbMenu");
+		
+		int pageNo = 1;
+		if(StringUtils.isNotEmpty(page)){
+			pageNo = Integer.parseInt(page);
+		}
+		
+		int pageSize = Constant.PAGE_SIZE;
+		if(StringUtils.isNotEmpty(size)){
+			pageSize = Integer.parseInt(size);
+		}
+		Page<Tbs> p = new Page<Tbs>(pageNo, pageSize);
+		
+		Tbs tbs = null;
+		//通过数据库类型查找
+		if(StringUtils.isNotEmpty(content)){
+			tbs = JSON.parseObject(content, Tbs.class);
+		} else {
+			tbs = new Tbs();
+		}
+		p.setConditions(tbs);
+		Page<Tbs> pageTbs = tbsService.findTbsListByPage(p);
+		model.addObject("page", pageTbs);
+		return model;
+	}
+	
+	/**
+	 * 
+	 * 跳转到所有表空间记录页.
+	 *
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年08月26日    caowei    新建
+	 * </pre>
+	 */
+	@RequestMapping(value="/allAsm", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toAllAsmView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		if(StringUtils.isEmpty(content)){
+			model.setViewName("/db/asmList");
+		} else {
+			model.setViewName("/db/asmTable");
+		}
+		
+		model.addObject("leftMenu", "dbMenu");
+		
+		int pageNo = 1;
+		if(StringUtils.isNotEmpty(page)){
+			pageNo = Integer.parseInt(page);
+		}
+		
+		int pageSize = Constant.PAGE_SIZE;
+		if(StringUtils.isNotEmpty(size)){
+			pageSize = Integer.parseInt(size);
+		}
+		Page<Asm> p = new Page<Asm>(pageNo, pageSize);
+		
+		Asm asm = null;
+		//通过数据库类型查找
+		if(StringUtils.isNotEmpty(content)){
+			asm = JSON.parseObject(content, Asm.class);
+		} else {
+			asm = new Asm();
+		}
+		p.setConditions(asm);
+		Page<Asm> pageAsm = asmService.findAsmListByPage(p);
+		model.addObject("page", pageAsm);
+		return model;
+	}
+	
+	/**
+	 * 
+	 * 跳转到所有MySQL主从延迟记录页.
+	 *
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年09月14日    caowei    新建
+	 * </pre>
+	 */
+	@RequestMapping(value="/allMySQL", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toAllMySQLView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		if(StringUtils.isEmpty(content)){
+			model.setViewName("/db/mysqlDelayRemoteList");
+		} else {
+			model.setViewName("/db/mysqlDelayRemoteTable");
+		}
+		
+		model.addObject("leftMenu", "dbMenu");
+		
+		int pageNo = 1;
+		if(StringUtils.isNotEmpty(page)){
+			pageNo = Integer.parseInt(page);
+		}
+		
+		int pageSize = Constant.PAGE_SIZE;
+		if(StringUtils.isNotEmpty(size)){
+			pageSize = Integer.parseInt(size);
+		}
+		Page<MySQLDelayRemote> p = new Page<MySQLDelayRemote>(pageNo, pageSize);
+		
+		MySQLDelayRemote mysqlDelayRemote = null;
+		
+		if(StringUtils.isNotEmpty(content)){
+			mysqlDelayRemote = JSON.parseObject(content, MySQLDelayRemote.class);
+		} else {
+			mysqlDelayRemote = new MySQLDelayRemote();
+		}
+		p.setConditions(mysqlDelayRemote);
+		Page<MySQLDelayRemote> pageMySQLDelayRemote = mysqlDelayRemoteService.findMySQLDelayRemoteListByPage(p);
+		model.addObject("page", pageMySQLDelayRemote);
+		return model;
+	}
+	
+	/**
+	 * 
+	 * 跳转到所有Oracle主从延迟记录页.
+	 *
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 *
+	 * <pre>
+	 * 修改日期        修改人    修改原因
+	 * 2016年09月14日    caowei    新建
+	 * </pre>
+	 */
+	@RequestMapping(value="/allOracle", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView toAllOracleView(@Param(value="content")String content, @Param(value="page")String page, @Param(value="size")String size, HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		if(StringUtils.isEmpty(content)){
+			model.setViewName("/db/oracleDelayRemoteList");
+		} else {
+			model.setViewName("/db/oracleDelayRemoteTable");
+		}
+		
+		model.addObject("leftMenu", "dbMenu");
+		
+		int pageNo = 1;
+		if(StringUtils.isNotEmpty(page)){
+			pageNo = Integer.parseInt(page);
+		}
+		
+		int pageSize = Constant.PAGE_SIZE;
+		if(StringUtils.isNotEmpty(size)){
+			pageSize = Integer.parseInt(size);
+		}
+		Page<OracleDelayRemote> p = new Page<OracleDelayRemote>(pageNo, pageSize);
+		
+		OracleDelayRemote oracleDelayRemote = null;
+		
+		if(StringUtils.isNotEmpty(content)){
+			oracleDelayRemote = JSON.parseObject(content, OracleDelayRemote.class);
+		} else {
+			oracleDelayRemote = new OracleDelayRemote();
+		}
+		p.setConditions(oracleDelayRemote);
+		Page<OracleDelayRemote> pageOracleDelayRemote = oracleDelayRemoteService.findOracleDelayRemoteListByPage(p);
+		model.addObject("page", pageOracleDelayRemote);
 		return model;
 	}
 	

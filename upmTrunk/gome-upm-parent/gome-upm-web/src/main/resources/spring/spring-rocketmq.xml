@@ -23,7 +23,7 @@
     
 	<bean id="upmSynMQ" class="com.gome.upm.mq.UpmSynMQ"></bean>
     <bean id="messagePushConsumer" class="com.gome.rocketmq.client.extension.impl.MessagePushConsumerImpl">
-        <property name="topic" value="upm_syn_topic_uat"/>
+        <property name="topic" value="${mq_topic}"/>
         <property name="consumerGroup" value="upm_syn_group"/>
         <property name="subExpression" value="*"/>
         <property name="group" value="rocketmq"/>

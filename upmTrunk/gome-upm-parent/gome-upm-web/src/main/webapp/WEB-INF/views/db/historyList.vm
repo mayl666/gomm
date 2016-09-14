@@ -39,10 +39,11 @@
     <!-- Left side end -->
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+    	#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <a href="${rc.contextPath}/index">统一监控平台 / </a>
-            <a href="${rc.contextPath}/db/index">数据库连接与表空间监控 / </a>
+            <a href="${rc.contextPath}/db/index">数据库监控 / </a>
             <a href="javascript:location.reload();">报警记录</a>
             <a href="javascript:history.back();" class="newbtn pull-right btnBack">返回</a>
         </section>

@@ -43,6 +43,33 @@ function initCpsData(){
     reloadCpsData(startTimeStr,endTimeStr,false);
 }
 $(function () {
+//Cps
+	laydate({
+	    elem: '#startTimeCps',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("startTime:" + date);
+	    }
+	});
+	laydate({
+	    elem: '#endTimeCps',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//alert("endTime:" + date);
+	    }
+	});
 	initCps();
 	initCpsData();
 });
@@ -75,8 +102,11 @@ function initCps(){
     });
 	options_cps = {
 		chart: {
-            type: 'spline',
+            type: 'line',
             renderTo: 'container_cps',  //图表放置的容器，一般在html中放置一个DIV，获取DIV的id属性值
+            animation: Highcharts.svg, // don't animate in old IE
+            marginRight: 0, //对容器的右内边距
+            animation:true,
             events: {
                 load: function () {
                 	waitTimeCps();
@@ -84,18 +114,25 @@ function initCps(){
             }
         },
         title: {
-            text: ''
+            text: ''    //by wangxiaye  去掉标题
         },
         xAxis: {
         	type: 'datetime',
+            tickPixelInterval: 5,
             dateTimeLabelFormats: {
                 second: '%H:%M:%S'
             },
+            title: {
+    			style: {
+    				color: '#AAA',
+    				font: 'bolder 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+                }
+            }
         },
         yAxis: {
-	        title: {
-	            text: ''   //by wangxiaye  去掉标题
-	        }
+            title: {
+	                     text: ''
+	                 }
         },
         //显示头
         tooltip: {
@@ -119,14 +156,6 @@ function initCps(){
         credits:{ //右下角超链接设置
             enabled: false
         },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: false
-            }
-        },
         series:[{
         	name: '订单',
         	data:[]
@@ -139,20 +168,51 @@ function searchCpsData(){
 	clearTimeout(waitCpsRun);
 	var startTimeStr=$('#startTimeCps').val();
 	var endTimeStr=$('#endTimeCps').val();
-	if(startTimeStr==''){
+	/**if(startTimeStr==''){
 			//获取结束时间
 		startTimeStr=new Date();
 		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
 		startTimeStr.setTime(yesterday_milliseconds);     
 		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
 		$("#startTimeCps").val(startTimeStr);
-	}
+	}*/
 	var endTimeStr=$('#endTimeCps').val();
-	if(endTimeStr==''){
+	/**if(endTimeStr==''){
 			//获取结束时间
 		endTimeNow=new Date();
 		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
 		$("#endTimeCps").val(endTimeStr);
+	}*/
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime==''&&endTime==''){
+		var obj=getSearchHour(6);
+		urlStartTime=obj.startTime;
+        endTime=obj.endTime;
+        var startTimeStr=obj.startTime;
+        var endTimeStr=obj.endTime;
+		$("#startTimeCps").val(startTimeStr);
+		$("#endTimeCps").val(endTimeStr);
+	}
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeCps").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeCps").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeCps").focus();
+			return ; 
+	    }  
+		
 	}
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);

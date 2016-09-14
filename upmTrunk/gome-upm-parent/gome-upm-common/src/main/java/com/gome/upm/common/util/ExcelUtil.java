@@ -1,31 +1,15 @@
 package com.gome.upm.common.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
-
-import jxl.Cell;
-import jxl.CellType;
-import jxl.DateCell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +17,19 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.Colour;
+import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class ExcelUtil {
 
@@ -54,16 +51,30 @@ public class ExcelUtil {
             
 			WritableWorkbook workbook = Workbook.createWorkbook(out.getOutputStream());
 			WritableSheet ws = workbook.createSheet("sheet 1", 0);
+			ws.setName(fileName); // 给sheet页改名
+			ws.getSettings().setDefaultColumnWidth(15); //设置列的宽度
+			ws.getSettings().setDefaultRowHeight(10);//设置列的高度
+			 //设置字体
+			WritableFont wf = new WritableFont(WritableFont.createFont("仿宋_GB2312"), 14, WritableFont.BOLD, false);
+			WritableCellFormat wcfF = new WritableCellFormat(wf);
+			wcfF.setWrap(true);//自动换行
+			wcfF.setBackground(Colour.YELLOW2);// 设置单元格的背景颜色 
+			wcfF.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);//把垂直对齐方式指定为居中
 			int rowNum = 0; // 要写的行
 			if (title != null) {
-				putRow(ws, 0, title);// 压入标题
+				putRow(ws, 0, title,wcfF);// 压入标题
 				rowNum = 1;
 			}
-
+			 //设置字体
+			WritableFont wf1 = new WritableFont(WritableFont.createFont("仿宋_GB2312"), 10, WritableFont.NO_BOLD, false);
+			WritableCellFormat wcfF1 = new WritableCellFormat(wf1);
+			wcfF1.setWrap(true);//自动换行
+			wcfF1.setBackground(Colour.GRAY_25);// 设置单元格的背景颜色 
+			wcfF1.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);//把垂直对齐方式指定为居中
 			for (int i = 0; i < datas.size(); i++, rowNum++) {// 写sheet
 				JSONObject data = datas.getJSONObject(i);
 				for (int k = 0; k < header.length; k++) {
-					Label cell = new Label(k, rowNum, "" + data.get(header[k]));
+					Label cell = new Label(k, rowNum, "" + data.get(header[k]),wcfF1);
 					ws.addCell(cell);
 				}
 
@@ -97,9 +108,14 @@ public class ExcelUtil {
 		try {
 			WritableWorkbook workbook = Workbook.createWorkbook(out);
 			WritableSheet ws = workbook.createSheet("sheet 1", 0);
+			 //设置字体
+			WritableFont wf = new WritableFont(WritableFont.createFont("仿宋_GB2312"), 14, WritableFont.BOLD, false);
+			WritableCellFormat wcfF = new WritableCellFormat(wf);
+			wcfF.setWrap(true);//自动换行
+			wcfF.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);//把垂直对齐方式指定为居中
 			int rowNum = 0; // 要写的行
 			if (title != null) {
-				putRow(ws, 0, title);// 压入标题
+				putRow(ws, 0, title,wcfF);// 压入标题
 				rowNum = 1;
 			}
 
@@ -135,16 +151,21 @@ public class ExcelUtil {
 			throw new IllegalArgumentException("写excel流需要List参数!");
 		}
 		try {
+			
 			WritableWorkbook workbook = Workbook.createWorkbook(out);
 			WritableSheet ws = workbook.createSheet("sheet 1", 0);
+			WritableFont wf = new WritableFont(WritableFont.createFont("仿宋_GB2312"), 14, WritableFont.BOLD, false);
+			WritableCellFormat wcfF = new WritableCellFormat(wf);
+			wcfF.setWrap(true);//自动换行
+			wcfF.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);//把垂直对齐方式指定为居中
 			int rowNum = 0; // 要写的行
 			if (title != null) {
-				putRow(ws, 0, title);// 压入标题
+				putRow(ws, 0, title,wcfF);// 压入标题
 				rowNum = 1;
 			}
 			for (int i = 0; i < datas.size(); i++, rowNum++) {// 写sheet
 				Object[] cells = (Object[]) datas.get(i);
-				putRow(ws, rowNum, cells); // 压一行到sheet
+				putRow(ws, rowNum, cells,wcfF); // 压一行到sheet
 			}
 
 			workbook.write();
@@ -439,10 +460,10 @@ public class ExcelUtil {
 	 * @throws RowsExceededException
 	 * @throws WriteException
 	 */
-	private static void putRow(WritableSheet ws, int rowNum, Object[] cells)
+	private static void putRow(WritableSheet ws, int rowNum, Object[] cells,WritableCellFormat wcfF)
 			throws RowsExceededException, WriteException {
 		for (int j = 0; j < cells.length; j++) {// 写一行
-			Label cell = new Label(j, rowNum, "" + cells[j]);
+			Label cell = new Label(j, rowNum, "" + cells[j],wcfF);
 			ws.addCell(cell);
 		}
 	}

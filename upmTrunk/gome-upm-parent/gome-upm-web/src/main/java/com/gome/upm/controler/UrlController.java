@@ -2,7 +2,6 @@ package com.gome.upm.controler;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,13 +76,9 @@ public class UrlController {
 			int validCount = urlMonitorService.findTotalResultByConditions(query);
 			
 			int inValidCount = total-validCount;
-			
-			float heath = 0.0f;
-			String exponential = "0.0";
-			DecimalFormat df=new DecimalFormat("0.0");
+			int exponential= 0;
 			if(page.getTotalResult()>0){
-				heath = (float)(validCount*100)/(total);
-				exponential=df.format(heath);
+				exponential = (validCount*100)/(total);
 			}
 			model.setViewName("/url/urlSurvivalMonitor");
 			model.addObject("leftMenu", "urlMenu");
@@ -181,7 +176,8 @@ public class UrlController {
 			@RequestParam(value = "isContainsCon", required = false) String isContainsCon,
 			@RequestParam(value = "isDefaultCode", required = false) String isDefaultCode, 
 			@RequestParam(value = "postParameter", required = false) String postParameter,
-			@RequestParam(value = "returnCode", required = false) String returnCode){
+			@RequestParam(value = "returnCode", required = false) String returnCode,
+			@RequestParam(value = "alarmWay", required = false) String alarmWay){
 		logger.info("paramas:||key:"+key+"|desc:"+desc+"|resContent:"+resContent);
 		model.addObject("key", key);
 		model.addObject("desc", desc);
@@ -198,6 +194,7 @@ public class UrlController {
 		model.addObject("timeOutNum", timeOutNum);
 		model.addObject("alarmInter", alarmInter);
 		model.addObject("method", method);
+		model.addObject("alarmWay", alarmWay);
 		if(resContent==null){
 			model.addObject("resContent", "");
 		}else{
@@ -238,7 +235,8 @@ public class UrlController {
 			@RequestParam(value = "isContainsCon", required = false) String isContainsCon,
 			@RequestParam(value = "isDefaultCode", required = false) String isDefaultCode, 
 			@RequestParam(value = "returnCode", required = false) String returnCode,
-			@RequestParam(value = "content", required = false) String content){
+			@RequestParam(value = "content", required = false) String content,
+			@RequestParam(value = "alarmWay", required = false) String alarmWay){
 		logger.info("content:"+content);
 		model.setViewName("/url/buildUrlStep3");
 		model.addObject("key", key);
@@ -254,6 +252,7 @@ public class UrlController {
 		model.addObject("isContainsCon", isContainsCon);
 		model.addObject("isDefaultCode", isDefaultCode);
 		model.addObject("returnCode", returnCode);
+		model.addObject("alarmWay", alarmWay);
 		model.addObject("leftMenu", "urlMenu");
 		return model;
 
@@ -521,7 +520,7 @@ public class UrlController {
         	if(addList.size()>0){
         		count=urlMonitorService.batchAddUrlMonitor(addList);
         	}
-            response.getWriter().write("URL存活监控数据导入成功:"+count+"条,URL地址或请求返回码格式错误:"+pcount+"条,重复数据:"+doubleCount+"条");
+            response.getWriter().write("URL存活监控数据导入成功:"+count+"条<br>URL地址或请求返回码格式错误:"+pcount+"条<br>重复数据:"+doubleCount+"条");
         } catch (Exception e) {
         	logger.info("eror",e);
             response.getWriter().write(e.getMessage());

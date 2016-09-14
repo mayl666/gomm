@@ -40,6 +40,8 @@ public class ServerAlarmRecord {
 	private String endTime;
 	/** 监控项 */
 	private String key_;
+	/** 监控项 */
+	private String level;
 	
 	public Long getId() {
 		return id;
@@ -144,4 +146,13 @@ public class ServerAlarmRecord {
 	public void setKey_(String key_) {
 		this.key_ = key_;
 	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	
 }

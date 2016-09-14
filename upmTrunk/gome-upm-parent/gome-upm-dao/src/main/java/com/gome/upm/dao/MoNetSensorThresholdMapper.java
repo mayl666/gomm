@@ -10,6 +10,8 @@ public interface MoNetSensorThresholdMapper {
     
     List<MoNetSensorThreshold> selectAll2();
     
+    List<MoNetSensorThreshold> selectAll3();
+    
     int deleteByPrimaryKey(Integer sensorId);
 
     int insert(MoNetSensorThreshold record);

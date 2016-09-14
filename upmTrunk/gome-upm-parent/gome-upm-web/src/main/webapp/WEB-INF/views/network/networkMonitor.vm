@@ -49,21 +49,36 @@
         <section class="content">
         	<div class="health_index_facility">
        			<h2>设备信息</h2>
-       			<span class="health_num">健康指数：<span style="color:#9c8ade;" id="healthyDeviceIndex">0</span></span>
-       			<div style="width: 320px;height: 250px;margin: auto;" id="network_health_index"></div>
+       			<div style="height: 250px;margin: auto;" id="network_health_index"></div>
 				<div class="health_status_count_server">
-	        		<span>错误：<a href="${rc.contextPath}/prtg/device/error" id="errorDeviceCount">0</a></span>
-	        		<span style="margin-left: 30px;">全部：<a href="${rc.contextPath}/prtg/device/all" id="totalDeviceCount">0</a></span>
+	        		<div class="border_R error_status">
+	        		     <p>错误</p>
+		       		     <p><a href="${rc.contextPath}/prtg/device/error" id="errorDeviceCount">0</a></p>
+		      	       </div>
+	        		<div class="all_status">
+	        		   <p>全部</p> 
+	        		   <p><a href="${rc.contextPath}/prtg/device/all" id="totalDeviceCount">0</a></p>
+	        		</div>
 	        	</div>
        		</div>
        		<div class="health_index_facility">
        			<h2>端口信息</h2>
-       			<span class="health_num">健康指数：<span style="color:#9c8ade;" id="healthySensorIndex">0</span></span>
-       			<div style="width: 320px;height: 250px;margin: auto;" id="port_health_index"></div>
-				<div class="health_status_count_server">
-					<span >全部：<a href="${rc.contextPath}/prtg/port/all?portStatus=all" id="totalSensorCount">0</a></span>
-	        		<span style="margin-left: 30px;">错误：<a href="${rc.contextPath}/prtg/port/all?portStatus=error" id="errorSensorCount">0</a></span>
-	        		<span style="margin-left: 30px;">报警：<a href="${rc.contextPath}/prtg/port/error" id="alarmPortCount">0</a></span>
+       			<div style="height: 250px;margin: auto;" id="port_health_index"></div>
+				<div class="health_status_count_server  health_three">
+				    <div class="border_R all_status">
+				        <p>全部</p>
+				    	<p><a href="${rc.contextPath}/prtg/port/all?portStatus=all" id="totalSensorCount">0</a></p>
+				    	
+				    </div>
+					<div class="border_R error_status">
+						<p>错误</p>
+						<p><a href="${rc.contextPath}/prtg/port/all?portStatus=error" id="errorSensorCount">0</a></p>
+						
+					</div>
+	        		<div class="alarm_status">
+	        			<p>报警</p>
+	        			<p><a href="${rc.contextPath}/prtg/port/error" id="alarmPortCount">0</a></p>
+	        		</div>	
 	        	</div>
        		</div>
 
@@ -87,6 +102,8 @@
 <script src="${rc.contextPath}/libs/js/app.min.js" type="text/javascript"></script>
 <script src="${rc.contextPath}/js/left_menu.js" type="text/javascript"></script>
 <script src="${rc.contextPath}/js/highcharts.js" type="text/javascript"></script>
+<script src="${rc.contextPath}/js/highcharts-more.js" type="text/javascript"></script>
+<script src="${rc.contextPath}/js/solid-gauge.js" type="text/javascript"></script>
 <script src="${rc.contextPath}/js/prtg/networkMonitor.js" type="text/javascript"></script>
 
 </body>

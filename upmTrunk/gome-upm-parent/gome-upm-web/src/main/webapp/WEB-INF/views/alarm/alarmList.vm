@@ -39,6 +39,7 @@
     <!-- Left side end -->
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+    	#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <a href="${rc.contextPath}/index">统一监控平台 / </a>
@@ -78,20 +79,30 @@
 					      	<option value="method">方法监控</option>
 					      	<option value="url">URL存活监控</option>
 					      	<option value="network">网络监控</option>
-					      	<option value="dbconn">数据库连接与表空间监控</option>
+					      	<option value="dbconn">数据库监控</option>
 					      	<option value="dragon">DRAGON</option>
 					      	<option value="oms">OMS</option>
 					      	<option value="forward">正向单</option>
+					      	<option value="finance">金融系统监控</option>
+					      	<!--
+					      	<option value="g3pp">G3PP监控</option>
+					      	<option value="smi">SMI监控</option>
+					      	<option value="allorder">不区分订单类型</option>
+					      	-->
 					    </select>
 					</div>
 					<div class="form-group">
 						<label for="level">报警级别：</label> 
+						#if($!chance !=1)
 						<select id="level" class="form-control"  style="width: 180px;"> 
 					      	<option value="">全部</option>
 					      	<option value="1">一级</option>
 					      	<option value="2">二级</option>
 					      	<option value="3">三级</option>
 					    </select>
+						#else
+							$!select
+						#end
 					</div>
 					<div class="form-group">
 						<label for="status">当前状态：</label> 
@@ -106,7 +117,10 @@
 					<a href="javascript:void(0);" class="newbtn search_btn ReactiveAlmSystembtn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
-					<input type="hidden" id="searchConditions" value="" />
+					<!--
+					<a class="export-btn"><i class=" fa fa-arrow-circle-down"></i>导出</a>
+					-->
+					<input type="hidden" id="searchConditions" value='$!search' />
 				</form>
             </div><!--toolbar end -->
             <div class="list_table" style="margin-top: 10px;">

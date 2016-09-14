@@ -9,10 +9,7 @@ $(function(){
 	$("#btn_search").click(function(){
 	    allPort.controller.search();
 	});
-	$("#import_submit").click(function(){
 	
-		importExcel();
-	})
 
 	$("#defaultReturnCode").on("click",function(){
 		allPort.service.defaultReturnCode();
@@ -147,6 +144,7 @@ var allPort = {
 		   allPort.controller.page();
 		   allPort.controller.editUrl();
 		   allPort.controller.editUrlSubmit();
+		   loadBind();
 	   },
 	   getCheckedUrl : function(){
 		   var ids = "";
@@ -177,13 +175,7 @@ var allPort = {
 		   });
 	   },
 	   getCheckedAlarm : function(){
-		   var ids = "";
-		   $("input[name='alarmWay']:radio").each(function(){
-			   if($(this).is(":checked")){
-				   ids += $(this).val()+",";
-			   }
-		   });
-		  return ids.substring(0, ids.length-1);
+		   return $("input[name='alarmWay']:checked").val();
 	   },
 	   alarmCheckedVari : function(){
 		   $(".list_table").on("click","#inlineCheckbox1",function(){
@@ -204,7 +196,6 @@ var allPort = {
 				dataType : 'html',	
 				data:{},
 				success:function(data){
-					console.info(data);
 					$(".content-wrapper").empty();
 					$(".content-wrapper").append(data);
 				},
@@ -234,7 +225,6 @@ var allPort = {
 						dataType : 'json',	
 						data:{"id":ids},
 						success:function(data){
-							console.info(data);
 							if(data.code == 1){
 								layer.msg("删除成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 									window.location.href=contextPath+"/portal/get";
@@ -266,7 +256,6 @@ var allPort = {
 					dataType : 'json',	
 					data:{"id":urlId,"status":status},
 					success:function(data){
-						console.info(data);
 						if(data.code == 1){
 							layer.msg("操作成功", {shade: [0.5, '#000'],scrollbar: false,offset: '50%', time:1000},function(){
 								refresh();
@@ -295,12 +284,12 @@ var allPort = {
 						dataType : 'html',	
 						data:{"urlAddress":urlAddress,"pageNo":pageNo},
 						success:function(data){
-							console.info(data);
 							var bool = data.indexOf("sessionTimeOut");
 							if(bool < 0){
 								$(".list_table").empty();
 								$(".list_table").append(data);
 								allPort.service.checkAndNoCheck();
+								loadBind();
 							}else{
 								window.location.href=contextPath+"/home";
 							}
@@ -325,12 +314,12 @@ var allPort = {
 						dataType : 'html',	
 						data:{"port":port},
 						success:function(data){
-							console.info(data);
 							var bool = data.indexOf("sessionTimeOut");
 							if(bool < 0){
 								$(".list_table").empty();
 								$(".list_table").append(data);
 								allPort.service.checkAndNoCheck();
+								loadBind();
 							}else{
 								window.location.href=contextPath+"/home";
 							}
@@ -361,7 +350,11 @@ var allPort = {
 							$("#urlFrc").val(data.attach.frequency);
 							$("#time_number").val(data.attach.overtimes);
 							$("input[name='alarmWay']:radio[value="+data.attach.alarmMethod+"]").prop("checked",true);
-								
+							if(data.attach.alarmMethod=='no'){
+								$("#warnContact").removeAttr("checked");
+							}else{
+								$("#warnContact").prop("checked",true);
+							}
 							
 							
 						}
@@ -460,12 +453,12 @@ function refresh(){
 			dataType : 'html',	
 			data:{"port":search,"pageNo":pageNum},
 			success:function(data){
-				console.info(data);
 				var bool = data.indexOf("sessionTimeOut");
 				if(bool < 0){
 					$(".list_table").empty();
 					$(".list_table").append(data);
 					allPort.service.checkAndNoCheck();
+					loadBind();
 				}else{
 					window.location.href=contextPath+"/home";
 				}
@@ -478,4 +471,19 @@ function refresh(){
 			
 			
 		});
+}
+
+function loadBind(){
+	$("#import_submit").click(function(){
+	
+		importExcel();
+	});
+	$("input[name='alarmWay']:radio").change(function(){
+		var alarmWay =$("input[name='alarmWay']:checked").val();
+		if(alarmWay=='no'){
+			$("#warnContact").removeAttr("checked");
+		}else{
+			$("#warnContact").prop("checked",true);
+		}
+	});
 }

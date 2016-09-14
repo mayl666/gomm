@@ -1,7 +1,11 @@
 package com.gome.upm.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -20,36 +24,6 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 
 	@Resource
 	ServerMonitorMapper serverMonitorMapper;
-
-	@Override
-	public void addHost(ServerHost serverHost) {
-		// TODO Auto-generated method stub
-		DBContextHolder.setDataSource("dataSourceOne");
-		serverMonitorMapper.addHost(serverHost);
-	}
-
-	@Override
-	public List<ServerHost> queryHost(String hostId) {
-		// TODO Auto-generated method stub
-		DBContextHolder.setDataSource("dataSourceOne");
-		return serverMonitorMapper.queryHost(hostId);
-	}
-
-	@Override
-	public Page<ServerHost> queryHostList(Page<ServerHost> page) throws Exception {
-		DBContextHolder.setDataSource("dataSourceOne");
-		List<ServerHost> hostList = serverMonitorMapper.queryHostList(page);
-		int total = serverMonitorMapper.selectTotalResultByConditions(page.getConditions());
-		Page<ServerHost> page2 = new Page<ServerHost>(page.getPageNo(), page.getPageSize(), total, hostList, page.getConditions());
-		return page2;
-	}
-
-	@Override
-	public void updateHost(ServerHost serverHost) {
-		// TODO Auto-generated method stub
-		DBContextHolder.setDataSource("dataSourceOne");
-		serverMonitorMapper.updateHost(serverHost);
-	}
 
 	@Override
 	public String[] queryHostGroup(ServerHost serverHost) {
@@ -106,24 +80,126 @@ public class ServerMonitorServiceImpl implements ServerMonitorService {
 		String[] hostNameList = serverMonitorMapper.queryHostNameNew(serverHost);
 		return hostNameList;
 	}
-
 	@Override
-	public int queryItemInvalidTotal(ServerHost serverHost) {
-		DBContextHolder.setDataSource("dataSourceOne");
-		return serverMonitorMapper.queryItemInvalidTotal(serverHost);
+	public Map<String, List<ServerHost>> queryIndexCpu(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceSix");
+		Map<String, List<ServerHost>> map = new HashMap<String, List<ServerHost>>();
+		List<ServerHost> hostsList60 = new ArrayList<ServerHost>();
+		List<ServerHost> hostsList80 = new ArrayList<ServerHost>();
+		List<ServerHost> hostsList90 = new ArrayList<ServerHost>();
+		List<ServerHost> hostsList = serverMonitorMapper.queryHostsList(serverHost);
+		if(hostsList!=null && hostsList.size()>0){
+			for (int i = 0; i < hostsList.size(); i++) {
+				Long itemid = hostsList.get(i).getItemid();
+				serverHost.setItemid(itemid);
+				serverHost.setTime_from(new Date().getTime()/1000-60);
+				serverHost.setTime_till(new Date().getTime()/1000);
+				ServerHost itemValue = serverMonitorMapper.queryItemValue(serverHost);
+				if(itemValue!=null){
+					hostsList.get(i).setValue(itemValue.getValue());
+					System.out.println(hostsList.get(i).getName()+"----"+i+"---"+itemValue.getValue());
+					if(itemValue.getValue()>=0 && itemValue.getValue()<60.0000){
+						hostsList60.add(hostsList.get(i));
+					}else if(itemValue.getValue()<90.0000){
+						hostsList80.add(hostsList.get(i));
+					}else{
+						hostsList90.add(hostsList.get(i));
+					}
+				}
+			}
+			map.put("hostsList60", hostsList60);
+			map.put("hostsList80", hostsList80);
+			map.put("hostsList90", hostsList90);
+		}
+		return map;
 	}
 
 	@Override
-	public int queryServerTotal(ServerHost serverHost) {
-		DBContextHolder.setDataSource("dataSourceOne");
+	public List<ServerHost> queryServerTimeValue(ServerHost serverHost) {
 		// TODO Auto-generated method stub
-		return serverMonitorMapper.queryServerTotal(serverHost);
+		DBContextHolder.setDataSource("dataSourceSix");
+		List<ServerHost> hostsListNew = new ArrayList<ServerHost>();
+		List<ServerHost> hostsList = serverMonitorMapper.queryHostsList(serverHost);
+		if(hostsList!=null && hostsList.size()>0){
+			for (int i = 0; i < hostsList.size(); i++) {
+				Long itemid = hostsList.get(i).getItemid();
+				serverHost.setItemid(itemid);
+				serverHost.setTime_from(new Date().getTime()/1000-60);
+				serverHost.setTime_till(new Date().getTime()/1000);
+				ServerHost itemValue = serverMonitorMapper.queryItemValue(serverHost);
+				if(itemValue!=null){
+					hostsList.get(i).setValue(itemValue.getValue());
+					hostsList.get(i).setClock(itemValue.getClock());
+					hostsListNew.add(hostsList.get(i));
+				}
+			}
+		}
+		return hostsListNew;
+	}
+	@Override
+	public List<ServerHost> queryServerPingValue(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceSix");
+		List<ServerHost> hostsListNew = new ArrayList<ServerHost>();
+		List<ServerHost> hostsList = serverMonitorMapper.queryHostsList(serverHost);
+		if(hostsList!=null && hostsList.size()>0){
+			for (int i = 0; i < hostsList.size(); i++) {
+				Long itemid = hostsList.get(i).getItemid();
+				serverHost.setItemid(itemid);
+				serverHost.setTime_from(new Date().getTime()/1000-60);
+				serverHost.setTime_till(new Date().getTime()/1000);
+				ServerHost itemValue = serverMonitorMapper.queryItemPingValue(serverHost);
+				if(itemValue!=null){
+					hostsList.get(i).setValue(itemValue.getValue());
+					hostsList.get(i).setClock(itemValue.getClock());
+					hostsListNew.add(hostsList.get(i));
+				}
+			}
+		}
+		return hostsListNew;
 	}
 
 	@Override
-	public List<ServerHost> queryHostsList() {
-		DBContextHolder.setDataSource("dataSourceOne");
+	public ServerHost queryHostsBase(ServerHost serverHost) {
 		// TODO Auto-generated method stub
-		return serverMonitorMapper.queryHostsList();
+		DBContextHolder.setDataSource("dataSourceOne");
+		return serverMonitorMapper.queryHostsBase(serverHost);
+	}
+
+	@Override
+	public void updateHostsBase(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceOne");
+		serverMonitorMapper.updateHostsBase(serverHost);
+	}
+
+	@Override
+	public void addHostsBase(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceOne");
+		serverMonitorMapper.addHostsBase(serverHost);
+		serverMonitorMapper.addItemsBase(serverHost);
+	}
+
+	@Override
+	public void updateItemsBase(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceOne");
+		serverMonitorMapper.updateItemsBase(serverHost);
+	}
+
+	@Override
+	public ServerHost queryItemsBase(ServerHost serverHost) throws Exception{
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceOne");
+		return serverMonitorMapper.queryItemsBase(serverHost);
+	}
+
+	@Override
+	public void addItemsBase(ServerHost serverHost) {
+		// TODO Auto-generated method stub
+		DBContextHolder.setDataSource("dataSourceOne");
+		serverMonitorMapper.addItemsBase(serverHost);
 	}
 }

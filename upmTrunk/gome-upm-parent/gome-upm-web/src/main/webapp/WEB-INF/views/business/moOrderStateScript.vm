@@ -1,10 +1,66 @@
 <script>
 $(function(){
    indentGraph();
+   indentGraph1();
+   initInfoData();
 });
-
+var startTimeStr ,endTimeStr;
+function initInfoData(){
+	var obj=getSearchHour(25);
+    startTimeStr=obj.startTime;
+    endTimeStr=obj.endTime;
+	var order1=$("#orderSId1").val();
+	getState1(order1);
+	var order=$("#orderSId").val();
+	getState(order);
+	
+	
+}
 function indentGraph(){
 	$('#container_orderState').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: ''
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: [
+                
+            ]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '订单',
+            data: []
+
+        }]
+    });
+}
+function indentGraph1(){
+	$('#container_orderState1').highcharts({
         chart: {
             type: 'line'
         },
@@ -49,7 +105,7 @@ function indentGraph(){
 
 $(function(){
    	indentOrderState();
-   	
+   	indentOrderState1();
    	laydate({
 	    elem: '#startTimeOrderState',
 	    format: 'YYYY-MM-DD hh:mm:ss',
@@ -66,6 +122,33 @@ $(function(){
 	
 	laydate({
 	    elem: '#endTimeOrderState',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//layer.msg("endTime:" + date);
+	    }
+	});
+	laydate({
+	    elem: '#startTimeOrderState1',
+	    format: 'YYYY-MM-DD hh:mm:ss',
+	    //min: laydate.now(), //设定最小日期为当前日期
+	    //max: '2099-06-16 23:59:59', //最大日期
+	    istime: true,
+	    istoday: true,
+	    choose: function(date){
+	         //end.min = datas; //开始日选好后，重置结束日的最小日期
+	         //end.start = datas //将结束日的初始值设定为开始日
+	    	//layer.msg("startTime:" + date);
+	    }
+	});
+	
+	laydate({
+	    elem: '#endTimeOrderState1',
 	    format: 'YYYY-MM-DD hh:mm:ss',
 	    //min: laydate.now(), //设定最小日期为当前日期
 	    //max: '2099-06-16 23:59:59', //最大日期
@@ -155,33 +238,137 @@ function indentOrderState(){
     copy(config_orderState,options_orderState);
 }
 
+var options_orderState1;
+var config_orderState1={};
+function indentOrderState1(){
+	Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+	options_orderState1 = {
+        chart: {
+            type: 'line',
+            renderTo: 'container_orderState1',
+            animation: Highcharts.svg,
+            animation:true
+        },
+        title: {
+            text: ''
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 5,
+            //gridLineWidth:1,
+            dateTimeLabelFormats: {
+                second: '%H:%M:%S'
+            },
+            title: {
+    			style: {
+    				color: '#AAA',
+    				font: 'bolder 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+                    Highcharts.numberFormat(this.y, 0);
+            },
+            backgroundColor: {
+    			linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+    			stops: [
+    				[0, 'rgba(96, 96, 96, .8)'],
+    				[1, 'rgba(16, 16, 16, .8)']
+    			]
+    		},
+    		borderWidth: 0,
+    		style: {
+    			color: '#FFF'
+    		}
+        },
+        credits:{ //右下角超链接设置
+            enabled: false
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '订单',
+            data: []
+        }]
+    }
+    copy(config_orderState1,options_orderState1);
+}
+
 function searchOrderStateData(){
 	var order=$("#orderSId").val();
 	if(order==''){
 		layer.msg('请选择类型');
 		return ;
 	}
-	var state=jQuery("#orderStateId :selected").text();
+	/**var state=jQuery("#orderStateId :selected").text();
 	if(state==''){
 		layer.msg('请选择状态');
 		return ;
-	}
+	}**/
 	var startTimeStr=$('#startTimeOrderState').val();
-	if(startTimeStr==''){
-			//获取结束时间
+	var endTimeStr=$('#endTimeOrderState').val();
+	
+	if(startTimeStr==''&&endTimeStr==''){
+		//获取结束时间
 		startTimeStr=new Date();
 		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
 		startTimeStr.setTime(yesterday_milliseconds);     
 		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
 		$("#startTimeOrderState").val(startTimeStr);
-	}
-	var endTimeStr=$('#endTimeOrderState').val();
-	if(endTimeStr==''){
 			//获取结束时间
 		endTimeNow=new Date();
 		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
 		$("#endTimeOrderState").val(endTimeStr);
 	}
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeOrderState").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeOrderState").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeOrderState").focus();
+			return ; 
+	    }  
+		
+	}
+	/**if(urlStartTime==''&&endTime==''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeOrderState").focus();
+		return ;
+	}
+	
+	*/
 	startTimeStr=startTimeStr.replace(/-/g,"/");
  	var oDate1 = new Date(startTimeStr);
  	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
@@ -189,8 +376,74 @@ function searchOrderStateData(){
  	endTimeStr=endTimeStr.replace(/-/g,"/");
  	var oDate2 = new Date(endTimeStr);
  	endTimeStr=oDate2.Format('yyyy-MM-dd HH:m5:s0');
+ 	var orderStateId = $("#orderStateId :selected").text();
+ 	reloadOrderStateData(startTimeStr,endTimeStr,orderStateId);
+}
+
+function searchOrderStateData1(){
+var order=$("#orderSId1").val();
+	if(order==''){
+		layer.msg('请选择类型');
+		return ;
+	}
+	/**var state=jQuery("#orderStateId :selected").text();
+	if(state==''){
+		layer.msg('请选择状态');
+		return ;
+	}**/
+	var startTimeStr=$('#startTimeOrderState1').val();
+	var endTimeStr=$('#endTimeOrderState1').val();
+	
+	if(startTimeStr==''&&endTimeStr==''){
+		//获取结束时间
+		startTimeStr=new Date();
+		var yesterday_milliseconds=startTimeStr.getTime()-1000*60*60*24;  
+		startTimeStr.setTime(yesterday_milliseconds);     
+		startTimeStr=startTimeStr.Format('yyyy/MM/dd HH:m5:s0');
+		$("#startTimeOrderState1").val(startTimeStr);
+			//获取结束时间
+		endTimeNow=new Date();
+		endTimeStr=endTimeNow.Format('yyyy/MM/dd HH:m5:s0');
+		$("#endTimeOrderState1").val(endTimeStr);
+	}
+	var urlStartTime = startTimeStr;
+	var endTime = endTimeStr;
+	if(urlStartTime==''&&endTime!=''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeOrderState1").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime==''){
+		layer.msg("请输入结束时间!");
+		$("#endTimeOrderState1").focus();
+		return ;
+	}
+	if(urlStartTime!=''&&endTime!=''){
+		var start=new Date(urlStartTime.replace("-", "/").replace("-", "/"));   
+	    var end=new Date(endTime.replace("-", "/").replace("-", "/"));  
+	    if(end<start){  
+	    	layer.msg("开始时间不能晚于结束时间!");
+	    	$("#startTimeOrderState1").focus();
+			return ; 
+	    }  
+		
+	}
+	/**if(urlStartTime==''&&endTime==''){
+		layer.msg("请输入开始时间!");
+		$("#startTimeOrderState1").focus();
+		return ;
+	}
+	
+	*/
+	startTimeStr=startTimeStr.replace(/-/g,"/");
+ 	var oDate1 = new Date(startTimeStr);
+ 	startTimeStr=oDate1.Format('yyyy-MM-dd HH:m5:s0');
  	
- 	reloadOrderStateData(startTimeStr,endTimeStr,state);
+ 	endTimeStr=endTimeStr.replace(/-/g,"/");
+ 	var oDate2 = new Date(endTimeStr);
+ 	endTimeStr=oDate2.Format('yyyy-MM-dd HH:m5:s0');
+ 	var orderStateId = $("#orderStateId1 :selected").text();
+ 	reloadOrderStateData1(startTimeStr,endTimeStr,orderStateId);
 }
 function reloadOrderStateData(startTimeStr,endTimeStr,state){
 	var payUrl="${rc.contextPath}/monitoBusiness/findMoOrderStateList.do";
@@ -205,6 +458,27 @@ function reloadOrderStateData(startTimeStr,endTimeStr,state){
 			copy(options_orderState,config_orderState);
 			options_orderState.series[0].data=dataList;
 			orderStateHighChart = new Highcharts.Chart(options_orderState);
+			$("#desc").show();
+			return false;
+     	},
+     	error : function(){
+     	}
+	});
+}
+
+function reloadOrderStateData1(startTimeStr,endTimeStr,state){
+	var payUrl="${rc.contextPath}/monitoBusiness/findMoOrderStateList.do";
+	$.ajax({
+		url: payUrl,
+		type:"POST",
+		data:{'startTime':startTimeStr,'endTime':endTimeStr,'state':state},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+			var dataList=eval(data);
+			copy(options_orderState1,config_orderState1);
+			options_orderState1.series[0].data=dataList;
+			orderStateHighChart = new Highcharts.Chart(options_orderState1);
 			$("#desc").show();
 			return false;
      	},
@@ -243,6 +517,40 @@ function getState(type){
 				var  option="<option value='"+list[i].name+"'>"+list[i].type+"</option>";
 				jQuery("#orderStateId").append(option);
 			}
+			var orderStateId = $("#orderStateId :selected").text();
+			reloadOrderStateData(startTimeStr,endTimeStr,orderStateId);
+     	},
+     	error : function(){
+     	}
+	});
+}
+function getState1(type){
+	jQuery("#orderStateId1").text(' ');
+	jQuery("#orderStateId1").empty();
+	if(type==''){
+		//jQuery("#orderStateId").empty();
+		return;
+	}
+	var url="${rc.contextPath}/monitoBusiness/searchOrderStateListByType.do";
+	$.ajax({ 
+		url: url,
+		type:"GET",
+		data:{orderType:type},
+		dataType:"text",
+		cache:false,
+		success: function(data){
+			var list=eval(data);
+			var  options="";
+			jQuery("#orderStateId1").append(options);
+			if(list.length>0){
+			$('#stateName1').text(list[0].name);
+			}
+			for(var i=0;i<list.length;i++){
+				var  option="<option value='"+list[i].name+"'>"+list[i].type+"</option>";
+				jQuery("#orderStateId1").append(option);
+			}
+			var orderStateId1 = $("#orderStateId1 :selected").text();
+			reloadOrderStateData1(startTimeStr,endTimeStr,orderStateId1);
      	},
      	error : function(){
      	}
@@ -258,5 +566,16 @@ function orderStateChange(){
 	}
 	//重新加载数据
 	$('#stateName').text(text);
+}
+
+function orderStateChange1(){
+	var selectv=jQuery("#orderStateId1 :selected").text();
+	var text=jQuery("#orderStateId1").val();
+	if(selectv==''){
+		layer.msg('请选择状态!');
+		return;
+	}
+	//重新加载数据
+	$('#stateName1').text(text);
 }
 </script>

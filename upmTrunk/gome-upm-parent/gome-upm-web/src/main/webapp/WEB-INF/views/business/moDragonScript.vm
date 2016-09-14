@@ -28,7 +28,9 @@ function initDragon(){
         xAxis: {
             categories: [
                 '正向单停在OD的订单',
-                '逆向单停在OD的订单'
+                '逆向单停在OD的订单',
+				'当天的G3PP真预留状态大量停在NA',
+				'当天的G3PP真预留状态停在DH'
             ]
         },
         yAxis: {

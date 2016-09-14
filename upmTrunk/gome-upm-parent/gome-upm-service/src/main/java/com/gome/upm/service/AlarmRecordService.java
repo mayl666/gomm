@@ -67,6 +67,13 @@ public interface AlarmRecordService {
 	 * 2016年7月26日 下午12:34:43   caowei-ds1
 	 */
 	List<AlarmRecord> findAllTypes();
+	
+	/**
+	 * 查询所有业务的类型
+	 * @return
+	 * 2016年9月9日 下午   liuyuqiang
+	 */
+	List<AlarmRecord> findAllBusinessTypes();
 
 	/**
 	 * 根据ID查询报警记录
@@ -91,4 +98,20 @@ public interface AlarmRecordService {
 	 * </pre>
 	 */
 	int editAlarmRecord(AlarmRecord alarmRecord);
+	
+	/**
+	 * 根据条件查询报警记录数
+	 * 
+	 * @param alarmRecord
+	 * @return
+	 */
+	List<AlarmRecord> selectAlarmRecordListByConditions(AlarmRecord alarmRecord);
+	
+	/**
+	 * 插入一条新的报警记录
+	 * @param alarmRecord
+	 * @return
+	 */
+	int insertAlarmRecord(AlarmRecord alarmRecord);
+	
 }

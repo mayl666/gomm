@@ -154,20 +154,26 @@ public class UrlRecord {
 				return "暂时重定向";
 			}else if(returnCode.equals("400")){
 				return "请求无效";
+			}else if(returnCode.equals("401")){
+				return "未授权";
 			}else if(returnCode.equals("403")){
 				return "禁止访问";
 			}else if(returnCode.equals("404")){
 				return "无法找到文件";
 			}else if(returnCode.equals("500")){
 				return "访问应用服务器错误";
+			}else if(returnCode.equals("501")){
+				return "未实现";
 			}else if(returnCode.equals("502")){
 				return "网关错误";
+			}else if(returnCode.equals("503")){
+				return "服务不可用";
 			}else{
 				return "访问失败";
 			}
 				
 		}
-		return returnCodeStr;
+		return "访问失败";
 	}
 
 	public void setReturnCodeStr(String returnCodeStr) {

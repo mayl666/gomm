@@ -47,10 +47,10 @@ public class InitConfigTableBean {
 	
 	public void work() {
 		logger.info("*************************************************************************************");
-		System.out.println("*************************************************************************************");
+//		System.out.println("*************************************************************************************");
 		date = new Date();
 		logger.info(df.format(date) + "-----开始初始化阈值配置表...");
-		System.out.println(df.format(date) + "-----开始初始化阈值配置表...");
+//		System.out.println(df.format(date) + "-----开始初始化阈值配置表...");
         long begin = date.getTime();
         ThresholdConfig thresholdConfig = null;
 		DBConnection dbConn = new DBConnection();
@@ -58,7 +58,7 @@ public class InitConfigTableBean {
 		//查询连接表
 		List<DBConnection> connList = dBConnectionService.findDBConnectionListByCondition(dbConn);
 		logger.info("连接表中共查询到" + connList.size() + "条数据......");
-		System.out.println("连接表中共查询到" + connList.size() + "条数据......");
+//		System.out.println("连接表中共查询到" + connList.size() + "条数据......");
 		for (DBConnection dbConnection : connList) {
 			thresholdConfig = new ThresholdConfig();
 			thresholdConfig.setServerAddr(dbConnection.getServerAddr());
@@ -86,7 +86,7 @@ public class InitConfigTableBean {
 		Tbs tbsCon = new Tbs();
 		List<Tbs> tbsList = tbsService.findTbsListByCondition(tbsCon);
 		logger.info("表空间表中共查询到" + tbsList.size() + "条数据......");
-		System.out.println("表空间表中共查询到" + tbsList.size() + "条数据......");
+//		System.out.println("表空间表中共查询到" + tbsList.size() + "条数据......");
 		for (Tbs tbs : tbsList) {
 			thresholdConfig = new ThresholdConfig();
 			thresholdConfig.setServerAddr(tbs.getServerAddr());
@@ -100,7 +100,7 @@ public class InitConfigTableBean {
 				thresholdConfig.setAlarmLevel(0);
 				thresholdConfig.setAlarmReason(0);
 				thresholdConfig.setLevel1Threshold(0.8f);
-				thresholdConfig.setLevel2Threshold(0.9f);
+				thresholdConfig.setLevel2Threshold(0.95f);
 				thresholdConfigService.addThresholdConfig(thresholdConfig);
 			}
 			
@@ -109,7 +109,7 @@ public class InitConfigTableBean {
 		Asm asmCon = new Asm();
 		List<Asm> asmList = asmService.findAsmListByCondition(asmCon);
 		logger.info("ASM空间表中共查询到" + asmList.size() + "条数据......");
-		System.out.println("ASM空间表中共查询到" + asmList.size() + "条数据......");
+//		System.out.println("ASM空间表中共查询到" + asmList.size() + "条数据......");
 		for (Asm asm : asmList) {
 			thresholdConfig = new ThresholdConfig();
 			thresholdConfig.setServerAddr(asm.getServerAddr());
@@ -123,21 +123,21 @@ public class InitConfigTableBean {
 				thresholdConfig.setAlarmLevel(0);
 				thresholdConfig.setAlarmReason(0);
 				thresholdConfig.setLevel1Threshold(0.8f);
-				thresholdConfig.setLevel2Threshold(0.9f);
+				thresholdConfig.setLevel2Threshold(0.95f);
 				thresholdConfigService.addThresholdConfig(thresholdConfig);
 			}
 			
 		}
 		logger.info("阈值配置表中共插入" + i + "条数据...");
-		System.out.println("阈值配置表中共插入" + i + "条数据...");
+//		System.out.println("阈值配置表中共插入" + i + "条数据...");
 		date = new Date();
 		logger.info(df.format(date) + "-----阈值配置表初始化完成...");
-		System.out.println(df.format(date) + "-----阈值配置表初始化完成...");
+//		System.out.println(df.format(date) + "-----阈值配置表初始化完成...");
 		long end = date.getTime();
         logger.info("本次初始化过程共耗时" + (end - begin)/1000 + "秒.");
-        System.out.println("本次初始化过程共耗时" + (end - begin)/1000 + "秒.");
+//        System.out.println("本次初始化过程共耗时" + (end - begin)/1000 + "秒.");
         logger.info("*************************************************************************************");
-        System.out.println("*************************************************************************************");
+//        System.out.println("*************************************************************************************");
 	}
 
 }

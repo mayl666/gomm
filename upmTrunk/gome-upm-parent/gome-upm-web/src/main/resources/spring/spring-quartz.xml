@@ -15,10 +15,9 @@
 		  http://www.springframework.org/schema/cache 
 		  http://www.springframework.org/schema/cache/spring-cache-3.0.xsd">
 		  
-	<!-- 初始化bean -->
-	<bean id="urlPortJob" class="com.gome.upm.service.quartz.UrlPortTimer" />
 	
-	
+	 <!-- 初始化bean -->
+	<bean id="initJob" class="com.gome.upm.service.quartz.InitConfigTableBean" />
 	<!-- job的配置开始 -->
 	<bean id="initJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -55,6 +54,8 @@
 	<!-- job的配置开始 -->
 	<bean id="dbJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!--false表示等上一个任务执行完后再开启新的任务-->
+    	<property name="concurrent" value="false"/>
 		<property name="targetObject">
 			<ref bean="dbJob" />
 		</property>
@@ -84,15 +85,18 @@
                     <ref bean="dbTriggerBean"/>
                     <ref bean="urlPortTriggerBean"/>
                      <!-- 
-                    <ref bean="cronTriggerBean"/>
-                  -->
+                    <ref bean="cronTriggerBean"/>-->
+                    <ref bean="monitorDragonTriggerBean"/>
+                  
                         
                </list>
           </property>
      </bean>
      
+     <!-- 初始化bean -->
+	<bean id="urlPortJob" class="com.gome.upm.service.quartz.UrlPortTimer" />
      <!-- URL和端口定时删除三天前数据job的配置开始 -->
-     <bean id="initJob" class="com.gome.upm.service.quartz.InitConfigTableBean" />
+     
 	<bean id="urlPortJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -109,6 +113,30 @@
           <property name="jobDetail" ref="urlPortJobDetail"/>
           <!--首次启动延迟时间（单位：毫秒）  -->
           <property name="startDelay" value="10000"/>
+          <!--周期，即每隔多久执行一次（单位：毫秒）  -->
+          <property name="repeatInterval" value="3600000"/>
+          <!--计数，从0开始，设置为9，任务会执行10次然后结束任务  -->
+     </bean>
+     
+     <!-- 初始化bean -->
+	<bean id="monitorDragonJob" class="com.gome.upm.service.quartz.MonitorDragonJob" />
+     <!-- URL和端口定时删除三天前数据job的配置开始 -->
+	<bean id="monitorDragonJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="monitorDragonJob" />
+		</property>
+		<property name="targetMethod">
+			<value>work</value>
+		</property>
+	</bean>
+	<!-- job的配置结束 -->
+	
+     <!-- 简单触发器bean(设置调度策略),按照定长周期调度石英任务,类似于定时器任务 -->
+     <bean id="monitorDragonTriggerBean" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+          <property name="jobDetail" ref="monitorDragonJobDetail"/>
+          <!--首次启动延迟时间（单位：毫秒）  -->
+          <property name="startDelay" value="20000"/>
           <!--周期，即每隔多久执行一次（单位：毫秒）  -->
           <property name="repeatInterval" value="3600000"/>
           <!--计数，从0开始，设置为9，任务会执行10次然后结束任务  -->

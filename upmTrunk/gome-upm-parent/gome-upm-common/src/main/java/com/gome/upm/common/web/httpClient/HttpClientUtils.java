@@ -140,12 +140,21 @@ public class HttpClientUtils {
 	}
 	
 	public static void main(String[] args) {
-		String url = "http://10.58.56.72:8081/alarmplatform/alarm";
+		String url = "http://10.58.56.45:8081/alarmplatform/sms";
 		Map<String,String> paramMap = new HashMap<String,String>();
-		paramMap.put("type", "server");
-		paramMap.put("mail", "caowei-ds1@yolo24.com");
-		paramMap.put("subject", "服务器报警11111");
-		paramMap.put("content", "10.58.56.72出现问题！");
+//		paramMap.put("type", "server");
+//		paramMap.put("mail", "caowei-ds1@yolo24.com");
+//		paramMap.put("subject", "服务器报警11111");
+//		paramMap.put("content", "10.58.56.72出现问题！");
+		
+		paramMap.put("type", "phone.dbconn");
+		paramMap.put("businessName", "cloud_net_alarm");
+		paramMap.put("templateId", "2011");
+		paramMap.put("category", "数据库连接与表空间报警");
+		paramMap.put("data", "服务器：10.126.50.116, 数据库：AFCUSDW, 表空间：CASHIER_INDEX");
+		paramMap.put("datetime", "2016-09-05 18:10:25");
+		paramMap.put("desc", "已使用百分比超出");
+		paramMap.put("level", "三级");
 		try {
 			String result = post(url, paramMap);
 			System.out.println("返回值：" + result);

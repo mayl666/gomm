@@ -17,15 +17,6 @@ import com.gome.upm.domain.ServerHost;
  */
 public interface ServerMonitorMapper {
 
-	void addHost(ServerHost serverHost);
-
-	List<ServerHost> queryHost(String hostId);
-
-	List<ServerHost> queryHostList(Page<ServerHost> page);
-
-	int selectTotalResultByConditions(ServerHost conditions);
-
-	void updateHost(ServerHost serverHost);
 
 	String[] queryHostGroup(ServerHost serverHost);
 
@@ -45,10 +36,22 @@ public interface ServerMonitorMapper {
 
 	String[] queryHostNameNew(ServerHost serverHost);
 
-	int queryItemInvalidTotal(ServerHost serverHost);
+	List<ServerHost> queryHostsList(ServerHost serverHost);
 
-	int queryServerTotal(ServerHost serverHost);
+	ServerHost queryItemValue(ServerHost serverHost);
 
-	List<ServerHost> queryHostsList();
+	ServerHost queryHostsBase(ServerHost serverHost);
+
+	void updateHostsBase(ServerHost serverHost);
+
+	void addHostsBase(ServerHost serverHost);
+
+	void updateItemsBase(ServerHost serverHost);
+
+	ServerHost queryItemsBase(ServerHost serverHost);
+
+	void addItemsBase(ServerHost serverHost);
+
+	ServerHost queryItemPingValue(ServerHost serverHost);
 
 }

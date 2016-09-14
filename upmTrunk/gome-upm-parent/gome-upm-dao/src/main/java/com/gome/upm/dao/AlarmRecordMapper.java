@@ -64,6 +64,13 @@ public interface AlarmRecordMapper {
 	List<AlarmRecord> selectAllTypes();
 	
 	/**
+	 * 查询所有业务监控的类型
+	 * @return
+	 * 2016年7月26日 下午12:36:05   liuyuqiang
+	 */
+	List<AlarmRecord> selectAllBusinessTypes();
+	
+	/**
 	 * 更新报警记录.
 	 * @param alarmRecord
 	 * 				报警记录
@@ -72,5 +79,20 @@ public interface AlarmRecordMapper {
 	 * 2016年8月12日   caowei-ds1
 	 */
 	int updateAlarmRecord(AlarmRecord alarmRecord);
+	
+	/**
+	 * 根据条件查询报警记录数
+	 * 
+	 * @param alarmRecord
+	 * @return
+	 */
+	List<AlarmRecord> selectAlarmRecordListByConditions(AlarmRecord alarmRecord);
+	
+	/**
+	 * 插入一条新的报警记录
+	 * @param alarmRecord
+	 * @return
+	 */
+	int insertAlarmRecord(AlarmRecord alarmRecord);
 }
 

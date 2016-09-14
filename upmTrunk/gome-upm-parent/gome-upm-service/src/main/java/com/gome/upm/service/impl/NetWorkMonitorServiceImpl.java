@@ -254,7 +254,11 @@ public class NetWorkMonitorServiceImpl implements NetWorkMonitorService {
 				lastUp = lastUp.substring(lastUp.indexOf("[")+1, lastUp.lastIndexOf("]"));
 			}
 			sd.setLastUp(lastUp);
-			sd.setLastDown(rootElt.elementTextTrim("lastdown"));
+			String lastdown = rootElt.elementTextTrim("lastdown");
+			if(!StringUtils.isEmpty(lastdown) && !lastdown.contains("-") && !lastdown.contains("<")){
+				lastdown = lastdown.substring(lastdown.indexOf("[")+1, lastdown.lastIndexOf("]"));
+			}
+			sd.setLastDown(lastdown);
 			String lastcheck = rootElt.elementTextTrim("lastcheck");
 			
 			if(!StringUtils.isEmpty(lastcheck) && !lastcheck.contains("-") && !lastcheck.contains("<")){

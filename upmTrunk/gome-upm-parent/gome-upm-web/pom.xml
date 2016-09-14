@@ -13,19 +13,13 @@
 	<name>gome-upm-web Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-		<dependency>
-		    <groupId>jdk.tools</groupId>
-		    <artifactId>jdk.tools</artifactId>
-		    <version>1.7</version>
-		    <scope>system</scope>
-		    <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
-		</dependency>
+
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<dependency> 
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
@@ -90,28 +84,28 @@
 			<artifactId>dom4j</artifactId>
 		</dependency>
 		<dependency>
-		  <groupId>net.sourceforge.jexcelapi</groupId>
-		  <artifactId>jxl</artifactId>
-		  <version>2.6</version>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6</version>
 		</dependency>
-		<!--poi begin-->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <!--poi end-->
-		
+		<!--poi begin -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<!--poi end -->
+
 		<dependency>
 			<groupId>com.gome</groupId>
 			<artifactId>userCenter-model</artifactId>
@@ -132,11 +126,11 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- if you enable JSR303 (Bean Validation) in spring. -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -189,11 +183,8 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-container-default</artifactId>
-			<version>1.6</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.codehaus.plexus</groupId> <artifactId>plexus-container-default</artifactId> 
+			<version>1.6</version> </dependency> -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -213,8 +204,8 @@
 					<groupId>org.springframework</groupId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.jboss.netty</groupId>	
-					<artifactId>netty</artifactId>		
+					<groupId>org.jboss.netty</groupId>
+					<artifactId>netty</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -228,15 +219,20 @@
 			<version>3.4.6</version>
 			<exclusions>
 				<exclusion>
-					<groupId>org.jboss.netty</groupId>	
-					<artifactId>netty</artifactId>	
+					<groupId>org.jboss.netty</groupId>
+					<artifactId>netty</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.github.sgroschupf</groupId>
 			<artifactId>zkclient</artifactId>
 			<version>0.1</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.101tec</groupId>
+			<artifactId>zkclient</artifactId>
+			<version>0.8</version>
 		</dependency>
 		<!-- Logging -->
 		<dependency>
@@ -255,11 +251,11 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-        <dependency>
-		  <groupId>redis.gcache</groupId>
-		  <artifactId>gcache</artifactId>
-		  <version>3.0.0-SNAPSHOT</version>
-		  <exclusions>
+		<dependency>
+			<groupId>redis.gcache</groupId>
+			<artifactId>gcache</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+			<exclusions>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
@@ -267,9 +263,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-		  <groupId>redis.clients</groupId>
-		  <artifactId>jedis</artifactId>
-		  <version>3.0.0.g-SNAPSHOT</version>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.0.0.g-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -317,13 +313,13 @@
 							<scanIntervalSeconds>10</scanIntervalSeconds>
 							<webApp>
 								<contextPath>/</contextPath>
-								 <!-- jetty9.2.6的defaultsDescriptor在<webApp>里，早期版本在<configuration>或者<webAppConfig>里 -->
-								  <defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
+								<!-- jetty9.2.6的defaultsDescriptor在<webApp>里，早期版本在<configuration>或者<webAppConfig>里 -->
+								<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
 							</webApp>
 							<httpConnector>
 								<port>8888</port>
 							</httpConnector>
-							
+
 						</configuration>
 					</plugin>
 				</plugins>
@@ -337,20 +333,43 @@
 				<username1>root</username1>
 				<password1>root</password1>
 				
+				<!-- datasource three -->
+				<url3>       
+                   <![CDATA[jdbc:oracle:thin:@10.126.53.186:1521:orcl]]>
+				</url3>
+				<driver3>oracle.jdbc.driver.OracleDriver</driver3>
+				<username3>uat_tr_fangjw</username3>
+				<password3>30GJE0Th7X3BuzuZ</password3>
+				<oms>oms_uat</oms>
+				<catb>UAT_CATB_6</catb>
+				<driver.source>dataSourceThree</driver.source>
+				<drg.source>dataSourceEight</drg.source>
+				<atp.ops>ATP_OPS_UAT</atp.ops>
+				<drag.core>DRG_CORE_UAT</drag.core>
 				<!-- datasource five -->
 				<url5>
-                    <![CDATA[jdbc:mysql://10.126.53.153:3306/sit?useUnicode=true&amp;characterEncoding=gb2312&amp;allowMultiQueries=true]]>
+                    <![CDATA[jdbc:mysql://monitor-mysql.ec.db:8306/sit?useUnicode=true&amp;characterEncoding=gb2312&amp;allowMultiQueries=true]]>
 				</url5>
 				<driver5>com.mysql.jdbc.Driver</driver5>
 				<username5>atg</username5>
-				<password5>123456</password5>
+				<password5>RF67hnG#Da</password5>
+				
+				<url7>       
+                   <![CDATA[jdbc:mysql://yptmon-mys.cloud.rdb:7309/sit?useUnicode=true&amp;characterEncoding=gb2312&amp;allowMultiQueries=true]]>
+				</url7>
+				<driver7>com.mysql.jdbc.Driver</driver7>
+				<username7>prd_pr_ypt_mon</username7>
+				<password7>JdfsNHLKV0kngHJ</password7>
+				
+				<!-- mq topic -->
+				<mq.topic>upm_syn_topic_uat</mq.topic>
 				
 				<!-- alarm address -->
 				<alarm.addr>http://10.58.56.45:8081/alarmplatform/alarm</alarm.addr>
 				<!-- elasticsearch hosts -->
 				<elasticsearch.hosts>10.58.56.132:9300,10.58.56.133:9300,10.58.56.134:9300</elasticsearch.hosts>
 				<elasticsearch.index>gtracetest-*</elasticsearch.index>
-				
+
 				<message.phone>13439530319</message.phone>
 
 				<!-- jtest log config -->
@@ -437,6 +456,20 @@
 				<driver1>com.mysql.jdbc.Driver</driver1>
 				<username1>monitorplat_rw</username1>
 				<password1>Inj(9^VLkm56BLcD</password1>
+				<!-- datasource three -->
+				
+				<url3>       
+                   <![CDATA[jdbc:oracle:thin:@yptmon-ora.cloud.rdb:31521:repdb]]>
+				</url3>
+				<driver3>oracle.jdbc.driver.OracleDriver</driver3>
+				<username3>prd_pr_ypt_mon</username3>
+				<password3>9lXXPlgrWAVY2CYJ</password3>
+				<oms>gome_oms_ogg</oms>
+				<catb>catb_ogg</catb>
+				<atp.ops>ATP_OPS_PRD</atp.ops>
+				<drag.core>DRG_CORE</drag.core>
+				<driver.source>dataSourceSeven</driver.source>
+				<drg.source>dataSourceThree</drg.source>
 				
 				<!-- datasource five -->
 				<url5>       
@@ -446,12 +479,23 @@
 				<username5>atg</username5>
 				<password5>RF67hnG#Da</password5>
 				
+				<!-- datasource seven -->
+				<url7>       
+                   <![CDATA[jdbc:mysql://yptmon-mys.cloud.rdb:7309/order?useUnicode=true&amp;characterEncoding=gb2312&amp;allowMultiQueries=true]]>
+				</url7>
+				<driver7>com.mysql.jdbc.Driver</driver7>
+				<username7>prd_pr_ypt_mon</username7>
+				<password7>JdfsNHLKV0kngHJ</password7>
+				
+				<!-- mq topic -->
+				<mq.topic>upm_syn_topic_live</mq.topic>
+				
 				<!-- alarm address -->
 				<alarm.addr>http://10.58.62.204/alarmplatform/alarm</alarm.addr>
 				<!-- elasticsearch hosts -->
 				<elasticsearch.hosts>10.58.61.88:9300,10.58.61.89:9300,10.58.50.248:9300,10.58.50.249:9300</elasticsearch.hosts>
 				<elasticsearch.index>gtrace-*</elasticsearch.index>
-				
+
 				<message.phone>13699167012</message.phone>
 
 				<!-- jtest log config -->

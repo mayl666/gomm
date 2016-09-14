@@ -103,7 +103,7 @@
 	        	<div class="rightlayout">
 	        		<div class="righttoplayout">
 	        			<h2>5分钟订单</h2>
-	        			<div id="container_headLoginInfo" style="height:300px;"></div>
+	        			<div id="container_FiveOrder" style="height:300px;"></div>
 	        		</div>
 	        		<div class="rightbottomlayout">
 	        			<h2>在线支付成功率</h2>
@@ -123,6 +123,8 @@
 <!-- 按订单状态查询-->
 #parse("business/orderHeadScript.vm")
 
+<!--五分钟订单-->
+#parse("business/moFiveOrderScript.vm")
 <!-- jQuery 2.1.3 -->
 <script src="${rc.contextPath}/js/jQuery/jQuery-2.1.3.min.js"></script>
 <!-- Bootstrap 3.3.2 JS -->

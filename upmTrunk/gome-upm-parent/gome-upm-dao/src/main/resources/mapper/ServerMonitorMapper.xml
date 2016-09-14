@@ -3,127 +3,116 @@
 <mapper namespace="com.gome.upm.dao.ServerMonitorMapper">
 	<resultMap id="BaseResultMap" type="com.gome.upm.domain.ServerHost">
 		<id column="id" property="id" jdbcType="VARCHAR" />
-		<result column="hostId" property="hostId" jdbcType="VARCHAR" />
-		<result column="hostStr" property="host" jdbcType="VARCHAR" />
-		<result column="cpuValue" property="cpu" jdbcType="VARCHAR" />
-		<result column="memoryValue" property="memory" jdbcType="VARCHAR" />
-		<result column="loadValue" property="load" jdbcType="VARCHAR" />
-		<result column="hostname" property="name" jdbcType="VARCHAR" />
-		<result column="groupName" property="groupName" jdbcType="VARCHAR" />
-		<result column="statusFlag" property="status" jdbcType="VARCHAR" />
+		<result column="hostid" property="hostid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="itemid" property="itemid" jdbcType="VARCHAR" />
+		<result column="key_" property="key_" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<sql id="Base_Column_List">
-		id, hostId,hostStr ,cpuValue,memoryValue,loadValue
-		,groupName,hostname,statusFlag
-	</sql>
-	<select id="queryHostsList" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from gm_host
+	<select id="queryHostsList" resultType="com.gome.upm.domain.ServerHost" parameterType="com.gome.upm.domain.ServerHost">
+		SELECT a.`hostid`,a.`name`,d.name as groupName,b.`itemid`,b.`key_` ,a.`available`
+		FROM `hosts` a ,items b,hosts_groups c ,groups d
+		WHERE a.`hostid` = b.`hostid`
+		AND a.`hostid` = c.hostid
+		AND c.`groupid` = d.`groupid`
+		<if test="key_ != null and key_ != ''">
+			AND b.`key_` like CONCAT('%',#{key_,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="key1_ != null and key1_ != ''">
+			AND b.`key_` like CONCAT('%',#{key1_,jdbcType=VARCHAR},'%')
+		</if>
+		AND a.`status` = #{status,jdbcType=VARCHAR}
 	</select>
-	<select id="queryHost" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from gm_host
-		where hostId = #{hostId,jdbcType=VARCHAR}
+	<select id="queryItemValue" resultType="com.gome.upm.domain.ServerHost" parameterType="com.gome.upm.domain.ServerHost">
+		SELECT value,clock FROM history b 
+		WHERE b.`itemid` = #{itemid,jdbcType=BIGINT} 
+		<if test="time_from != null and time_from != 0">
+			<![CDATA[ AND b.clock > #{time_from,jdbcType=BIGINT}]]>
+		</if>
+		<if test="time_till != null and time_till != 0">
+			 <![CDATA[AND b.clock < #{time_till,jdbcType=BIGINT}]]>
+		</if>
+		limit 1
 	</select>
-
-	<select id="queryHostList" resultMap="BaseResultMap"
-		parameterType="com.gome.upm.common.Page">
-		select
-		<include refid="Base_Column_List" />
-		from gm_host
-		where 1=1
-		<if test="conditions.groupName != null and conditions.groupName != ''">
-			and groupName = #{conditions.groupName,jdbcType=VARCHAR}
+	<select id="queryItemPingValue" resultType="com.gome.upm.domain.ServerHost" parameterType="com.gome.upm.domain.ServerHost">
+		SELECT value,clock FROM history_uint b 
+		WHERE b.`itemid` = #{itemid,jdbcType=BIGINT} 
+		<if test="time_from != null and time_from != 0">
+			<![CDATA[ AND b.clock > #{time_from,jdbcType=BIGINT}]]>
 		</if>
-		<if test="conditions.host != null and conditions.host != ''">
-			and hostStr = #{conditions.host,jdbcType=VARCHAR}
+		<if test="time_till != null and time_till != 0">
+			 <![CDATA[AND b.clock < #{time_till,jdbcType=BIGINT}]]>
 		</if>
-		<if test="conditions.status != null and conditions.status != ''">
-			and statusFlag = #{conditions.status,jdbcType=VARCHAR}
-		</if>
-		<if test="conditions.status != null and conditions.status != ''">
-			and statusFlag = #{conditions.status,jdbcType=VARCHAR}
-		</if>
-		<if test="conditions.orderBy=='1'.toString()">
-			order by cpuValue*1 asc
-		</if>
-		<if test="conditions.orderBy=='2'.toString()">
-			order by cpuValue*1 desc
-		</if>
-		<if test="conditions.orderBy=='3'.toString()">
-			order by memoryValue*1 asc
-		</if>
-		<if test="conditions.orderBy=='4'.toString()">
-			order by memoryValue*1 desc
-		</if>
-		<if test="conditions.orderBy=='5'.toString()">
-			order by loadValue*1 asc
-		</if>
-		<if test="conditions.orderBy=='6'.toString()">
-			order by loadValue*1 desc
-		</if>
-		<if test="conditions.orderBy == null or conditions.orderBy == ''">
-			ORDER BY cpuValue*1 desc
-		</if>
-		<if test="start != null and pageSize != null">
-			LIMIT #{start},#{pageSize}
-		</if>
+		limit 1
 	</select>
 
-	<insert id="addHost" parameterType="com.gome.upm.domain.ServerHost"
+
+	<!-- 查询host -->
+	<select id="queryHostsBase" resultType="com.gome.upm.domain.ServerHost" parameterType="com.gome.upm.domain.ServerHost">
+		SELECT hostid,name,groupName,statusFlag 
+		FROM gm_host_base
+		<if test="hostid != null and hostid != ''">
+			where hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+	</select>
+	<!-- 查询items -->
+	<select id="queryItemsBase" resultType="com.gome.upm.domain.ServerHost" parameterType="com.gome.upm.domain.ServerHost">
+		SELECT itemid,hostid,key_,clock,`value`
+		FROM gm_item_base
+		WHERE 1 = 1
+		<if test="itemid != null and itemid != ''">
+			and itemid = #{itemid,jdbcType=BIGINT}
+		</if>
+		<if test="hostid != null and hostid != ''">
+			and hostid = #{hostid,jdbcType=BIGINT}
+		</if>
+		<if test="key_ != null and key_ != ''">
+			and key_ = #{key_,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="addHostsBase" parameterType="com.gome.upm.domain.ServerHost"
 		useGeneratedKeys="true" keyProperty="id">
-		insert into gm_host (hostId,
-		hostStr,cpuValue,memoryValue,loadValue,groupName,hostname,statusFlag)
-		values (#{hostId,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR},
-		#{cpu,jdbcType=VARCHAR}, #{memory,jdbcType=VARCHAR},
-		#{load,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR},
-		#{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+		insert into gm_host_base (hostid,name,groupName,statusFlag)
+		values (#{hostid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{groupName,jdbcType=VARCHAR}, #{available,jdbcType=VARCHAR})
+	</insert>
+	<insert id="addItemsBase" parameterType="com.gome.upm.domain.ServerHost"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into gm_item_base (hostid,itemid,key_,clock,value)
+		values (#{hostid,jdbcType=BIGINT}, #{itemid,jdbcType=BIGINT},
+		#{key_,jdbcType=VARCHAR}, #{clock,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR})
 	</insert>
 
-	<!-- 查询总数量 -->
-	<select id="selectTotalResultByConditions" resultType="java.lang.Integer"
-		parameterType="com.gome.upm.domain.ServerHost">
-		select count(*) from gm_host
-		where 1=1
-		<if test="groupName != null and groupName != ''">
-			and groupName = #{groupName,jdbcType=VARCHAR}
+	<update id="updateHostsBase" parameterType="com.gome.upm.domain.ServerHost">
+		update gm_host_base set
+		<if test="hostid != null">
+			hostid = #{hostid,jdbcType=BIGINT}
 		</if>
-		<if test="host != null and host != ''">
-			and hostStr = #{host,jdbcType=VARCHAR}
-		</if>
-		<if test="status != null and status != ''">
-			and statusFlag = #{status,jdbcType=VARCHAR}
-		</if>
-	</select>
-
-	<update id="updateHost" parameterType="com.gome.upm.domain.ServerHost">
-		update gm_host set
-		<if test="hostId != null">
-			hostId = #{hostId,jdbcType=BIGINT}
-		</if>
-		<if test="cpu != null">
-			, cpuValue = #{cpu,jdbcType=VARCHAR}
-		</if>
-		<if test="memory != null">
-			, memoryValue = #{memory,jdbcType=VARCHAR}
-		</if>
-		<if test="load != null">
-			, loadValue = #{load,jdbcType=VARCHAR}
+		<if test="name != null">
+			, name = #{name,jdbcType=VARCHAR}
 		</if>
 		<if test="groupName != null">
 			, groupName = #{groupName,jdbcType=VARCHAR}
 		</if>
-		<if test="name != null">
-			, hostname = #{name,jdbcType=VARCHAR}
+		<if test="available != null">
+			, statusFlag = #{available,jdbcType=VARCHAR}
 		</if>
-		<if test="status != null">
-			, statusFlag = #{status,jdbcType=VARCHAR}
-		</if>
-		where hostId = #{hostId,jdbcType=BIGINT}
+		where hostid = #{hostid,jdbcType=BIGINT}
 	</update>
+	<update id="updateItemsBase" parameterType="com.gome.upm.domain.ServerHost">
+		update gm_item_base set
+		<if test="itemid != null">
+			itemid = #{itemid,jdbcType=BIGINT}
+		</if>
+		<if test="clock != null">
+			, clock = #{clock,jdbcType=VARCHAR}
+		</if>
+		<if test="value != null">
+			, value = #{value,jdbcType=VARCHAR}
+		</if>
+		where itemid = #{itemid,jdbcType=BIGINT}
+	</update>
+	
 	<!-- 查询host -->
 	<select id="queryHostName" resultType="java.lang.String"
 		parameterType="com.gome.upm.domain.ServerHost">
@@ -205,11 +194,11 @@
 	<insert id="addAlarmRecord" parameterType="com.gome.upm.domain.ServerAlarmRecord"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into gm_server_alarm_record
-		(groupName,host,alarmTime,content,status,alarmValue,type,key_)
+		(groupName,host,alarmTime,content,status,alarmValue,type,key_,alarm_level)
 		values (#{groupName,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR},
 		#{alarmTime,jdbcType=VARCHAR},
 		#{content,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
-		#{alarmValue,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{key_,jdbcType=VARCHAR})
+		#{alarmValue,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{key_,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR})
 	</insert>
 	<update id="updateAlarmRecord" parameterType="com.gome.upm.domain.ServerAlarmRecord">
 		update gm_server_alarm_record set

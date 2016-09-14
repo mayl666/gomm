@@ -30,8 +30,10 @@ public class UrlMonitorConvertUtils {
 						urlMonitor.setSurvivalStr("不存活");
 					} else if(urlMonitor.getSurvival() == 1){
 						urlMonitor.setSurvivalStr("存活");
-					}else{
+					}else if(urlMonitor.getSurvival() == 2){
 						urlMonitor.setSurvivalStr("匹配失败");
+					}if(urlMonitor.getSurvival() == 3){
+						urlMonitor.setSurvivalStr("访问超时");
 					}
 				}
 				if(urlMonitor.getUrl().length()>80){

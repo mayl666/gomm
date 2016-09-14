@@ -15,10 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.gome.upm.common.util.DataSourceGetUtils;
 import com.gome.upm.common.util.JsonUtils;
 import com.gome.upm.dao.MoOrderRechargeDAO;
 import com.gome.upm.dao.MoPayDAO;
-import com.gome.upm.domain.MoOrderNotRechargeBO;
 import com.gome.upm.domain.MoOrderRechargeBO;
 import com.gome.upm.service.util.DBContextHolder;
 /**
@@ -39,6 +39,10 @@ public class MonitoPayOrderController extends AbsBaseController{
 	public void setMoPayDAO(MoPayDAO moPayDAO) {
 		this.moPayDAO = moPayDAO;
 	}
+	/**
+	 * 系数
+	 */
+	private int xishu =13;
 	@RequestMapping(value = "findPayOrderList", method = RequestMethod.POST)
 	public void findPayOrderList(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 		// 参数，开始时间，时间间隔
@@ -53,13 +57,13 @@ public class MonitoPayOrderController extends AbsBaseController{
 		List<Object[]> l1=new ArrayList<Object[]>();
 		List<Object[]> l2=new ArrayList<Object[]>();
 		List<Object[]> l3=new ArrayList<Object[]>();
-		//今天----"当前5分钟非充值订单"
+		//今天----"当前5分钟充值订单"
 		getSeriesByTimeForPayOrder(startTime, endTime, timeMap);
-		//昨天--"昨天5分钟非充值订单"
+		//昨天--"昨天5分钟充值订单"
 		Date startYesterdayTime=new Date(startTime.getTime()-1000*60*60*24);
 		Date endYesterdayTime=new Date(endTime.getTime()-1000*60*60*24);
 		getSeriesByTimeForPayOrder(startYesterdayTime, endYesterdayTime, timeMap);
-		//一周前--"7天前5分钟非充值订单"
+		//一周前--"7天前5分钟充值订单"
 		Date startWeekTime=new Date(startTime.getTime()-1000*60*60*24*7);
 		Date endWeekTime=new Date(endTime.getTime()-1000*60*60*24*7);
 		getSeriesByTimeForPayOrder(startWeekTime, endWeekTime, timeMap);
@@ -67,11 +71,11 @@ public class MonitoPayOrderController extends AbsBaseController{
 		while(startTime.getTime()<=endTime.getTime()){
 			//添加数据
 			Integer v1=timeMap.get(startTime.getTime());
-			l1.add(new Object[]{startTime.getTime(),v1==null?0:v1});
+			l1.add(new Object[]{startTime.getTime(),v1==null?0:v1*xishu});
 			Integer v2=timeMap.get(startTime.getTime()-1000*60*60*24);
-			l2.add(new Object[]{startTime.getTime(),v2==null?0:v2});
+			l2.add(new Object[]{startTime.getTime(),v2==null?0:v2*xishu});
 			Integer v3=timeMap.get(startTime.getTime()-1000*60*60*24*7);
-			l3.add(new Object[]{startTime.getTime(),v3==null?0:v3});
+			l3.add(new Object[]{startTime.getTime(),v3==null?0:v3*xishu});
 			//+5分钟
 			startTime = new Date(startTime .getTime() + 300000);
 		}
@@ -104,9 +108,9 @@ public class MonitoPayOrderController extends AbsBaseController{
 		getObjectForPayOrder(startWeekTime, timeMap);
 		Integer v3=timeMap.get(startWeekTime.getTime());
 		
-		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1});
-		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2});
-		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3});
+		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1*xishu});
+		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2*xishu});
+		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3*xishu});
 		renderData(response, JsonUtils.Object2Json(reList));
 	}
 	private void getObjectForPayOrder(Date startTime,Map<Long,Integer> timeMap) throws ParseException{
@@ -114,7 +118,7 @@ public class MonitoPayOrderController extends AbsBaseController{
 		MoOrderRechargeBO searchBo=new MoOrderRechargeBO();
 		searchBo.setStartTime(startTime);
 		Integer count= moOrderRechargeDAO.searchCountByTime(searchBo);
-		timeMap.put(startTime.getTime(), count);
+		timeMap.put(startTime.getTime(), count*xishu);
 	}
 	private void getSeriesByTimeForPayOrder(Date startTime,Date endTime,Map<Long,Integer> map) throws ParseException{
 		DBContextHolder.setDataSource("dataSourceOne");
@@ -123,7 +127,7 @@ public class MonitoPayOrderController extends AbsBaseController{
 		searchbo.setEndTime(endTime);
 		List<MoOrderRechargeBO> li=moOrderRechargeDAO.searchMoOrderRechargeList(searchbo);
 		for(MoOrderRechargeBO bo:li){
-			map.put(bo.getStartTime().getTime(), bo.getCount());
+			map.put(bo.getStartTime().getTime(), bo.getCount()*xishu);
 		}
 	}
 	
@@ -144,20 +148,28 @@ public class MonitoPayOrderController extends AbsBaseController{
 		MoOrderRechargeBO notPayVO=new MoOrderRechargeBO();
 		notPayVO.setStartTime(startTime);
 		notPayVO.setEndTime(endTime);
-		DBContextHolder.setDataSource("dataSourceThree");
-		Integer v1=moPayDAO.searchMoPayCountByTime(notPayVO);
-		//昨天
-		notPayVO.setStartTime(new Date(startTime.getTime()-1000*60*60*24));
-		notPayVO.setEndTime(new Date(endTime.getTime()-1000*60*60*24));
-		Integer v2=moPayDAO.searchMoPayCountByTime(notPayVO);
-		//一周前
-		notPayVO.setStartTime(new Date(startTime.getTime()-1000*60*60*24*7));
-		notPayVO.setEndTime(new Date(endTime.getTime()-1000*60*60*24*7));
-		Integer v3=moPayDAO.searchMoPayCountByTime(notPayVO);
+		DBContextHolder.setDataSource(DataSourceGetUtils.getDataSource());
+		Integer v1=0;
+		Integer v2=0;
+		Integer v3=0;
+		try{
+			v1=moPayDAO.searchMoPayCountByTime(notPayVO);
+			//昨天
+			notPayVO.setStartTime(new Date(startTime.getTime()-1000*60*60*24));
+			notPayVO.setEndTime(new Date(endTime.getTime()-1000*60*60*24));
+				v2=moPayDAO.searchMoPayCountByTime(notPayVO);
+			//一周前
+			notPayVO.setStartTime(new Date(startTime.getTime()-1000*60*60*24*7));
+			notPayVO.setEndTime(new Date(endTime.getTime()-1000*60*60*24*7));
+			v3=moPayDAO.searchMoPayCountByTime(notPayVO);
+		}catch(Exception e){
+			
+		}
 		
-		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1});
-		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2});
-		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3});
+		reList.add(new Object[]{endTime.getTime(),v1==null?0:v1*xishu});
+		reList.add(new Object[]{endTime.getTime(),v2==null?0:v2*xishu});
+		reList.add(new Object[]{endTime.getTime(),v3==null?0:v3*xishu});
 		renderData(response, JsonUtils.Object2Json(reList));
 	}
+
 }

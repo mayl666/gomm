@@ -3,10 +3,10 @@
 <mapper namespace="com.gome.upm.dao.MoBusinessDAO">
 	<!-- 热销商品排行榜 -->
 	<sql id="oms" >
-	oms_uat
+	${oms}
 	</sql>
 	<sql id="catb" >
-	UAT_CATB_6
+	${catb}
 	</sql>
 	<select id="searchGoodKindSort" resultType="MoBusiness" parameterType="MoBusiness">
 		SELECT *

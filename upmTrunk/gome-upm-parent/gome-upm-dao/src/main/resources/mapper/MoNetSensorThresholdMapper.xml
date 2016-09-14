@@ -8,9 +8,11 @@
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="alarm_time" property="alarmTime" jdbcType="TIMESTAMP" />
     <result column="alarm_type" property="alarmType" jdbcType="VARCHAR" />
+    <result column="alarm_in_level" property="alarmInLevel" jdbcType="INTEGER" />
+    <result column="alarm_out_level" property="alarmOutLevel" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    sensor_id sensorId, sensor_threshold sensorThreshold, alia_name aliaName, state, alarm_time alarmTime,alarm_type alarmType
+    sensor_id sensorId, sensor_threshold sensorThreshold, alia_name aliaName, state, alarm_time alarmTime,alarm_type alarmType,alarm_in_level alarmInLevel,alarm_out_level alarmOutLevel
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -42,21 +44,43 @@
      t.state, 
      t.alarm_time alarmTime,
      t.alarm_type alarmType,
+     t.alarm_in_level alarmInLevel,
+     t.alarm_out_level alarmOutLevel,
      s.group_name groupName,
      s.device_name deviceName,
      s.sensor_name sensorName,
      s.state sensorState
     from mo_net_sensor_threshold t left join mo_net_sensor s on t.sensor_id = s.sensor_id
   </select>
+  
+  <select id="selectAll3" resultType="com.gome.upm.domain.prtg.MoNetSensorThreshold" >
+    select 
+     t.sensor_id sensorId, 
+	 sum(case ar.level when 1 then ar.value end) level1,
+	 sum(case ar.level when 2 then ar.value end) level2,
+	 sum(case ar.level when 3 then ar.value end) level3,
+     t.alia_name aliaName, 
+     t.state, 
+     t.alarm_time alarmTime,
+     t.alarm_type alarmType,
+     t.alarm_in_level alarmInLevel,
+     t.alarm_out_level alarmOutLevel,
+     s.group_name groupName,
+     s.device_name deviceName,
+     s.sensor_name sensorName,
+     s.state sensorState
+    from alarm_range ar,mo_net_sensor_threshold t,mo_net_sensor s where ar.type=t.alia_name and t.sensor_id=s.sensor_id group by ar.type
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mo_net_sensor_threshold
     where sensor_id = #{sensorId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.gome.upm.domain.prtg.MoNetSensorThreshold" >
     insert into mo_net_sensor_threshold (sensor_id, sensor_threshold, alia_name, 
-      state, alarm_time,alarm_type)
+      state, alarm_time,alarm_type,alarm_in_level,alarm_out_level)
     values (#{sensorId,jdbcType=INTEGER}, #{sensorThreshold,jdbcType=DOUBLE}, #{aliaName,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{alarmTime,jdbcType=TIMESTAMP}, #{alarmType,jdbcType=VARCHAR)
+      #{state,jdbcType=INTEGER}, #{alarmTime,jdbcType=TIMESTAMP}, #{alarmType,jdbcType=VARCHAR},#{alarmInLevel,jdbcType=INTEGER},#{alarmOutLevel,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.gome.upm.domain.prtg.MoNetSensorThreshold" >
     insert into mo_net_sensor_threshold
@@ -79,6 +103,12 @@
       <if test="alarmType != null" >
         alarm_type,
       </if>
+      <if test="alarmInLevel != null">
+        alarm_in_level,
+      </if>
+      <if test="alarmOutLevel != null">
+        alarm_out_level,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sensorId != null" >
@@ -99,6 +129,12 @@
       <if test="alarmType != null" >
         #{alarmType,jdbcType=VARCHAR},
       </if>
+      <if test="alarmInLevel != null" >
+        #{alarmInLevel,jdbcType=INTEGER},
+      </if>
+      <if test="alarmOutLevel != null" >
+        #{alarmOutLevel,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.gome.upm.domain.prtg.MoNetSensorThreshold" >
@@ -114,6 +150,12 @@
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
       </if>
+      <if test="alarmInLevel != null" >
+        alarm_in_level = #{alarmInLevel,jdbcType=INTEGER},
+      </if>
+      <if test="alarmOutLevel != null" >
+        alarm_out_level = #{alarmOutLevel,jdbcType=INTEGER},
+      </if>
    	 alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
    	 alarm_type = #{alarmType,jdbcType=VARCHAR}
     </set>
@@ -125,7 +167,9 @@
       alia_name = #{aliaName,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
-      alarm_type = #{alarmType,jdbcType=VARCHAR}
+      alarm_type = #{alarmType,jdbcType=VARCHAR},
+      alarm_in_level = #{alarmInLevel,jdbcType=INTEGER},
+      alarm_out_level = #{alarmOutLevel,jdbcType=INTEGER}
     where sensor_id = #{sensorId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,7 +1,10 @@
 package com.gome.upm.domain;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Properties;
 
 public class MoOrderRechargeBO implements Serializable{
 	private static final long serialVersionUID = 893407464888560250L;
@@ -11,7 +14,27 @@ public class MoOrderRechargeBO implements Serializable{
 	private Date endTime;
 	private Integer count;
 	private Integer minute;
+	private String oms;
 	
+	public MoOrderRechargeBO(){
+		/*InputStream in =  MoOrderRechargeBO.class.getClassLoader().getResourceAsStream("jdbc.properties");
+		Properties pro = new Properties();
+		try {
+			pro.load(in);
+			this.oms = pro.getProperty("oms");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			if(in != null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}*/
+
+	}
 	public Long getId() {
 		return id;
 	}
@@ -42,4 +65,12 @@ public class MoOrderRechargeBO implements Serializable{
 	public void setMinute(Integer minute) {
 		this.minute = minute;
 	}
+	public String getOms() {
+		return oms;
+	}
+	public void setOms(String oms) {
+		this.oms = oms;
+	}
+	
+	
 }

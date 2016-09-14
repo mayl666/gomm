@@ -3,8 +3,8 @@
                            <input type="hidden" value="$!page.conditions.survival" id="hiddenUrlSurvival" />
                            <i class="icon fa fa-bullhorn"></i>
                            <!-- <span style="color:orange">Key：</span>ump.web&nbsp;&nbsp;-->
-                           <span style="color:orange" >URL：</span><a href="$!url.url" target="_blank"><span class="hover-span" title="$!url.url">
-                           $!url.shortUrl&nbsp;&nbsp;</span></a>
+                           <span style="color:orange" >URL：</span><span class="hover-span" title="$!url.url">
+                           $!url.shortUrl&nbsp;&nbsp;</span>
                             <span style="color:orange">配置状态：</span>#if($!url.status == 1)有效#else无效#end&nbsp;&nbsp;<span style="color:orange">监控频率(分钟)：</span>$!url.frequency&nbsp;&nbsp;
                             <table id="example1" class="table table_data  table-striped">
                                 <thead>

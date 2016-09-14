@@ -21,26 +21,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
-import com.gome.rocketmq.client.extension.MessageProducer;
 import com.gome.upm.common.Constant;
 import com.gome.upm.common.Page;
+import com.gome.upm.common.util.DataSourceGetUtils;
 import com.gome.upm.common.util.JsonUtils;
+import com.gome.upm.dao.AlarmRangeMapper;
 import com.gome.upm.dao.MoBusinessDAO;
 import com.gome.upm.dao.MoLoginInfoDAO;
+import com.gome.upm.dao.MoMonitorMapper;
+import com.gome.upm.dao.MoOrderNotRechargeDAO;
+import com.gome.upm.dao.MoOrderRechargeDAO;
 import com.gome.upm.dao.MoOrderStateDAO;
 import com.gome.upm.dao.MoPayDAO;
 import com.gome.upm.dao.MoSynDAO;
 import com.gome.upm.dao.OrderStateDAO;
+import com.gome.upm.domain.AlarmRange;
 import com.gome.upm.domain.AlarmRecord;
+import com.gome.upm.domain.ColumnVo;
 import com.gome.upm.domain.MapCoordinate;
 import com.gome.upm.domain.MoBusiness;
 import com.gome.upm.domain.MoCpsBO;
+import com.gome.upm.domain.MoOrderNotRechargeBO;
 import com.gome.upm.domain.MoOrderRechargeBO;
 import com.gome.upm.domain.MoOrderStateBO;
 import com.gome.upm.domain.MoSynBO;
+import com.gome.upm.domain.OrderMap;
+import com.gome.upm.domain.OrderMonitorMap;
 import com.gome.upm.domain.OrderState;
 import com.gome.upm.service.AlarmRecordService;
 import com.gome.upm.service.util.DBContextHolder;
@@ -60,6 +66,14 @@ public class MonitoBusinessController extends AbsBaseController{
 	private MoLoginInfoDAO moLoginInfoDAO;
 	@Autowired
 	private MoSynDAO moSynDAO;
+	@Resource
+	private MoMonitorMapper moMonitorMapper;
+	@Resource
+	private AlarmRangeMapper alarmRangeMapper;
+	@Autowired
+	private MoOrderRechargeDAO moOrderRechargeDAO;
+	@Autowired
+	private MoOrderNotRechargeDAO moOrderNotRechargeDAO;
 	public void setMoSynDAO(MoSynDAO moSynDAO) {
 		this.moSynDAO = moSynDAO;
 	}
@@ -87,7 +101,7 @@ public class MonitoBusinessController extends AbsBaseController{
 	 */
 	@RequestMapping(value="/gotoMonitoBusiness")
 	public ModelAndView gotoMonitoBusiness(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
-		model.addObject("leftMenu", "businessMenu");
+		model.addObject("leftMenu", "business.businessMenu");
 		model.setViewName("/business/monitoBusinessMain");
 		return model;
 	}
@@ -112,7 +126,6 @@ public class MonitoBusinessController extends AbsBaseController{
 //		DBContextHolder.setDataSource("dataSourceThree");
 //		Integer nx=  moBusinessDAO.getDragonReverseODOrder(moBusiness);
 //		Integer zx=  moBusinessDAO.getDragonForwardODOrder(moBusiness);
-		List<Long> reList=new ArrayList<Long>();
 		// 参数，开始时间，时间间隔
 		// 开始时间
 		String startTimeStr = request.getParameter("startTime");
@@ -128,15 +141,107 @@ public class MonitoBusinessController extends AbsBaseController{
 		List<MoSynBO>  nxl=moSynDAO.searchMoSynList(moSynBO);
 		Long nx=  nxl.size()>0?nxl.get(0).getCount():0;
 		Long zx=  zxl.size()>0?zxl.get(0).getCount():0;
-		reList.add(zx);
-		reList.add(nx);
+		List<OrderMap> tempList = new ArrayList<OrderMap>();
+		
+		DBContextHolder.setDataSource(DataSourceGetUtils.getDrgDataSource());
+		int g3pp_realy_na =0;
+		int g3pp_realy_dh =0;
+		try{
+			g3pp_realy_na = moMonitorMapper.g3pp_realy_na_count();
+
+			g3pp_realy_dh = moMonitorMapper.g3pp_realy_dh_count();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		tempList.add(new OrderMap("DRAGON 正向单停在OD的订单",zx));
+		tempList.add(new OrderMap("DRAGON 逆向单停在OD的订单",nx));
+		tempList.add(new OrderMap("G3PP真预留状态大量停在NA",Long.valueOf(g3pp_realy_na)));
+		tempList.add(new OrderMap("G3PP真预留状态大量停在DH",Long.valueOf(g3pp_realy_dh)));
+		List<ColumnVo> reList = setColumnVo(tempList);
 		String data = JsonUtils.Object2Json(reList);
 		renderData(response, data);
+	}
+	
+	/**
+	 * 填充页面柱形图
+	 * @param tempList
+	 * @return
+	 */
+	public List<ColumnVo> setColumnVo(List<OrderMap> tempList){
+		DBContextHolder.setDataSource("dataSourceOne");
+		List<String> list = new ArrayList<String>();
+		for(OrderMap temp:tempList){
+			list.add(temp.getType());
+		}
+		List<AlarmRange> rangeList =alarmRangeMapper.selectAlarmRangeByType(list);
+		List<ColumnVo> reList=new ArrayList<ColumnVo>();
+		Map<String,Long> map = new HashMap<String,Long>();
+		for(AlarmRange range:rangeList){
+			map.put(range.getType(), Long.valueOf(range.getValue()));
+		}
+		ColumnVo vo = null;
+		for(OrderMap order:tempList){
+
+			if(map.containsKey(order.getType())){
+				if(order.getCount() > Long.valueOf(map.get(order.getType()))){
+					vo = new ColumnVo("#FF5750",order.getCount());
+				}else{
+					vo = new ColumnVo("#672795",order.getCount());
+				}
+			}else{
+				vo = new ColumnVo("#672795",order.getCount());
+			}
+			reList.add(vo);
+		}
+		
+		return reList;
+	}
+	
+	/**
+	 * 填充页面横向柱形图
+	 * @param tempList
+	 * @return
+	 */
+	public List<OrderMonitorMap> putMonitorVo(List<OrderMap> tempList){
+		DBContextHolder.setDataSource("dataSourceOne");
+		List<String> list = new ArrayList<String>();
+		for(OrderMap temp:tempList){
+			list.add(temp.getType());
+		}
+		List<AlarmRange> rangeList =alarmRangeMapper.selectAlarmRangeByType(list);
+		List<OrderMonitorMap> reList=new ArrayList<OrderMonitorMap>();
+		Map<String,Long> map = new HashMap<String,Long>();
+		for(AlarmRange range:rangeList){
+			map.put(range.getType(), Long.valueOf(range.getValue()));
+		}
+		OrderMonitorMap vo = null;
+		Long max = 0l;
+		for(OrderMap order:tempList){
+			if(order.getCount()>max){
+				max=order.getCount();
+			}
+		}
+		max+=10;
+		for(OrderMap order:tempList){
+
+			if(map.containsKey(order.getType())){
+				if(order.getCount() > Long.valueOf(map.get(order.getType()))){
+					vo = new OrderMonitorMap(order.getType(),order.getCount(),order.getCount()*100/max,true);
+				}else{
+					vo = new OrderMonitorMap(order.getType(),order.getCount(),order.getCount()*100/max,true);
+				}
+			}else{
+				vo = new OrderMonitorMap(order.getType(),order.getCount(),order.getCount()*100/max,false);
+			}
+			reList.add(vo);
+		}
+		
+		return reList;
 	}
 	//-----------------------------oms-----------------------------------------
 	@RequestMapping(value = "getOmsDataList", method = RequestMethod.POST)
 	public void getOmsDataList(HttpServletRequest request, HttpServletResponse response) throws ParseException{
-		List<Long> reList=new ArrayList<Long>();
+		List<OrderMap> tempList = new ArrayList<OrderMap>();
 //		MoBusiness moBusiness=new MoBusiness();
 //		moBusiness.setStartTime(startTime);
 //		moBusiness.setEndTime(endTime);
@@ -183,17 +288,18 @@ public class MonitoBusinessController extends AbsBaseController{
 		List<MoSynBO>  POP_nxl=moSynDAO.searchMoSynList(moSynBO);
 		Long POP_nx=POP_nxl.size()>0?POP_nxl.get(0).getCount():0;
 		
-		reList.add(DRG_zx);
-		reList.add(DRG_nx);
-		reList.add(POP_zx);
-		reList.add(POP_nx);
+		tempList.add(new OrderMap("OMS-DRG正向订单状态差异",DRG_zx));
+		tempList.add(new OrderMap("OMS-DRG逆向订单状态差异",DRG_nx));
+		tempList.add(new OrderMap("OMS-POP正向订单状态差异",POP_zx));
+		tempList.add(new OrderMap("OMS-POP逆向订单状态差异",POP_nx));
+		List<OrderMonitorMap> reList = putMonitorVo(tempList);
 		String data = JsonUtils.Object2Json(reList);
 		renderData(response, data);
 	}
 	//-----------------------------co-----------------------------------------
 	@RequestMapping(value = "getCoDataList", method = RequestMethod.POST)
 	public void getCoDataList(HttpServletRequest request, HttpServletResponse response) throws ParseException{
-		List<Long> reList=new ArrayList<Long>();
+		List<OrderMap> tempList = new ArrayList<OrderMap>();
 //		// 参数，开始时间，时间间隔
 //		// 开始时间
 //		String startTimeStr = request.getParameter("startTime");
@@ -280,16 +386,19 @@ public class MonitoBusinessController extends AbsBaseController{
 		List<MoSynBO>  co_so_n_popl=moSynDAO.searchMoSynList(moSynBO);
 		Long co_so_n_pop=co_so_n_popl.size()>0?co_so_n_popl.get(0).getCount():0;
 		
-		reList.add(co_count);
-		reList.add(co_g3pp);
-		reList.add(co_so_r_drg);
-		reList.add(co_so_r_pop);
-		reList.add(co_kf);
-		reList.add(co_so_n_drg);
-		reList.add(co_so_n_pop);
+		//tempList.add(new OrderMap("总数",co_count));
+		tempList.add(new OrderMap("正向单停在CO的订单--G3PP返回状态不正确",co_g3pp));
+		tempList.add(new OrderMap("正向单停在CO的订单--已发送SO至DRG",co_so_r_drg));
+		tempList.add(new OrderMap("正向单停在CO的订单--已发送SO至POP",co_so_r_pop));
+		tempList.add(new OrderMap("正向单停在CO的订单--待客服处理",co_kf));
+		tempList.add(new OrderMap("正向单停在CO的订单--未发SO至DRG",co_so_n_drg));
+		tempList.add(new OrderMap("正向单停在CO的订单--未发SO至POP",co_so_n_pop));
+		List<OrderMonitorMap> reList = putMonitorVo(tempList);
 		String data = JsonUtils.Object2Json(reList);
 		renderData(response, data);
 	}
+	
+	
 	//-----------------------------cps-----------------------------------------
 	private Integer intervalTime=1000*60*30;
 	@RequestMapping(value = "findCpsDataList", method = RequestMethod.POST)
@@ -440,6 +549,7 @@ public class MonitoBusinessController extends AbsBaseController{
 			this.money = money;
 		}
 	}
+	
 	int xishu=13;
 	/**
 	 * 查询种类排行
@@ -571,7 +681,13 @@ public class MonitoBusinessController extends AbsBaseController{
 		Integer wap= moBusinessDAO.getOrderAmountForWap(moBusiness);
 		Integer app= moBusinessDAO.getOrderAmountForApp(moBusiness);
 		//充值订单
-		Integer cz=moBusinessDAO.getOrderAmountForPay(moBusiness);
+		Integer cz =0;
+		try{
+			DBContextHolder.setDataSource(DataSourceGetUtils.getDataSource());
+			cz=moBusinessDAO.getOrderAmountForPay(moBusiness);
+		}catch(Exception e){
+			
+		}
 		List relist=new ArrayList();
 		relist.add(new MoVo("订单量", (cz+fcz)*xishu));
 		relist.add(new MoVo("充值订单", cz*xishu));
@@ -631,6 +747,61 @@ public class MonitoBusinessController extends AbsBaseController{
 		public void setValue(Long value) {
 			this.value = value;
 		}
+	}
+	/**
+	 * 五分钟订单记录
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "getFiveOrderForTime")
+	public void getFiveOrderForTime(HttpServletRequest request, HttpServletResponse response){
+			Date endTime = new Date();
+			Date startTime= new Date(endTime.getTime()-60*60*1000);
+			DBContextHolder.setDataSource("dataSourceOne");
+			MoOrderRechargeBO searchbo=new MoOrderRechargeBO();
+			searchbo.setStartTime(startTime);
+			searchbo.setEndTime(endTime);
+			List<MoOrderRechargeBO> li=moOrderRechargeDAO.searchMoOrderRechargeList(searchbo);
+			MoOrderNotRechargeBO notRecharge=new MoOrderNotRechargeBO();
+			notRecharge.setStartTime(startTime);
+			notRecharge.setEndTime(endTime);
+			List<MoOrderNotRechargeBO> list=moOrderNotRechargeDAO.searchMoOrderNotRechargeList(notRecharge);
+			List<Object[]> reList=new ArrayList<Object[]>(); 
+			if(li.size()==list.size()){
+				int i =0;
+				for(MoOrderNotRechargeBO bo:list){
+					Integer v1= li.get(i).getCount()*xishu+bo.getCount()*xishu;
+					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					i++;
+				}
+			}else if(li.size()>list.size()){
+				int i =0;
+				for(MoOrderRechargeBO bo:li){
+					Integer v1= 0;
+					if(i<list.size()){
+						v1= list.get(i).getCount()*xishu+bo.getCount()*xishu;
+					}else{
+						v1= bo.getCount()*xishu;
+					}
+					
+					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					i++;
+				}
+			}else{
+				int i =0;
+				for(MoOrderNotRechargeBO bo:list){
+					Integer v1= 0;
+					if(i<li.size()){
+						v1= li.get(i).getCount()*xishu+bo.getCount()*xishu;
+					}else{
+						v1= bo.getCount()*xishu;
+					}
+					
+					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					i++;
+				}
+			}
+			renderData(response, JsonUtils.Object2Json(reList));
 	}
 	/**
 	 * 前5个销售量最多的城市

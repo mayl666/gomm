@@ -25,20 +25,21 @@ public class UrlPortTimer {
 		long current = new Date().getTime();
 		Date start = new Date(current-2*24*60*60000);
 		String startTime = df.format(start);
+		System.out.println("*******************开始时间"+startTime);
 		UrlRecord urlRecord = new UrlRecord();
 		urlRecord.setStartTime(startTime);
 		logger.info("*******************定时把历史记录加入到ES库里************************");
 		List<UrlRecord> urlList =urlMonitorService.findUrlRecordList(urlRecord);
-		urlMonitorService.add(urlList);
 		PortRecord port = new PortRecord();
 		port.setStartTime(startTime);
 		List<PortRecord> portList =portMonitorService.findPortRecordList(port);
-		portMonitorService.add(portList);
 		System.out.println("定时删除url和端口访问记录开始");
 		logger.info("*******************定时删除url和端口访问记录开始************************");
 		int urlCount =urlMonitorService.deleteByTime(startTime);
 		logger.info("*******************url 删除"+urlCount+"条************************");
 		int portCount =portMonitorService.deleteByTime(startTime);
 		logger.info("*******************端口  删除"+portCount+"条************************");
+		urlMonitorService.add(urlList);
+		portMonitorService.add(portList);
 	}
 }

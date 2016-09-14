@@ -140,6 +140,7 @@ var createPortal = {
 			var monitorType = $("#monitorType").val();
 			var overtimes = $("#overtimes").val();
 			var frequency = $("#frequency").val();
+			var alarmWay = $("#alarmWay").val();
 //			if(urlAddress == "" ){
 //				$("#urlAddress").siblings($(".error_span")).show().text("请输入监控地址");
 //				flag = false;
@@ -162,7 +163,8 @@ var createPortal = {
 					'portalAddress':portalAddress,
 					'monitorType':monitorType,
 					'overtimes':overtimes,
-					'frequency':frequency
+					'frequency':frequency,
+					'alarmWay':alarmWay
 				};
 				StandardPost(contextPath+'/portal/create/step3',data);
 			}

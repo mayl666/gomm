@@ -45,7 +45,7 @@
             <a href="${rc.contextPath}/index">统一监控平台 </a>
         		<a href="${rc.contextPath}/system/get">/ 系统进程存活监控</a>
             <a href="${rc.contextPath}/system/warning">/ 报警记录</a>
-        	<a href="javascript:history.back(-1);" class="newbtn pull-right btnBack">返回</a>
+        	<a href="${rc.contextPath}/system/get" class="newbtn pull-right btnBack">返回</a>
         </section>
 
         <!-- Main content -->
@@ -93,7 +93,7 @@
 					    </select>
 				  	</div>
 					-->
-					<a href="javascript:void(0);" id="search_id" class="newbtn search_btn ReactiveSystembtn">
+					<a id="search_id" class="newbtn search_btn ReactiveSystembtn">
 						<i class="fa fa-search"></i> 搜索
 					</a>
 				</form>
