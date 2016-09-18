@@ -29,7 +29,7 @@
 		from mo_cps t
 		WHERE 1=1
 		<if test="startTime != null and startTime != '' and endTime != null and endTime != ''" >
-	      and t.start_time between #{startTime} and #{endTime}
+	      and t.end_time between #{startTime} and #{endTime}
 	    </if>
 	</select>
 </mapper>

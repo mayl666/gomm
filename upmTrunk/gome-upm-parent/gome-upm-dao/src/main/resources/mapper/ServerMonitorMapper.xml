@@ -190,6 +190,9 @@
 		<if test="type != null and type != ''">
 			and type = #{type,jdbcType=VARCHAR}
 		</if>
+		<if test="level != null and level != ''">
+			and alarm_level = #{level,jdbcType=VARCHAR}
+		</if>
 	</select>
 	<insert id="addAlarmRecord" parameterType="com.gome.upm.domain.ServerAlarmRecord"
 		useGeneratedKeys="true" keyProperty="id">

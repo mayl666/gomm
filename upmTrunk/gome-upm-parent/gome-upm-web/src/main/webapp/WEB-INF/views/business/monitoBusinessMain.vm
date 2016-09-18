@@ -31,6 +31,7 @@
     
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="height: 1780px !important;">
+		#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
         <section class="content-header">
            <a href="${rc.contextPath}/index">统一监控平台</a><a href="${rc.contextPath}/monitoBusiness/gotoMonitoBusiness">/ 业务监控/ 订单监控</a> 
@@ -56,7 +57,7 @@
 									</a>
 								</div>
 							</div>
-								<p class="operation_infop">订单总数（含取消）：<span id="today_Pay"></span>       同比昨天：<span id="yDiffer_Pay"></span> <i id="ydc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>【<span id="yb_Pay"></span>】      环比一周前：<span id="wDiffer_Pay"></span> <i id="wdc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i>    【<span id="wb_Pay"></span>】</p>
+								<p class="operation_infop">订单总数（含取消）：<span id="today_Pay"></span>       同比昨天：<span id="yDiffer_Pay"></span> 【<i id="ydc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i><span id="yb_Pay"></span>】      环比一周前：<span id="wDiffer_Pay"></span>     【<i id="wdc_Pay" class="fa fa-caret-down" style="color:red;font-size: 20px;"></i><span id="wb_Pay"></span>】</p>
 							<div class="box-body">
 								<div id="container_pay"></div>
 							</div>

@@ -39,6 +39,7 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+		#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <ol class="breadcrumb">

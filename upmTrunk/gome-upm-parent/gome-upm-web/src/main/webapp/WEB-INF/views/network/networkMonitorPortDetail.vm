@@ -41,6 +41,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="min-height:1150px !important;margin-bottom: -30px;">
         <!-- Content Header (Page header) -->
+        #parse("common/flat-alarm.vm") 
         <section class="content-header">
         	<a href="${rc.contextPath}/index">统一监控平台</a><a href="${rc.contextPath}/prtg/index">/ 网络监控</a>
         	<a href="javascript:window.history.back();" class="newbtn pull-right btnDetailBack backBtn btnBack" deviceId="$!deviceId" >返回</a>

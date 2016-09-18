@@ -53,9 +53,12 @@ public class PingTimer {
 						alarmRecord.setStatus("0");
 						alarmRecord.setAlarmValue(String.valueOf(value));
 						alarmRecord.setType("5");
+						//调用发送手机短信接口,查询当前此服务器宕机是否已经发送过手机提醒
+						List<ServerAlarmRecord> list = serverMonitorService.queryAlarmRecord(alarmRecord);
+						if(list==null){
+							//TODO
+						}
 						serverMonitorService.addAlarmRecord(alarmRecord);
-						//调用发送手机短信接口
-						
 					}else{
 						String contentCPU = "服务器组中的"+hostsList_P.get(i).getGroupName()+"服务器"+hostsList_P.get(i).getName()+"服务器恢复正常啦";
 						ServerAlarmRecord alarmRecord = new ServerAlarmRecord();

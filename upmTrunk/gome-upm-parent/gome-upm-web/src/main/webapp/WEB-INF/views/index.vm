@@ -78,23 +78,8 @@
 
 	</div>
 	
-	<!--遮罩层
-	#if($!session.getAttribute("oneTotalNum"))
-        <div class='mask'></div>
-		<div class="mask_layer">
-
-		    <div class="loading-indicator">
-		    	<h2 class="mask-title">告警</h2>
-		    	<div class="mask-con">
-					
-		    		<p>${content}</P>
-		    		<p>请<a herf="javascript:void(0);" onclick="toAlarmListOne()">查看报警记录</a>进行处理</P>
-		    		
-		    	</div>
-		    </div>
-		     <div class="mask-colose" onclick="clouseMask()"></div>
-		</div>
-	#end-->
+	<!--遮罩层-->
+	
 	<!--遮罩层-->     
 	<!-- ./wrapper -->
 

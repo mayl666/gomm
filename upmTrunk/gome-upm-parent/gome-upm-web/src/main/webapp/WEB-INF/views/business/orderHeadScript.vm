@@ -1,7 +1,8 @@
 <script>
+var colors = ["#672795","#9c89dd","#cfcfcf","#999"];
 $(function(){
 	//商品属性分类
-	drowPie_commodity_property();
+	//drowPie_commodity_property();
     //城市销售TOP5
     //drowMap_city_sales(0);
     //在线支付成功率
@@ -168,57 +169,61 @@ function searttt(){
 		cache:false,
 		success: function(data){
 			var obj=eval(data);
-			drowPie.series[0].data=obj;
-			new Highcharts.Chart(drowPie);
+			//drowPie.series[0].data=obj;
+			drowPie_commodity_property(obj);
+			//new Highcharts.Chart(drowPie);
      	},
      	error : function(){
      	}
 	});
 }
 var drowPie
-function drowPie_commodity_property(){
-	drowPie={
+function drowPie_commodity_property(data){
+	$('#commodity_property').highcharts({
         chart: {
-	    renderTo: 'commodity_property',
             plotBackgroundColor: null,
-            plotBorderWidth: 0,
+            plotBorderWidth: null,
             plotShadow: false
         },
-        credits:{
-            enabled:false // 禁用版权信息
-        },
-        colors:[
-          	'#4c288b',
-          	'#6842ac',
-          	'#b09df3',
-          	'#9c8ade'
-        ],
         title: {
             text: ''
         },
+        credits:{
+            enabled:false
+        },
+        exporting: {
+            enabled: false
+        },
         tooltip: {
-    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0,
+            color: '#666',
+            fontFamily: "Microsoft YaHei",
+            fontWeight:'normal'
         },
         plotOptions: {
             pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
-                size : 160,
-                showInLegend: true,
+                innerSize: 220,
+                depth: 45,
                 dataLabels: {
-                    enabled: false,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
+                    enabled: false
+                },
+                showInLegend: true
             }
         },
         series: [{
             type: 'pie',
-            name: '商品类别',
-            data: []
+            name: '订单',
+            colors:colors,
+            data: data
         }]
-    }
+    });
 }
 //城市销售榜
 function searchHotCity(){

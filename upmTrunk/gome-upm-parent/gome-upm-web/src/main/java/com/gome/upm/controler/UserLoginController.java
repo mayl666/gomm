@@ -87,6 +87,7 @@ public class UserLoginController extends BaseController{
             String loginTime = sdf.format(new Date());
             hsession.setAttribute("firstLoginTime",loginTime);
 			hsession.setAttribute("userName", loginName);
+			hsession.setAttribute("info", "info");
 		} catch (Exception e) {
 			logger.error("系统出现异常", e);
 			res.setReturnCode(ReturnCode.ERROR_SERVER);
@@ -183,7 +184,6 @@ public class UserLoginController extends BaseController{
 				}
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String loginTime = sdf.format(new Date());
-                //session.setAttribute("loginTime",loginTime);
                 String content = "截止到"+loginTime+"，统一监控平台共收到一级报警信息<strong>"+oneTotalNum+"</strong>条，其中";
                 if(methodNum > 0){
                 	content += "方法监控:<strong>"+methodNum+"</strong>条，";
@@ -222,6 +222,14 @@ public class UserLoginController extends BaseController{
                 if(content.indexOf("，") != -1){
                 	content = content.substring(0, content.length()-1);
                 }
+                String informa = (String) session.getAttribute("information");
+				if(StringUtils.isNotEmpty(informa)){
+					session.removeAttribute(informa);
+				}
+                String information = content;
+                information = information + "&nbsp请<a herf='javascript:void(0);' onclick='toAlarmListOne()'>查看报警记录</a>进行处理";
+                session.setAttribute("information", information);
+                session.setAttribute("message", "message");
                 session.setAttribute("content", content);
 			}
 			logger.info("一级报警总数："+oneTotalNum+" ,其中： method:"+methodNum+" dbconn:"
@@ -255,6 +263,11 @@ public class UserLoginController extends BaseController{
 			}else{					
 				session.setAttribute("threeLevelList", threeLevelList);
 			}
+			//总记录数据
+			int totalNum = oneLevelList.size()+twoLevelList.size()+threeLevelList.size();
+			if(totalNum > 0){
+				session.setAttribute("totalNum", totalNum);
+			}
 		}
 	
 		return model;
@@ -280,6 +293,39 @@ public class UserLoginController extends BaseController{
 		}
 
 		return "redirect:/";
+	}
+	
+	/**
+	 * 用户点击取消浮层，session 中参数失效
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@RequestMapping(value="/removeFloat",method={RequestMethod.GET,RequestMethod.POST})
+	public void removeFloat(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		HttpSession session = request.getSession();
+		String info = (String) session.getAttribute("info");
+		if(StringUtils.isNotEmpty(info)){
+			session.removeAttribute(info);
+			logger.info("退出浮层");
+		}
+		
+	}
+	
+	/**
+	 * 用户点击取消,退出消息提示
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@RequestMapping(value="/removeMessage",method={RequestMethod.GET,RequestMethod.POST})
+	public void removeMessage(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		HttpSession session = request.getSession();
+		String messagee = (String) session.getAttribute("message");
+		if(StringUtils.isNotEmpty(messagee)){
+			session.removeAttribute(messagee);
+			logger.info("退出消息提示");
+		}
 	}
 
 }

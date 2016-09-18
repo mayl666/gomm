@@ -1,5 +1,7 @@
 package com.gome.upm.controler;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -271,7 +274,7 @@ public class AlarmRecordController extends BaseController {
 	}
 	
 	@RequestMapping(value="/toList", method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView formIndexToAlarmListView( HttpServletRequest request, HttpServletResponse response, ModelAndView model,
+	public ModelAndView formIndexToAlarmListView(HttpServletRequest request, HttpServletResponse response, ModelAndView model,
 								@RequestParam(value="level",required=true) Integer level){
 		model.setViewName("/alarm/alarmList");
 		
@@ -322,6 +325,140 @@ public class AlarmRecordController extends BaseController {
 		model.addObject("chance",1);
 		model.addObject("search",gson.toJson(map));
 		return model;
+	}
+	
+	/**
+	 * 用户登录后每五分钟查询一次,消息提示
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getOneAlarmList",method={RequestMethod.GET,RequestMethod.POST}, produces = "application/json; charset=utf-8")
+	public String checkMessage(HttpServletRequest request, HttpServletResponse response, ModelAndView model){
+		HttpSession session = request.getSession();
+		String message = (String) session.getAttribute("message");
+		String information = "";
+		String time = (String) session.getAttribute("firstLoginTime");
+		if(StringUtils.isNotEmpty(time)){
+			//用户登录期间，没有失效
+			AlarmRecord alarmRecord = new AlarmRecord();
+			/*alarmRecord.setStartTime(time);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String end = sdf.format(new Date());
+			alarmRecord.setEndTime(end);*/
+			alarmRecord.setLevel(1);
+			List<AlarmRecord> oneLevelList = alarmRecordService.findAlarmRecordListByConditions(alarmRecord);
+			//方法 method
+			int methodNum = 0;
+			//dbconn 
+			int dbconnNum = 0;
+			//network
+			int networkNum = 0;
+			//url
+			int urlNum = 0;
+			//port
+			int portNum = 0;
+			//process
+			int processNum = 0;
+			//finance
+			int financeNum = 0;
+			//server
+			int serverNum = 0;
+			//dragon
+			int dragonNum = 0;
+			//oms
+			int omsNum = 0;
+			//forward
+			int forwardNum = 0;
+			//一级报警总记录数
+			int oneTotalNum = 0;
+			if(oneLevelList.size() > 0){
+				if(StringUtils.isEmpty(message)){
+					session.setAttribute("message", "message");
+				}
+				String informa = (String) session.getAttribute("information");
+				if(StringUtils.isNotEmpty(informa)){
+					session.removeAttribute(informa);
+				}
+				oneTotalNum = oneLevelList.size();
+				for (AlarmRecord record : oneLevelList) {
+					String type = record.getType();
+					if("method".equals(type)){
+						methodNum++;
+					}else if("dbconn".equals(type)){
+						dbconnNum++;
+					}else if ("network".equals(type)) {
+						networkNum++;
+					}else if ("url".equals(type)) {
+						urlNum++;
+					}else if ("port".equals(type)) {
+						portNum++;
+					}else if ("process".equals(type)) {
+						processNum++;
+					}else if ("finance".equals(type)) {
+						financeNum++;
+					}else if("server".equals(type)){
+						serverNum ++;
+					}else if("dragon".equals(type)){
+						dragonNum ++;
+					}else if("oms".equals(type)){
+						omsNum ++;
+					}else if("forward".equals(type)){
+						forwardNum ++;
+					}
+				}
+				
+				session.setAttribute("oneTotalNum", oneTotalNum);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String currentTime = sdf.format(new Date());
+				information = "截止到"+currentTime+"，统一监控平台共收到一级报警信息<strong>"+oneTotalNum+"</strong>条，其中";
+                if(methodNum > 0){
+                	information += "方法监控:<strong>"+methodNum+"</strong>条，";
+                }
+                if(dbconnNum > 0){
+                	information += "数据库连接与表空间监控&nbsp:&nbsp&nbsp<strong>"+dbconnNum+"</strong>条，";
+                }
+                if(networkNum > 0){
+                	information += "网络监控&nbsp:&nbsp&nbsp<strong>"+networkNum+"</strong>条，";
+                }
+                if(urlNum > 0){
+                	information += "URL存活监控&nbsp:&nbsp&nbsp<strong>"+urlNum+"</strong>条，";
+                }
+                if(portNum > 0){
+                	information += "端口存活监控&nbsp:&nbsp&nbsp<strong>"+portNum+"</strong>条，";
+                }
+                if(processNum > 0){
+                	information += "系统进程存活监控&nbsp:&nbsp&nbsp<strong>"+processNum+"</strong>条，";
+                }
+                if(financeNum > 0){
+                	information += "金融系统监控&nbsp:&nbsp&nbsp<strong>"+financeNum+"</strong>条，";
+                }
+                if(serverNum > 0){
+                	information += "服务器监控&nbsp:&nbsp&nbsp<strong>"+serverNum+"</strong>条，";
+                }
+                if(dragonNum > 0){
+                	information += "DRAGON&nbsp:&nbsp&nbsp<strong>"+dragonNum+"</strong>条，";
+                }
+                if(omsNum > 0){
+                	information += "OMS&nbsp:&nbsp&nbsp<strong>"+omsNum+"</strong>条，";
+                }
+                if(forwardNum > 0){
+                	information += "正向单&nbsp:&nbsp&nbsp<strong>"+forwardNum+"</strong>条，";
+                }
+                
+                if(information.indexOf("，") != -1){
+                	information = information.substring(0, information.length()-1);
+                }
+                information = information + "&nbsp请<a herf='javascript:void(0);' onclick='toAlarmListOne()'>查看报警记录</a>进行处理";
+                session.setAttribute("information", information);
+                model.setViewName("/common/flat-alarm");
+                logger.info("一级报警信息："+information);
+			}
+		}
+		
+		return information;
 	}
 	
 }

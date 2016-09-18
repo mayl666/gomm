@@ -186,7 +186,7 @@ function searchCpsData(){
 	var urlStartTime = startTimeStr;
 	var endTime = endTimeStr;
 	if(urlStartTime==''&&endTime==''){
-		var obj=getSearchHour(6);
+		var obj=getSearchHour(5);
 		urlStartTime=obj.startTime;
         endTime=obj.endTime;
         var startTimeStr=obj.startTime;

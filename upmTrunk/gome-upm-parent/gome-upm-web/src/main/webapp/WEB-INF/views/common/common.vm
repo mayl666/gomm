@@ -45,12 +45,29 @@ $("#logout").click(function(){
 	
 	});
 	
-	//悬浮告警提示条 关闭
+	function show1(){
+		
+            $.ajax({
+                url:contextPath+'/alarm/getOneAlarmList',
+                type:"POST",
+                dataType: 'html',
+                data:{},
+                success:function(data){
+
+					$(".float-alarm").show();
+					$(".float_txt").html(data);
+
+                },
+                error:function(){
+                    //alert("出错");
+
+                }
+
+
+            });
+        }
 	
-	$(".waring-close").click(function(){
-	
-	  $(".float-alarm").hide();
-	});
+	//setInterval(show1,60000);
 	
 	  
 </script>

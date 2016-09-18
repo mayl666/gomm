@@ -31,88 +31,135 @@
     <!-- Left side end -->
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+		#parse("common/flat-alarm.vm")
         <section class="content-header">
         	<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/monitoBusiness/gotoOrderHead">/ 订单一览</a>
         </section>
 
         <!-- Main content -->
-        <section class="content" style="height: 1280px;">
+        <section class="content">
 				<div class="orderSummarySty">
-	        	<div class="leftlayout">
-	        		<div class="lefttopLayout">
-	        			<h2 style="">热销商品排行榜</h2>
-	        			<table class="table hotsellTable">
-	        				<tbody id="hotGood">
-	        				</tbody>
-	        			</table>
-	        			<h2 style="font-size: 15px;">品牌排行榜</h2>
-	        			<div class="rankingList" style="text-align: center;padding: 33px 0px;" id="GoodBrand">
-							<img src="../image/top1.png" />
-							<img class="top2_img" src="../image/top2.png" />
-							<img src="../image/top3.png" />
-						</div>
-	        		</div>
-	        	</div>
-	        	<div class="centerLayout">
-	        		<div class="centertoplayout">
-	        			<h2 style="font-size: 15px;">订单解析</h2>
-	        			<span style="color:#999999;display: block;text-align: center;margin-top: 10px;font-size:16px;">订单量：<span style="color:#9c8ade;" id="order_tal"></span></span>
-	        			<div style="width: 290px;height: 200px;margin: auto;" id="order_analysis"></div>
-						<div class="order_txt_con">
-							<p>
-							    WEB端：<span class="order-span-Strong" id="order_web"></span>
-							    APP端：<span class="order-span-Strong" id="order_app"></span>
-								WAP端：<span class="order-span-Strong" id="order_wap"></span>
-							</p>
-							<p>
-							        充值订单：<span class="order-span-Strong"  id="order_pay"></span>
-								非充值订单：<span class="order-span-Strong" id="order_notpay"></span>
-							</p>
-							<p>
-							        支付成功订单：<span class="order-span-Strong" id="order_relpay"></span>
-								妥投成功订单：<span class="order-span-Strong"id="order_delivery"></span>
-							</p>
-						</div>
+		        	<div class="leftlayout">
+		        		<div class="lefttopLayout">
+		        			<h2 class="order-title">热销商品排行榜</h2>
+		        			<table class="table hotsellTable">
+		        				<tbody id="hotGood">
+		        				</tbody>
+		        			</table>
+		        			<h2 class="order-title">品牌排行榜</h2>
+		        			<div class="rankingList" id="GoodBrand">
+								<img src="../image/top1.png" />
+								<img class="top2_img" src="../image/top2.png" />
+								<img src="../image/top3.png" />
+							</div><!--rankingList end-->
+		        		</div><!--lefttopLayout end-->
+		        	</div><!--leftlayout end-->
+		        	
+		        	<div class="centerLayout">
+		        		<div class="centertoplayout">
+		        			 <h2 class="order-title">订单解析</h2>
+		        			 <div class="order-panel1">
+		        				<div class="order_txt_con">
+									 <div class="orderProgressType">
+									        <h3 class="ordertitle">WEB端</h3>   
+										    <div class="progress MyProgress">
+												  <div class="progress-bar progress-bar-normal" style="width: 80%">
+												    <span class="sr-only">80 Complete (danger)</span>
+												  </div>
+			                                </div><!--progress end-->
+			                                <span class="order-progress-info">85834</span> 
+									 </div><!--orderProgressType end-->
+									 <div class="orderProgressType">
+									        <h3 class="ordertitle">APP端</h3>   
+										    <div class="progress MyProgress">
+												  <div class="progress-bar progress-bar-normal" style="width: 40%">
+												    <span class="sr-only">40 Complete (danger)</span>
+												  </div>
+			                                </div><!--progress end-->
+			                                <span class="order-progress-info">85834</span>
+			                                 
+									 </div><!--orderProgressType end-->
+									 <div class="orderProgressType">
+									        <h3 class="ordertitle">WAP端</h3>   
+										    <div class="progress MyProgress">
+												  <div class="progress-bar progress-bar-normal" style="width: 30%">
+												    <span class="sr-only">30 Complete (danger)</span>
+												  </div>
+			                                </div><!--progress end-->
+			                                <span class="order-progress-info">85834</span>
+			                               
+									 </div><!--orderProgressType end-->
+								    <h2 class="orderNumber">订单量 : <strong>964782</strong></h2>
+							    </div><!--order_txt_con-->
+		        		    </div><!--order-panel1 end-->
+							 <!--order-panel2-->
+							 <div class="order-panel2">
+								<ul>
+									<li>
+										<p class="order_numP">112796</p>
+										<p>充值订单</p>
+									</li>
+									<li>
+										<p class="order_numP">112796</p>
+										<p>充值订单</p>
+									</li>
+								</ul>
+							 </div><!--order-panel2 end-->
+							 <div class="order-panel2" style="border-bottom:none;">
+		        		 	<ul>
+		        		 		<li>
+			        		 		<p class="order_numP">112796</p>
+			        		 		<p>充值订单</p>
+		        		 		</li>
+		        		 		<li>
+			        		 		<p class="order_numP">112796</p>
+			        		 		<p>充值订单</p>
+		        		 		</li>
+		        		 	</ul>
+		        		 </div><!--order-panel2 end-->
+		        	    </div><!--centertoplayout end-->
+		            </div><!--centerLayout end-->
+		            <!--rightLayout-->
+		            <div class="rightlayout">
+		        		<div class="righttoplayout">
 						
-	        		</div>
-	        		<div class="centertoplayout" style="margin-left: 66%;margin-top: -358px;">
-	        			<h2 style="font-size: 15px;">商品属性分类</h2>
-	        			<div style="width: 290px;height: 300px;margin: auto;" id="commodity_property"></div>
-	        		</div>
-	        		<div class="centerbottomLayout">
+		        		    <div class="rightPanel">
+			        		    <h2 class="order-title">M5-PBS机房万兆裸纤</h2>
+			        			<div id="container_headLoginInfo" style="height:300px;"></div>
+		        		    </div>
+		        			<div class="rightPanel">
+			        		    <h2 class="order-title">5分钟订单</h2>
+			        			<div id="container_headLoginInfo" style="height:300px;"></div>
+		        		    </div>
+		        		</div><!--righttoplayout end-->
+						
+		        </div><!--rightlayout-->
+              </div><!-- /.orderSummarySty -->
+              <div class="orderSummarySty">
+              		<div class="centerbottomLayout">
 	        			<div class="city_title">
-		        			<h2>城市销售榜</h2>
-		        			<div class="pull-right">
-								<div class="form-group" style="margin-right: 15px;">
-									<input type="text" class="form-control laydate-icon" id="startTime_HotCity" style="width: 180px;" >
-									<label>至</label>
-									<input type="text" class="form-control lastInput laydate-icon" id="endTime_HotCity" style="width: 180px;">
-									<i class="fa fa-search" onclick="searchHotCity()"></i>
-								</div>
+		        			<h2 class="fl">城市销售榜</h2>
+							<div class="fr data_warp city_data-warp">
+									<input type="text" class="form-control laydate-icon fl" id="startTime_HotCity" value="" style="width:180px;">
+									<span class="span-disinline fl">至</span>
+									<input type="text" class="form-control lastInput fl laydate-icon" id="endTime_HotCity" style="width: 180px;">
+									<a class="newbtn fl" onclick="searchHotCity()">
+										<i class="fa fa-search">查找</i> 
+									</a>
 							</div>
 	        			</div>
 	        			
-	        			<div id="city_sales" style="border-radius: 0px 0px 0px 3px;height:85%;width:70%;padding-left: 30px;background-color:#FFF"></div>
+	        			<div id="city_sales" style="border-radius: 0px 0px 0px 3px;height:85%;width:70%;padding-left:20px;background-color:#FFF"></div>
 	        			<div class="hottest">
 	        				<h2>最热城市</h2>
 	        				<div style="width: 159px;background: #f9f9f9;margin: 0px 90px;height: 212px;" id="hotCity">
 	        				</div>
 	        			</div>
 	        		</div>
-	        	</div>
-	        	<div class="rightlayout">
-	        		<div class="righttoplayout">
-	        			<h2>5分钟订单</h2>
-	        			<div id="container_FiveOrder" style="height:300px;"></div>
-	        		</div>
-	        		<div class="rightbottomlayout">
-	        			<h2>在线支付成功率</h2>
-	        			<div id="pay_success_rate" style="height:300px;"></div>
-	        		</div>
-	        	</div>
-	        </div>
-        </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+
+
+              </div>
+            </section><!-- /.content -->
     <!-- Control Sidebar -->
       #parse("common/controlSidebar.vm")
     <!-- Control Sidebar end-->

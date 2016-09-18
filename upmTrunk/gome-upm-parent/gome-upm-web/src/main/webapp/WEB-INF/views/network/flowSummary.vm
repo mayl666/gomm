@@ -41,6 +41,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
+        #parse("common/flat-alarm.vm") 
         <section class="content-header">
         	<a href="${rc.contextPath}/index">统一监控平台 </a><a href="${rc.contextPath}/prtg/flowSummary">/ 流量一览</a>
         </section>

@@ -74,6 +74,8 @@ public class MonitoBusinessController extends AbsBaseController{
 	private MoOrderRechargeDAO moOrderRechargeDAO;
 	@Autowired
 	private MoOrderNotRechargeDAO moOrderNotRechargeDAO;
+	
+	private SimpleDateFormat sd = new SimpleDateFormat("HH:mm");
 	public void setMoSynDAO(MoSynDAO moSynDAO) {
 		this.moSynDAO = moSynDAO;
 	}
@@ -439,7 +441,7 @@ public class MonitoBusinessController extends AbsBaseController{
 		SimpleDateFormat ww = new SimpleDateFormat("yyyy-MM-dd HH@mm:ss");
 		Date now=new Date();
 		String minutes="00";
-		if(now.getMinutes()>30){
+		if(now.getMinutes()>=30){
 			minutes="30";
 		}
 		String nwo=ww.format(now);
@@ -766,12 +768,15 @@ public class MonitoBusinessController extends AbsBaseController{
 			notRecharge.setStartTime(startTime);
 			notRecharge.setEndTime(endTime);
 			List<MoOrderNotRechargeBO> list=moOrderNotRechargeDAO.searchMoOrderNotRechargeList(notRecharge);
-			List<Object[]> reList=new ArrayList<Object[]>(); 
+			List<String> timeList= new ArrayList<String>();
+			List<Long> countList = new ArrayList<Long>();
+			List<Object> reList=new ArrayList<Object>(); 
 			if(li.size()==list.size()){
 				int i =0;
 				for(MoOrderNotRechargeBO bo:list){
 					Integer v1= li.get(i).getCount()*xishu+bo.getCount()*xishu;
-					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					timeList.add( sd.format(bo.getStartTime().getTime()));
+					countList.add(v1==null?0l:Long.valueOf(v1));
 					i++;
 				}
 			}else if(li.size()>list.size()){
@@ -784,7 +789,8 @@ public class MonitoBusinessController extends AbsBaseController{
 						v1= bo.getCount()*xishu;
 					}
 					
-					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					timeList.add( sd.format(bo.getStartTime().getTime()));
+					countList.add(v1==null?0l:Long.valueOf(v1));
 					i++;
 				}
 			}else{
@@ -796,11 +802,13 @@ public class MonitoBusinessController extends AbsBaseController{
 					}else{
 						v1= bo.getCount()*xishu;
 					}
-					
-					reList.add(new Object[]{bo.getStartTime().getTime(),v1==null?0:v1});
+					timeList.add( sd.format(bo.getStartTime()));
+					countList.add(v1==null?0l:Long.valueOf(v1));
 					i++;
 				}
 			}
+			reList.add(timeList);
+			reList.add(countList);
 			renderData(response, JsonUtils.Object2Json(reList));
 	}
 	/**

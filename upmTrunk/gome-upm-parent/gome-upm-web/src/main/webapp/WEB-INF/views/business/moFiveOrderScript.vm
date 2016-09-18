@@ -27,7 +27,7 @@ var FiveOrderDate;
 var FiveOrderHighChart;
 var timeFiveOrderCon=false;
 $(function () {
-	initFiveOrder();
+	//initFiveOrder();
 	initFiveOrderData();
 });
 var options_FiveOrder;
@@ -109,6 +109,53 @@ function initFiveOrder(){
 	}
 	copy(config_FiveOrder,options_FiveOrder);
 }
+
+function loadhighcharts(data){
+	var colors = ['#9c8ade'];
+    Highcharts.getOptions().colors = Highcharts.map(colors, function (colors) {
+        return {
+            linearGradient: { cx: 1},
+            stops: [[0, colors], [1, Highcharts.Color(colors).brighten(0.35).get('rgb')] // darken
+                   ]
+        };
+    });
+    $('#container_FiveOrder').highcharts({
+        chart: {
+            type: 'areaspline'
+        },
+        title: {
+            text: ''
+        },
+        credits:{
+            enabled:false
+        },
+        exporting: {
+            enabled: false
+        },
+        xAxis: {
+            categories: data[0],
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            //shared: true,
+            valueSuffix: ' units',
+            //pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}',
+            crosshairs: {
+                width: 1,
+                color: '#9c8ade',
+                dashStyle: 'solid'
+            }
+        },
+        series: [{
+            name: '订单',
+            data: data[1]
+        }]
+    });
+}
 function searchFiveOrderData(){
 	timeFiveOrderflg=true;
 	//停止5分钟查询
@@ -189,8 +236,9 @@ function addFiveOrderData(){
 		success: function(data){
 			var obj=eval(data);
 			FiveOrderDate=obj[0];
-			FiveOrderHighChart.series[0].addPoint([obj[0], obj[1]], false, true);
-			FiveOrderHighChart.redraw();
+			loadhighcharts(obj);
+			//FiveOrderHighChart.series[0].addPoint([obj[0], obj[1]], false, true);
+			//FiveOrderHighChart.redraw();
      	},
      	error : function(){
      	}
@@ -205,15 +253,15 @@ function reloadFiveOrderData(stLogin,etLogin,waitTimeReload){
 		dataType:"text",
 		cache:false,
 		success: function(data){
-		debugger;
 			var dataList=eval(data);
-			FiveOrderDate=dataList[dataList.length-1][0];
+			loadhighcharts(dataList);
+			/**FiveOrderDate=dataList[dataList.length-1][0];
 			copy(options_FiveOrder,config_FiveOrder);
 			options_FiveOrder.series[0].data=dataList;
 			if(waitTimeReload){
 				options_FiveOrder.chart.events.load=function(){};
 			}
-			FiveOrderHighChart = new Highcharts.Chart(options_FiveOrder);
+			FiveOrderHighChart = new Highcharts.Chart(options_FiveOrder);*/
      	},
      	error : function(){
      	}

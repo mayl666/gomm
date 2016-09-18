@@ -31,8 +31,11 @@
     
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="height: 1780px !important;">
+		#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
-        
+		
+		<!--每个页面引入-->
+		
         <section class="content-header">
             
            <a href="${rc.contextPath}/index">统一监控平台</a><a href="${rc.contextPath}/monitoDragon/get">/ 业务监控/ 业务系统监控</a>
@@ -161,49 +164,10 @@
 								</div>
 							 </div>
 							</div><!--OM_header END-->
-							<div class="OM_box-body ">
-							    <div class="progressType">
-							         <h3>DRG正向订单状态差异</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-alarm" style="width: 40%">
-										    <span class="sr-only">40 Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info alarm-info">40单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>DRG逆向订单状态差异</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 60%">
-										    <span class="sr-only">60% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">60单</span>
-	                                
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>POP正向订单状态差异</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 40%">
-										    <span class="sr-only">40% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">40单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>POP逆向订单状态差异</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 50%">
-										    <span class="sr-only">50% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">50单</span>
-							    </div><!--progressType end-->
-
+								    
 							<div class="box-body" id="oms_id">
 							    
-
-							</div><!--OM_box-body end-->
+							</div><!--box-body end-->
 				   </div><!--addbox_show end-->
 					<div class="addbox_show">
 							<div class="OM_box">
@@ -220,73 +184,10 @@
 									</div><!--data_warp end-->
 								</div><!--OM_header end-->
 							 </div><!--OM_box end-->
-
-							<div class="OM_box-body">
-							    <div class="progressType">
-							         <h3>G3PP返回状态不正确</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-alarm" style="width: 60%">
-										    <span class="sr-only">60% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info alarm-info">60单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>已发送SO至DRG</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 60%">
-										    <span class="sr-only">60% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">60单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>G3PP返回状态不正确</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 40%">
-										    <span class="sr-only">40% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">40单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>已发送SO至POP</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 50%">
-										    <span class="sr-only">50% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">50单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>待客服处理</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width:30%">
-										    <span class="sr-only">30% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">30单</span>
-							    </div><!--progressType end-->
-							    <div class="progressType">
-							         <h3>未发SO至DRG</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 22%">
-										    <span class="sr-only">22% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">22单</span>
-							    </div><!--progressType end-->
-								<div class="progressType">
-							         <h3>未发SO至POP</h3>
-								    <div class="progress MyProgress">
-										  <div class="progress-bar progress-bar-normal" style="width: 70%">
-										    <span class="sr-only">70% Complete (danger)</span>
-										  </div>
-	                                </div><!--progress end-->
-	                                <span class="progress-info">70单</span>
-							    </div><!--progressType end-->
 							<div class="box-body" id="co_id">
-							</div><!--OM_box-body end-->
+							    
+								
+							</div><!--box-body end-->
 					</div><!--addbox_show end-->
 				</div>
         </section><!-- /.content -->

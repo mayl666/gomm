@@ -41,6 +41,7 @@
     
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+		#parse("common/flat-alarm.vm")
         <!-- Content Header (Page header) -->
         <section class="content-header">
         	 <a href="${rc.contextPath}/index">统一监控平台</a><a href="${rc.contextPath}/monitoBusiness/gotoMonitoBusiness">/ 业务监控</a> <a href="${rc.contextPath}/monitoBusiness/goAlarmlist">/ 报警记录</a> 

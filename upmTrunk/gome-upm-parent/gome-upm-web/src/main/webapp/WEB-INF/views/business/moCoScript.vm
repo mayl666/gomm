@@ -115,11 +115,11 @@ function reloadCoData(stCo){
 					dataHtml +="<div class='progress-bar progress-bar-normal' style='width: "+data.precent+"%'>";
 
 				}
-				dataHtml +="<span class='sr-only'>40 Complete (danger)</span></div>";
+				dataHtml +="<span class='sr-only'>40 Complete (danger)</span></div></div>";
 				if(data.isWarning){
-					dataHtml +="<span class='progress-info alarm-info'>"+data.value+"单</span></div></div>";
+					dataHtml +="<span class='progress-info alarm-info'>"+data.value+"单</span></div>";
 				}else{
-					dataHtml +="<span class='progress-info '>"+data.value+"单</span></div></div>";
+					dataHtml +="<span class='progress-info '>"+data.value+"单</span></div>";
 
 				}
 			}

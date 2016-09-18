@@ -46,6 +46,10 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+		
+		<!--每个页面引入-->
+        #parse("common/flat-alarm.vm")
+		
         <!-- Content Header (Page header) -->
         <section class="content-header">
         		<a href="${rc.contextPath}/index">统一监控平台 </a>

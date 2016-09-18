@@ -1,5 +1,0 @@
- <div class="float-alarm">
-        	<span class="waring_icon"></span>
-        	<p class="float_txt">收到新的一级报警<strong>22</strong>条，其中服务器监控：<strong>11</strong>条，网络监控<strong>11</strong>条，请查看<a herf="#">报警记录</a>进行处理</p>
-            <span class="waring-close fr"></span>
-</div>

@@ -127,45 +127,42 @@ public class TCPTimer {
 			if(response!=null && !"".endsWith(response)){
 				JSONArray jsonArray = JSON.parseArray(response);
 				if(jsonArray!=null && jsonArray.toArray().length>0){
-					for (int j = 0; j < jsonArray.toArray().length; j++) {
-						String status = jsonArray.getJSONObject(j).getString("status");
-						String ip = jsonArray.getJSONObject(j).getString("ip");
-						if(status!=null && status.equals("success")){
-							JSONObject jsonObject = jsonArray.getJSONObject(j).getJSONObject("searchResult");
-							HostsInfo queryHostDetail = hostsList.get(j);
-							if(queryHostDetail.getIp().equals(ip)){
-								if(jsonObject.getString("envType")!=null){
-									queryHostDetail.setOsType(jsonObject.getString("envType"));
-								}else{
-									queryHostDetail.setOsType("无");
+					for (int m = 0; m < hostsList.size(); m++) {
+						for (int j = 0; j < jsonArray.toArray().length; j++) {
+							String status = jsonArray.getJSONObject(j).getString("status");
+							String ip = jsonArray.getJSONObject(j).getString("ip");
+							if(status!=null && status.equals("success")){
+								JSONObject jsonObject = jsonArray.getJSONObject(j).getJSONObject("searchResult");
+								HostsInfo queryHostDetail = hostsList.get(m);
+								if(queryHostDetail.getIp().equals(ip)){
+									if(jsonObject.getString("envType")!=null){
+										queryHostDetail.setOsType(jsonObject.getString("envType"));
+									}else{
+										queryHostDetail.setOsType("无");
+									}
+									if(jsonObject.getString("prjName")!=null){
+										queryHostDetail.setProjectName(jsonObject.getString("prjName"));
+									}else{
+										queryHostDetail.setProjectName("无");
+									}
+									if(jsonObject.getString("prjAdmin")!=null){
+										queryHostDetail.setProjectLeader(jsonObject.getString("prjAdmin"));
+									}else{
+										queryHostDetail.setProjectLeader("无");
+									}
+									if(jsonObject.getString("appName")!=null){
+										queryHostDetail.setApplicationName(jsonObject.getString("appName"));
+									}else{
+										queryHostDetail.setApplicationName("无");
+									}
+									if(jsonObject.getString("appAdmin")!=null){
+										queryHostDetail.setApplicationLeader(jsonObject.getString("appAdmin"));
+									}else{
+										queryHostDetail.setApplicationLeader("无");
+									}
+									serverAnalysisService.updateHostsInfo(queryHostDetail);
+									continue;
 								}
-								if(jsonObject.getString("prjName")!=null){
-									queryHostDetail.setProjectName(jsonObject.getString("prjName"));
-								}else{
-									queryHostDetail.setProjectName("无");
-								}
-								if(jsonObject.getString("prjAdmin")!=null){
-									queryHostDetail.setProjectLeader(jsonObject.getString("prjAdmin"));
-								}else{
-									queryHostDetail.setProjectLeader("无");
-								}
-								if(jsonObject.getString("appName")!=null){
-									queryHostDetail.setApplicationName(jsonObject.getString("appName"));
-								}else{
-									queryHostDetail.setApplicationName("无");
-								}
-								if(jsonObject.getString("appAdmin")!=null){
-									queryHostDetail.setApplicationLeader(jsonObject.getString("appAdmin"));
-								}else{
-									queryHostDetail.setApplicationLeader("无");
-								}
-								serverAnalysisService.updateHostsInfo(queryHostDetail);
-							}else{
-								queryHostDetail.setOsType("无");
-								queryHostDetail.setProjectName("无");
-								queryHostDetail.setProjectLeader("无");
-								queryHostDetail.setApplicationName("无");
-								queryHostDetail.setApplicationLeader("无");
 							}
 						}
 					}
